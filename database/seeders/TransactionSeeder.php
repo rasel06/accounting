@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\Post;
+use App\Models\Transaction;
 use Illuminate\Database\Seeder;
 
-class PostSeeder extends Seeder
+class TransactionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Post::factory()->count(5)->create();
+        Transaction::factory()->count(5)->create();
     }
 }

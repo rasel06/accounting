@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Post extends Model
+class PaymentMethod extends Model
 {
     use HasFactory;
 
@@ -17,11 +17,9 @@ class Post extends Model
      * @var array
      */
     protected $fillable = [
-        'title',
-        'content',
-        'remark',
+        'name',
+        'status',
         'user_id',
-        'published_at',
     ];
 
     /**
@@ -32,7 +30,6 @@ class Post extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
-        'published_at' => 'timestamp',
     ];
 
     public function transactions(): HasMany

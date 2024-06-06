@@ -17,9 +17,56 @@ models:
     number_of_unit: decimal:8,2
     unit_price: decimal:8,2
     total: decimal:8,2
-    invoice_file: string:200
+    remarks: string:200
     relationships:
       belongsTo: PaymentMethod, User
+
+seeders: PaymentMethod, Transaction
+
+controllers:
+  PaymentMethod:
+    index:
+      query: all:paymentMethods
+      render: payment-methods.index with:paymentMethods
+    create:
+      render: payment-methods.create
+    store:
+      validate: title, content, remark
+      save: paymentMethod
+      redirect: payment-methods.index
+    show:
+      render: payment-methods.show with:paymentMethod
+    edit:
+      render: payment-methods.edit with:paymentMethod
+    update:
+      validate: paymentMethod
+      update: paymentMethod
+      redirect: payment-methods.index
+    destroy:
+      delete: paymentMethod
+      redirect: payment-methods.index
+
+  Transaction:
+    index:
+      query: all:transactions
+      render: transaction.index with:transactions
+    create:
+      render: transaction.create
+    store:
+      validate: payment_method, invoice_number, description, invoice_date, number_of_unit, unit_price,total, remark
+      save: transaction
+      redirect: transaction.index
+    show:
+      render: transaction.show with:transaction
+    edit:
+      render: transaction.edit with:transaction
+    update:
+      validate: payment_method, invoice_number, description, invoice_date, number_of_unit, unit_price,total, remark
+      update: transaction
+      redirect: transaction.index
+    destroy:
+      delete: transaction
+      redirect: transaction.index
 # models:
 #   Post:
 #     title: string:400

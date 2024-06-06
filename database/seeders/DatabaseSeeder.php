@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\PaymentMethod;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Transaction;
@@ -15,9 +16,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
-        Post::factory(10)->create();
-        Transaction::factory(10)->create();
+        // User::factory(10)->create();
+
+        PaymentMethod::factory(10)->create();
+        Transaction::factory(20)->create();
+
 
         User::factory()->create([
             'name' => 'Test User',

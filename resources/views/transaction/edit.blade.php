@@ -2,6 +2,6 @@
     @extends('layouts.app')
 
     @section('content')
-        post.show template
+        transaction.edit template
     @endsection
 --}}

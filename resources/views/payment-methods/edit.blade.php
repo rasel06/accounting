@@ -2,6 +2,6 @@
     @extends('layouts.app')
 
     @section('content')
-        report template
+        payment-methods.edit template
     @endsection
 --}}

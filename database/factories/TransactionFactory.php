@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Post;
+use App\Models\PaymentMethod;
 use App\Models\Transaction;
 use App\Models\User;
 
@@ -23,11 +23,17 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            'payment_token' => $this->faker->regexify('[A-Za-z0-9]{40}'),
-            'total' => $this->faker->randomFloat(2, 0, 999999.99),
+            'payment_method' => PaymentMethod::factory(),
+            'invoice_number' => $this->faker->regexify('[A-Za-z0-9]{100}'),
+            'description' => $this->faker->text(),
             'user_id' => User::factory(),
-            'post_id' => Post::factory(),
-            'status' => $this->faker->randomElement(["pending","successful","failed"]),
+            'invoice_date' => $this->faker->dateTime(),
+            'invoice_file' => $this->faker->regexify('[A-Za-z0-9]{120}'),
+            'number_of_unit' => $this->faker->randomFloat(2, 0, 999999.99),
+            'unit_price' => $this->faker->randomFloat(2, 0, 999999.99),
+            'total' => $this->faker->randomFloat(2, 0, 999999.99),
+            'remarks' => $this->faker->regexify('[A-Za-z0-9]{200}'),
+            'payment_method_id' => PaymentMethod::factory(),
         ];
     }
 }

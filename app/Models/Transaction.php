@@ -16,11 +16,17 @@ class Transaction extends Model
      * @var array
      */
     protected $fillable = [
-        'payment_token',
-        'total',
+        'payment_method',
+        'invoice_number',
+        'description',
         'user_id',
-        'post_id',
-        'status',
+        'invoice_date',
+        'invoice_file',
+        'number_of_unit',
+        'unit_price',
+        'total',
+        'remarks',
+        'payment_method_id',
     ];
 
     /**
@@ -30,18 +36,22 @@ class Transaction extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'total' => 'decimal:2',
+        'payment_method' => 'integer',
         'user_id' => 'integer',
-        'post_id' => 'integer',
+        'invoice_date' => 'timestamp',
+        'number_of_unit' => 'decimal:2',
+        'unit_price' => 'decimal:2',
+        'total' => 'decimal:2',
+        'payment_method_id' => 'integer',
     ];
+
+    public function paymentMethod(): BelongsTo
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function post(): BelongsTo
-    {
-        return $this->belongsTo(Post::class);
     }
 }

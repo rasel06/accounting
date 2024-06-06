@@ -4,17 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Post;
+use App\Models\PaymentMethod;
 use App\Models\User;
 
-class PostFactory extends Factory
+class PaymentMethodFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Post::class;
+    protected $model = PaymentMethod::class;
 
     /**
      * Define the model's default state.
@@ -22,11 +22,9 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(4),
-            'content' => $this->faker->paragraphs(3, true),
-            'remark' => $this->faker->regexify('[A-Za-z0-9]{100}'),
+            'name' => $this->faker->name(),
+            'status' => $this->faker->randomElement(["active","inactive"]),
             'user_id' => User::factory(),
-            'published_at' => $this->faker->dateTime(),
         ];
     }
 }

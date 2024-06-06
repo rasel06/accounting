@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostUpdateRequest extends FormRequest
+class PaymentMethodUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,11 +20,9 @@ class PostUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:400'],
-            'content' => ['required', 'string'],
-            'remark' => ['nullable', 'string', 'max:100'],
+            'name' => ['required', 'string', 'max:400'],
+            'status' => ['required', 'in:active,inactive'],
             'user_id' => ['required', 'integer', 'exists:users,id'],
-            'published_at' => ['nullable'],
         ];
     }
 }
