@@ -1,0 +1,82 @@
+models:
+  PaymentMethod:
+    name: string:400
+    status: enum:active,inactive default:active
+    user_id: id foreign
+    relationships:
+      hasMany: Transaction
+      belongsTo: User
+
+  Transaction:
+    payment_method: id foreign
+    invoice_number: string:100
+    description: longtext
+    user_id: id foreign
+    invoice_date: timestamp
+    invoice_file: string:120
+    number_of_unit: decimal:8,2
+    unit_price: decimal:8,2
+    total: decimal:8,2
+    invoice_file: string:200
+    relationships:
+      belongsTo: PaymentMethod, User
+# models:
+#   Post:
+#     title: string:400
+#     content: longtext
+#     remark: string:100 nullable
+#     user_id: id foreign
+#     published_at: nullable timestamp
+#     relationships:
+#       hasMany: Transaction
+#       belongsTo: User
+#   Transaction:
+#     payment_token: string:40
+#     total: decimal:8,2
+#     user_id: id foreign
+#     post_id: id foreign:posts
+#     status: enum:pending,successful,failed
+#     relationships:
+#       belongsTo: User, Post
+
+# seeders: Post, Comment
+
+# controllers:
+#   Post:
+#     index:
+#       query: all:posts
+#       render: post.index with:posts
+#     create:
+#       render: post.create
+#     store:
+#       validate: title, content, remark
+#       save: post
+#       send: ReviewNotification to:post.author with:post
+#       dispatch: SyncMedia with:post
+#       fire: NewPost with:post
+#       flash: post.title
+#       redirect: post.index
+#     show:
+#       render: post.show with:post
+#     edit:
+#       render: post.edit with:post
+#     update:
+#       validate: post
+#       update: post
+#       flash: post.id
+#       redirect: post.index
+#     destroy:
+#       delete: post
+#       redirect: post.index
+#   Transaction:
+#     store:
+#       validate: transaction
+#       save: transaction
+#       flash: transaction.id
+#       redirect: post.index
+#     show:
+#       render: transaction.show with:transaction
+#   Report:
+#     invokable:
+#       fire: ReportGenerated
+#       render: report
