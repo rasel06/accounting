@@ -13,7 +13,7 @@ class PaymentMethodController extends Controller
 {
     public function index(Request $request)
     {
-        $paymentMethods = PaymentMethod::simplePaginate(10);
+        $paymentMethods = PaymentMethod::simplePaginate(8);
 
         return view('payment-methods.index', compact('paymentMethods'));
     }

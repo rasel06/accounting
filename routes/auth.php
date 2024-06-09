@@ -18,7 +18,14 @@ Route::middleware('guest')->group(function () {
         ->name('password.reset');
 });
 
+
+
 Route::middleware('auth')->group(function () {
+
+    Volt::route('register', 'pages.auth.register')
+        ->name('register');
+
+
     Volt::route('verify-email', 'pages.auth.verify-email')
         ->name('verification.notice');
 

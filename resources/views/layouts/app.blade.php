@@ -23,7 +23,7 @@
 </head>
 
 <body class="font-sans antialiased bg-slate-800">
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-full bg-gray-100 overflow-hidden">
         <livewire:layout.navigation />
 
         <!-- Page Heading -->
@@ -37,7 +37,7 @@
 
         <!-- Page Content -->
 
-        <div class="flex   bg-white overflow-hidden ">
+        <div class="flex   bg-white ">
             <livewire:parts.sidebar />
 
             <main class="w-4/5 p-4">

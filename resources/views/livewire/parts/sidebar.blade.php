@@ -1,4 +1,4 @@
-<sidebar class="w-1/5 max-h-fit  border-r-2">
+<sidebar class="w-1/5 max-h-dvh  border-r-2">
 
     <ul class="space-y-2 text-gray-600">
         <li>
