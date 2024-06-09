@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\PaymentMethod;
 
 Route::view('/', 'welcome');
 
@@ -16,6 +17,10 @@ require __DIR__ . '/auth.php';
 
 
 
-Route::resource('payment-methods', App\Http\Controllers\PaymentMethodController::class);
+Route::get('/payment-method/create', PaymentMethod::class);
+
+
+
+// Route::resource('payment-methods', App\Http\Controllers\PaymentMethodController::class);
 
 Route::resource('transactions', App\Http\Controllers\TransactionController::class);
