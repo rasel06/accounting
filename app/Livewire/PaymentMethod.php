@@ -4,10 +4,9 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Layout;
 use Livewire\WithoutUrlPagination;
 use App\Models\PaymentMethod as PayMethods;
-
+use Illuminate\Support\Facades\Auth;
 
 class PaymentMethod extends Component
 {
@@ -18,43 +17,65 @@ class PaymentMethod extends Component
     public $status = "";
     public $paymentName = "";
     // public $paymentMethods = [];
+    public $userId;
+
+    public $createMode = false;
+
+    public $showModal = false;
+
+    public $id;
 
 
-    public function placeholder()
-    {
-        return <<<'HTML'
-        <div>
-            <!-- Loading spinner... -->
-            <div class="size-10 bg-red-500">ok</div>
-        </div>
-        HTML;
-    }
+
 
     public function mount()
     {
+        $this->userId = Auth::id();
         // $this->paymentMethods = PayMethods::paginate(10);
     }
 
-    protected function paymentMethods()
+
+
+    protected function tableData()
     {
-        return $this->status === '' ? PayMethods::paginate(10) :  PayMethods::where('status', $this->status)->paginate(10);
+        return  PayMethods::when($this->status !== '', function ($query) {
+            return $query->where('status', $this->status);
+        })->when($this->paymentName !== '', function ($query) {
+            return $query->where('name', 'like', '%' . $this->paymentName . '%');
+        })->paginate(8);
     }
 
 
     public function render()
     {
-
-        // echo (" OK " . $this->status . " == " . $this->paymentName);
-        // if ($this->status == 'active') {
-        //     $paymentMethods = PayMethods::where('status', 'active')->paginate(10);
-        // } elseif ($this->status == 'inactive') {
-        //     $paymentMethods = PayMethods::where('status', 'inactive')->paginate(10);
-        // } else {
-        //     $paymentMethods = PayMethods::paginate(10);
-        // }
-
         return view('livewire.payment-method', [
-            "paymentMethods" => $this->paymentMethods()
+            "paymentMethods" => $this->tableData()
         ]);
+    }
+
+
+    public function create()
+    {
+        $this->showModal = true;
+    }
+
+    public function details($id)
+    {
+        $this->id = $id;
+    }
+
+    public function edit($id)
+    {
+        $this->id = $id;
+    }
+
+    public function delete($id)
+    {
+        $this->id = $id;
+    }
+
+    public function modalClose()
+    {
+        $this->showModal = false;
     }
 }

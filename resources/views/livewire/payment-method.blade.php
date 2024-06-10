@@ -1,6 +1,9 @@
-<div>
+<div class="">
 
-    <div class="w-full h-fit">
+    {{-- <livewire:parts.helper.modal  /> --}}
+
+
+    <div class="w-full h-fit ">
         <div class="max-w-7xl mx-auto sm:px-4 lg:px-3 bg-slate-300 rounded-lg ">
             <div class="flex flex-col">
                 <div class="py-1 flex flex-wrap flex-grow justify-between">
@@ -9,7 +12,6 @@
                             class="bg-gray-100 appearance-none border-2 border-gray-100 rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300"
                             id="inline-search" type="text" placeholder="Search">
 
-
                         <select wire:model.change="status"
                             class="border-gray-100 rounded ml-4 py-1 px-8 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300">
                             <option value="">All</option>
@@ -17,12 +19,15 @@
                             <option value="inactive">In Active</option>
                         </select>
 
+                        <span>{{ $id }}</span>
+
                     </div>
+
                     <div class="flex items-center py-2">
-                        <a href=""
+                        <button wire:click="create"
                             class="inline-block px-4 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-500 focus:outline-none focus:shadow-outline">
                             Create new page
-                        </a>
+                        </button>
                     </div>
                 </div>
                 <div class="-my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
@@ -33,7 +38,7 @@
                             <thead>
 
                                 <tr
-                                    class="bg-gray-200 border-b font-bold border-gray-200 text-xs leading-4 text-gray-500 uppercase tracking-wider">
+                                    class="bg-slate-500 border-b font-extrabold border-gray-200 text-xs leading-4 text-gray-100 uppercase tracking-wider">
 
                                     <th class="px-6 py-2 text-left font-medium">
                                         Serial
@@ -41,7 +46,7 @@
                                     <th class="px-6 py-2 text-left font-medium">
                                         Method Name
                                     </th>
-                                    <th class="px-6 py-2 text-left font-medium">
+                                    <th class="px-6 py-2 text-center font-medium">
                                         Status
                                     </th>
                                     <th class="px-6 py-2 text-right font-medium">
@@ -71,15 +76,22 @@
                                             </span>
 
                                         </td>
-                                        <td
-                                            class="px-6 py-1 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                                        <td class="py-1 text-center border-b border-gray-200 text-sm  font-medium pr-3">
 
-                                            {{-- <button type="button" class="inline-block text-cyan-400 hover:text-gray-700">
-                                                <svg class="inline-block h-6 w-6 fill-current" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M12 6a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4zm-2 6a2 2 0 104 0 2 2 0 00-4 0z" />
-                                                </svg>
-                                            </button> --}}
+
+                                            <div class="flex gap-2 justify-end">
+                                                <button class="" wire:click="details({{ $paymentMethod->id }})">
+                                                    <span class="material-symbols-outlined">description</span>
+                                                </button>
+                                                <button class="text-green-600/60 hover:text-cyan-600"
+                                                    wire:click="edit({{ $paymentMethod->id }})">
+                                                    <span class="material-symbols-outlined">edit</span>
+                                                </button>
+                                                <button class="text-rose-600/60 hover:text-cyan-600"
+                                                    wire:click="delete({{ $paymentMethod->id }})">
+                                                    <span class="material-symbols-outlined">delete</span>
+                                                </button>
+                                            </div>
 
                                         </td>
                                     </tr>
@@ -94,14 +106,26 @@
                     </div>
 
                     <div class="px-4 py-2 ">
-                        {{ $paymentMethods->onEachSide(3)->links() }}
+                        {{ $paymentMethods->onEachSide(2)->links() }}
                         {{-- {{ $paymentMethods->links() }} --}}
                     </div>
 
                 </div>
             </div>
         </div>
+
+        {{-- Modal for create new item --}}
+
+        @if ($showModal)
+            <x-helpers.modal header="Create New Payment Method" :$userId>
+
+            </x-helpers.modal>
+        @endif
+
+
     </div>
+
+
 
 
 </div>
