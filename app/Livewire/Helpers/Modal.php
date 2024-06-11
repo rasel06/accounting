@@ -10,6 +10,7 @@ trait Modal
     public function modalClose()
     {
         $this->showModal = false;
+        $this->resetErrorBag();
         $this->clean();
     }
 }

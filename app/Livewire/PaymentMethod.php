@@ -41,10 +41,17 @@ class PaymentMethod extends Component
     public $status = '';
 
 
+    public $dataTableItems = [
+        'name' => 'Method Name',
+        'status' => 'Status',
+    ];
+
+
     public function mount()
     {
         $this->userId = Auth::id();
     }
+
 
     protected function tableData()
     {
@@ -61,8 +68,7 @@ class PaymentMethod extends Component
                 return $query->where('status', $this->statusFilter);
             })->when($this->nameFilter !== '', function ($query) {
                 return $query->where('name', 'like', '%' . $this->nameFilter . '%');
-            })
-                ->orderBy('created_at', 'desc');
+            })->orderBy('created_at', 'desc')->get();
         }
     }
 
@@ -89,19 +95,18 @@ class PaymentMethod extends Component
         ]);
 
         if ($user->id > 0) {
-            $this->editMode = true;
             $this->showModal = false;
             $this->clean();
-        } else {
         }
-
-        // return redirect()->to('/payment-method');
-        // $this->editMode = false;
-        // $this->showModal = true;
     }
 
-    public function edit()
+    public function edit(PayMethods $payMethod)
     {
+
+        $this->id = $payMethod->id;
+        $this->name = $payMethod->name;
+        $this->status = $payMethod->status;
+
         $this->editMode = true;
         $this->showModal = true;
     }
