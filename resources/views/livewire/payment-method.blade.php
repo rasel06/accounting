@@ -8,25 +8,37 @@
             <div class="flex flex-col">
                 <div class="py-1 flex flex-wrap flex-grow justify-between">
                     <div class="flex items-center py-2">
-                        <input wire:model.live="paymentName"
-                            class="bg-gray-100 appearance-none border-2 border-gray-100 rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300"
+                        <input wire:model.live="nameFilter"
+                            class="bg-gray-100 appearance-none border-2 border-gray-100 rounded w-1/2 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300"
                             id="inline-search" type="text" placeholder="Search">
 
-                        <select wire:model.change="status"
-                            class="border-gray-100 rounded ml-4 py-1 px-8 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300">
+                        <select wire:model.change="statusFilter"
+                            class="border-gray-100 rounded ml-2 py-1 pr-8 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300">
                             <option value="">All</option>
                             <option value="active">Active</option>
                             <option value="inactive">In Active</option>
                         </select>
 
-                        <span>{{ $id }}</span>
+                        <select wire:model.change="limitFilter"
+                            class="border-gray-100 rounded ml-2 py-1 pr-8 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="">All</option>
+                        </select>
 
                     </div>
 
                     <div class="flex items-center py-2">
                         <button wire:click="create"
-                            class="inline-block px-4 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-500 focus:outline-none focus:shadow-outline">
-                            Create new page
+                            class="inline-block px-2 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-500 focus:outline-none focus:shadow-outline">
+                            <div class="flex justify-center gap-2 items-center">
+                                Method
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span>
+                            </div>
                         </button>
                     </div>
                 </div>
@@ -36,10 +48,8 @@
                         <table class="min-w-full text-slate-900">
                             <!-- HEAD start -->
                             <thead>
-
                                 <tr
                                     class="bg-slate-500 border-b font-extrabold border-gray-200 text-xs leading-4 text-gray-100 uppercase tracking-wider">
-
                                     <th class="px-6 py-2 text-left font-medium">
                                         Serial
                                     </th>
@@ -54,8 +64,6 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <!-- HEAD end -->
-                            <!-- BODY start -->
                             <tbody class="bg-white">
                                 @foreach ($paymentMethods as $paymentMethod)
                                     <tr class="text-gray-600 bg-slate-300/30 odd:bg-white">
@@ -79,7 +87,7 @@
                                         <td class="py-1 text-center border-b border-gray-200 text-sm  font-medium pr-3">
 
 
-                                            <div class="flex gap-2 justify-end">
+                                            <div class="flex gap-2 justify-end font-sm">
                                                 <button class="" wire:click="details({{ $paymentMethod->id }})">
                                                     <span class="material-symbols-outlined">description</span>
                                                 </button>
@@ -96,19 +104,16 @@
                                         </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
-                            <!-- BODY end -->
                         </table>
-
-
-
                     </div>
 
-                    <div class="px-4 py-2 ">
-                        {{ $paymentMethods->onEachSide(2)->links() }}
-                        {{-- {{ $paymentMethods->links() }} --}}
-                    </div>
+                    @if ($limitFilter != '')
+                        <div class="px-4 py-2 ">
+                            {{ $paymentMethods->links() }}
+                        </div>
+                    @endif
+
 
                 </div>
             </div>
@@ -117,8 +122,13 @@
         {{-- Modal for create new item --}}
 
         @if ($showModal)
-            <x-helpers.modal header="Create New Payment Method" :$userId>
+            <x-helpers.modal header="Create New" :$userId>
 
+                @if (!$editMode)
+                    <x-helpers.forms.payment-method :statusOptions="$statusOptions" :selectedOption="$status" />
+                @else
+                    Edit Mode
+                @endif
             </x-helpers.modal>
         @endif
 

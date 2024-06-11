@@ -17,7 +17,7 @@ require __DIR__ . '/auth.php';
 
 
 
-Route::get('/payment-method/create', PaymentMethod::class);
+Route::get('/payment-method', PaymentMethod::class);
 
 
 
