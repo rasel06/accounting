@@ -1,4 +1,4 @@
-@props(['header' => '', 'footer' => '', 'color' => 'bg-slate-200', 'userId' => ''])
+@props(['header' => '', 'footer' => '', 'color' => 'bg-slate-200'])
 
 @php
     $defaults = [

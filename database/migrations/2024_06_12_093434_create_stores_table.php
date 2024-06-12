@@ -12,15 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::disableForeignKeyConstraints();
-
-        Schema::create('payment_methods', function (Blueprint $table) {
+        Schema::create('stores', function (Blueprint $table) {
             $table->id();
             $table->string('name', 200);
             $table->enum('status', ["active", "inactive"])->default('active');
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('location_id')->constrained();
             $table->timestamps();
         });
-
         Schema::enableForeignKeyConstraints();
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_methods');
+        Schema::dropIfExists('stores');
     }
 };

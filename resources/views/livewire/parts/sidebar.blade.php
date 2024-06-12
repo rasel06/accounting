@@ -68,16 +68,22 @@
                     keyboard_arrow_down
                 </span>
             </button>
-            <ul id="dropdown-settings" class="hidden py-2 space-y-1">
+            <ul id="dropdown-settings"
+                class="hidden py-2 space-y-1 {{ request()->routeIs('settings.*') == true ? '' : 'hidden' }}">
                 <li>
-                    <a href="#"
-                        class="flex items-center w-full p-2 text-base font-normal text-gray-600 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">Debit
-                        Report</a>
+                    <a href="/settings/payment-method"
+                        class="flex items-center w-full p-2 text-base font-normal text-gray-600 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">
+                        Payment Method</a>
                 </li>
                 <li>
-                    <a href="#"
-                        class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">Credit
-                        Report</a>
+                    <a href="/settings/location"
+                        class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">Business
+                        Location</a>
+                </li>
+
+                <li>
+                    <a href="/settings/store"
+                        class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">Stores</a>
                 </li>
 
             </ul>

@@ -2,7 +2,7 @@
     <div class="w-full h-fit ">
         <div class="max-w-7xl mx-auto sm:px-4 lg:px-3 bg-slate-300 rounded-lg ">
             <div class="flex flex-col items-stretch">
-                <h1 class="text-xl font-bold text-cyan-500 py-2">Payment Method <span>::</span> </h1>
+                <h1 class="text-xl font-bold text-cyan-500 py-2">Stores <span>::</span> </h1>
                 <hr class="border-slate-500/40 ">
 
                 <div class="flex flex-wrap flex-grow justify-between">
@@ -16,6 +16,15 @@
                             <option value="">All</option>
                             <option value="active">Active</option>
                             <option value="inactive">In Active</option>
+                        </select>
+
+                        <select wire:model.change="locationFilter"
+                            class="border-gray-100 rounded ml-2 py-1 pr-8 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300">
+                            <option value="">All</option>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}">{{ $location->name }}</option>
+                            @endforeach
+
                         </select>
 
                         <select wire:model.change="limitFilter"
@@ -39,7 +48,7 @@
                     </div>
                 </div>
                 <div class=" py-0  ">
-                    <x-helpers.parts.data-table.table :tableItems="$paymentMethods" :$limitFilter :$tableFields />
+                    <x-helpers.parts.data-table.store-table :tableItems="$paymentMethods" :$limitFilter :$tableFields />
                 </div>
             </div>
         </div>
@@ -48,7 +57,7 @@
 
         @if ($showModal)
             <x-helpers.modal header="{{ $id == null ? 'Create New' : 'Update' }}">
-                <x-helpers.forms.payment-method :statusOptions="$statusOptions" :selectedOption="$status" />
+                <x-helpers.forms.business-location :statusOptions="$statusOptions" :selectedOption="$status" :$locations :selectedLocation="$location_id" />
             </x-helpers.modal>
         @endif
     </div>

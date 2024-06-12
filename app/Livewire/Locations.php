@@ -8,21 +8,24 @@ use App\Livewire\Helpers\Modal;
 use Illuminate\Validation\Rule;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
-use App\Models\PaymentMethod as PayMethods;
+use App\Models\Location;
 
-class PaymentMethod extends Component
+class Locations extends Component
 {
 
     use WithPagination, WithoutUrlPagination, Modal;
 
-    public $title = "Payment Method";
+    public $title = "Business Location";
     public $id;
     public $userId;
 
-    public $selectedPayMethod;
+    public $selectedLocation;
 
     public $statusOptions = ['' => 'Choose Status', 'active' => 'Active', 'inactive' => 'In Active'];
-    public $tableFields = ['name' => 'Payment Method', 'status' => 'Status'];
+    public $tableFields = ['name' => 'Business Location', 'status' => 'Status'];
+
+
+
 
     // ---------------------- Table Filter Attributes ------------ >
     public $statusFilter = "";
@@ -59,7 +62,7 @@ class PaymentMethod extends Component
                     'min:2',
                     'string',
                     'max:255',
-                    Rule::unique('payment_methods')->ignore($this->id),
+                    Rule::unique('locations')->ignore($this->id),
                 ],
                 'status' => [
                     'required'
@@ -67,7 +70,7 @@ class PaymentMethod extends Component
             ]);
             if ($this->id) {
                 $this->select($this->id);
-                $this->selectedPayMethod->update([
+                $this->selectedLocation->update([
                     'name' => $this->name,
                     'user_id' => $this->userId,
                     'status' => $this->status
@@ -75,7 +78,7 @@ class PaymentMethod extends Component
                 $this->showModal = false;
                 $this->clean();
             } else {
-                $pay_method = PayMethods::create([
+                $pay_method = Location::create([
                     'name' => $this->name,
                     'user_id' => $this->userId,
                     'status' => $this->status
@@ -94,8 +97,8 @@ class PaymentMethod extends Component
 
         if ($id) {
             $this->select($id);
-            $this->name = $this->selectedPayMethod->name;
-            $this->status = $this->selectedPayMethod->status;
+            $this->name = $this->selectedLocation->name;
+            $this->status = $this->selectedLocation->status;
         }
 
         $this->showModal = true;
@@ -105,20 +108,20 @@ class PaymentMethod extends Component
     {
         if ($id) {
             $this->select($id);
-            $this->selectedPayMethod->delete();
+            $this->selectedLocation->delete();
         }
     }
 
     protected function select($id)
     {
-        $this->selectedPayMethod = PayMethods::find($id);;
+        $this->selectedLocation = Location::find($id);;
     }
 
 
     protected function tableData()
     {
         if ($this->limitFilter != '') {
-            return  PayMethods::when($this->statusFilter !== '', function ($query) {
+            return  Location::when($this->statusFilter !== '', function ($query) {
                 return $query->where('status', $this->statusFilter);
             })->when($this->nameFilter !== '', function ($query) {
                 return $query->where('name', 'like', '%' . $this->nameFilter . '%');
@@ -126,7 +129,7 @@ class PaymentMethod extends Component
                 ->orderBy('created_at', 'desc')
                 ->simplePaginate($this->limitFilter);
         } else {
-            return  PayMethods::when($this->statusFilter !== '', function ($query) {
+            return  Location::when($this->statusFilter !== '', function ($query) {
                 return $query->where('status', $this->statusFilter);
             })->when($this->nameFilter !== '', function ($query) {
                 return $query->where('name', 'like', '%' . $this->nameFilter . '%');
@@ -138,7 +141,7 @@ class PaymentMethod extends Component
 
     public function render()
     {
-        return view('livewire.payment-method', [
+        return view('livewire.locations', [
             "paymentMethods" => $this->tableData()
         ]);
     }

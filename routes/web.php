@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\PaymentMethod;
+use App\Livewire\Locations;
+use App\Livewire\Stores;
 
 Route::view('/', 'welcome');
 
@@ -16,8 +18,11 @@ Route::view('profile', 'profile')
 require __DIR__ . '/auth.php';
 
 
-
-Route::get('/payment-method', PaymentMethod::class);
+Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
+    Route::get('/payment-method', PaymentMethod::class);
+    Route::get('/store', Stores::class);
+    Route::get('/location', Locations::class);
+});
 
 
 
