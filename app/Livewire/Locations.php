@@ -19,7 +19,7 @@ class Locations extends Component
     public $id;
     public $userId;
 
-    public $selectedLocation;
+    public $selectedItem;
 
     public $statusOptions = ['' => 'Choose Status', 'active' => 'Active', 'inactive' => 'In Active'];
     public $tableFields = ['name' => 'Business Location', 'status' => 'Status'];
@@ -70,7 +70,7 @@ class Locations extends Component
             ]);
             if ($this->id) {
                 $this->select($this->id);
-                $this->selectedLocation->update([
+                $this->selectedItem->update([
                     'name' => $this->name,
                     'user_id' => $this->userId,
                     'status' => $this->status
@@ -97,8 +97,8 @@ class Locations extends Component
 
         if ($id) {
             $this->select($id);
-            $this->name = $this->selectedLocation->name;
-            $this->status = $this->selectedLocation->status;
+            $this->name = $this->selectedItem->name;
+            $this->status = $this->selectedItem->status;
         }
 
         $this->showModal = true;
@@ -108,13 +108,13 @@ class Locations extends Component
     {
         if ($id) {
             $this->select($id);
-            $this->selectedLocation->delete();
+            $this->selectedItem->delete();
         }
     }
 
     protected function select($id)
     {
-        $this->selectedLocation = Location::find($id);;
+        $this->selectedItem = Location::find($id);;
     }
 
 

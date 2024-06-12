@@ -21,7 +21,7 @@ class Stores extends Component
     public $userId;
     public $locations;
 
-    public $selectedPayMethod;
+    public $selectedItem;
 
     public $statusOptions = ['' => 'Choose Status', 'active' => 'Active', 'inactive' => 'In Active'];
 
@@ -77,7 +77,7 @@ class Stores extends Component
             ]);
             if ($this->id) {
                 $this->select($this->id);
-                $this->selectedPayMethod->update([
+                $this->selectedItem->update([
                     'name' => $this->name,
                     'user_id' => $this->userId,
                     'location_id' => $this->location_id,
@@ -106,9 +106,9 @@ class Stores extends Component
 
         if ($id) {
             $this->select($id);
-            $this->name = $this->selectedPayMethod->name;
-            $this->status = $this->selectedPayMethod->status;
-            $this->location_id = $this->selectedPayMethod->location->id;
+            $this->name = $this->selectedItem->name;
+            $this->status = $this->selectedItem->status;
+            $this->location_id = $this->selectedItem->location->id;
         }
 
         $this->showModal = true;
@@ -118,13 +118,13 @@ class Stores extends Component
     {
         if ($id) {
             $this->select($id);
-            $this->selectedPayMethod->delete();
+            $this->selectedItem->delete();
         }
     }
 
     protected function select($id)
     {
-        $this->selectedPayMethod = Store::find($id);;
+        $this->selectedItem = Store::find($id);;
     }
 
 
