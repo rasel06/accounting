@@ -36,7 +36,7 @@
 
 </head>
 
-<body class="font-sans antialiased bg-slate-800">
+<body class="font-sans antialiased ">
     <div class="min-full bg-gray-100 overflow-hidden">
         <livewire:layout.navigation />
 

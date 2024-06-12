@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\AssetType;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\PaymentMethod;
 use App\Livewire\Locations;
@@ -20,6 +21,7 @@ require __DIR__ . '/auth.php';
 
 Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
     Route::get('/payment-method', PaymentMethod::class);
+    Route::get('/asset-types', AssetType::class);
     Route::get('/store', Stores::class);
     Route::get('/location', Locations::class);
 });

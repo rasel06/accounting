@@ -1,4 +1,4 @@
-<sidebar class="w-1/5 max-h-dvh  border-r-2">
+<sidebar class="w-1/5 h-[calc(100vh-64px)] border-r-2">
 
     <ul class="space-y-2 text-gray-600">
         <li>
@@ -74,6 +74,11 @@
                     <a href="/settings/payment-method"
                         class="flex items-center w-full p-2 text-base font-normal text-gray-600 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">
                         Payment Method</a>
+                </li>
+                <li>
+                    <a href="/settings/asset-types"
+                        class="flex items-center w-full p-2 text-base font-normal text-gray-600 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">
+                        Asset Types</a>
                 </li>
                 <li>
                     <a href="/settings/location"
