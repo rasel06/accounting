@@ -3,8 +3,11 @@
 
     <div class="w-full h-fit ">
         <div class="max-w-7xl mx-auto sm:px-4 lg:px-3 bg-slate-300 rounded-lg ">
-            <div class="flex flex-col">
-                <div class="py-1 flex flex-wrap flex-grow justify-between">
+            <div class="flex flex-col items-stretch">
+                <h1 class="text-xl font-bold text-cyan-500 py-2">Payment Method</h1>
+                <hr class="border-slate-500/40 ">
+
+                <div class="flex flex-wrap flex-grow justify-between">
                     <div class="flex items-center py-2">
                         <input wire:model.live="nameFilter"
                             class="bg-gray-100 appearance-none border-2 border-gray-100 rounded w-1/2 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300"
@@ -25,27 +28,20 @@
                             <option value="50">50</option>
                             <option value="">All</option>
                         </select>
-
-                        <span>{{ $editMode }}</span>
-
                     </div>
 
                     <div class="flex items-center py-2">
                         <button wire:click="create"
                             class="inline-block px-2 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-500 focus:outline-none focus:shadow-outline">
                             <div class="flex justify-center gap-2 items-center">
-                                Method
-                                <span class="material-symbols-outlined">
-                                    add
-                                </span>
+                                Create
+                                <span class="material-symbols-outlined">add</span>
                             </div>
                         </button>
                     </div>
                 </div>
-                <div class="-my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 ">
-
-                    <x-helpers.parts.data-table.table :tableItems="$paymentMethods" :$limitFilter :$dataTableItems />
-
+                <div class=" py-0  ">
+                    <x-helpers.parts.data-table.table :tableItems="$paymentMethods" :$limitFilter />
                 </div>
             </div>
         </div>

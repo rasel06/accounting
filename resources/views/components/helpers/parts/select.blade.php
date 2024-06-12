@@ -17,7 +17,7 @@
             {{ $slot }}
         </select>
     </div>
-    <div class="text-sm text-rose-500">
+    <div class="text-sm text-rose-500 mt-1">
         @error($name)
             {{ $message }}
         @enderror

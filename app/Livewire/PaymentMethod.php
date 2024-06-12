@@ -41,11 +41,6 @@ class PaymentMethod extends Component
     public $status = '';
 
 
-    public $dataTableItems = [
-        'name' => 'Method Name',
-        'status' => 'Status',
-    ];
-
 
     public function mount()
     {
@@ -102,13 +97,28 @@ class PaymentMethod extends Component
 
     public function edit(PayMethods $payMethod)
     {
-
         $this->id = $payMethod->id;
         $this->name = $payMethod->name;
         $this->status = $payMethod->status;
 
         $this->editMode = true;
         $this->showModal = true;
+    }
+
+    public function update()
+    {
+        $this->validate();
+
+        $user = PayMethods::create([
+            'name' => $this->name,
+            'user_id' => $this->userId,
+            'status' => $this->status
+        ]);
+
+        // if ($user->id > 0) {
+        //     $this->showModal = false;
+        //     $this->clean();
+        // }
     }
 
 

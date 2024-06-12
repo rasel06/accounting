@@ -1,16 +1,6 @@
-@props(['tableItems', 'limitFilter', 'dataTableItems' => []])
+@props(['tableItems', 'limitFilter'])
 
-{{-- @php
-    $itemsForDatatable = [
-        'serial' => 'Serial',
-        'action' => 'Action',
-    ];
 
-    $insert_position = count($itemsForDatatable) - 1;
-
-    array_splice($itemsForDatatable, $insert_position, 0, $dataTableItems);
-
-@endphp --}}
 
 
 <div class="-my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 ">
@@ -32,7 +22,7 @@
                         Status
                     </x-helpers.parts.data-table.th>
                     <x-helpers.parts.data-table.th class="text-right">
-                        Acion
+                        Action
                     </x-helpers.parts.data-table.th>
                 </tr>
             </thead>
@@ -76,7 +66,6 @@
                                 </x-helpers.parts.data-table.button>
 
                             </div>
-
                         </x-helpers.parts.data-table.td>
                     </tr>
                 @endforeach
@@ -85,7 +74,7 @@
     </div>
 
     @if ($limitFilter != '')
-        <div class="px-4 py-2 ">
+        <div class="py-2 ">
             {{ $tableItems->links() }}
         </div>
     @endif
