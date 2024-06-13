@@ -17,13 +17,10 @@ class Stores extends Component
     use WithPagination, WithoutUrlPagination, Modal;
 
     public $title = "Payment Method";
-    public $id;
-    public $userId;
+
     public $locations;
 
     public $selectedItem;
-
-    public $statusOptions = ['' => 'Choose Status', 'active' => 'Active', 'inactive' => 'In Active'];
 
     public $tableFields = ['name' => 'Store Name', 'location->name' => 'Store Location', 'status' => 'Status'];
 
@@ -35,7 +32,6 @@ class Stores extends Component
 
     // ----------------------  DB Attributes --------------------- >
     public $name = "";
-    public $status = '';
     public $location_id = '';
 
 
@@ -44,14 +40,19 @@ class Stores extends Component
     public function mount()
     {
         $this->userId = Auth::id();
-        $this->locations = Location::where('status', 'active')->get();
+
+        $this->locations = Location::where('status', 'active')
+            ->orderBy('name', 'asc')
+            ->get();
+        if ($this->locations) {
+            $this->location_id = $this->locations[0]->id;
+        }
     }
 
     public function clean()
     {
+        $this->commonClean();
         $this->name = "";
-        $this->status = '';
-        $this->resetErrorBag();
     }
 
 
@@ -157,7 +158,7 @@ class Stores extends Component
     public function render()
     {
         return view('livewire.stores', [
-            "paymentMethods" => $this->tableData()
+            "storeList" => $this->tableData()
         ]);
     }
 }

@@ -16,7 +16,7 @@
     <label for="{{ $name }}" class="block text-sm font-medium leading-6 text-gray-600">{{ $label }}</label>
     <div class="relative mt-1 rounded-md shadow-sm">
 
-        <input {{ $attributes($defaults) }}>
+        <input autocomplete="off" {{ $attributes($defaults) }}>
 
     </div>
     <div class="text-sm text-rose-500 mt-1">

@@ -12,14 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::disableForeignKeyConstraints();
-        Schema::create('stores', function (Blueprint $table) {
+
+        Schema::create('credit_transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 200)->unique();
-            $table->enum('status', ["active", "inactive"])->default('active');
+            $table->foreignId('credit_account_id');  // payment_method_id
+            $table->foreignId('payment_method')->constrained();
+            $table->longText('description');
+            $table->string('invoice_number', 50);
+            $table->timestamp('invoice_date');
+            $table->string('invoice_file', 120);
+            $table->decimal('amount', 8, 2);
+            $table->string('remarks', 200);
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('location_id')->constrained();
             $table->timestamps();
         });
+
         Schema::enableForeignKeyConstraints();
     }
 
@@ -28,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stores');
+        Schema::dropIfExists('credit_transactions');
     }
 };

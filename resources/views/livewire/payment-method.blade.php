@@ -48,7 +48,7 @@
 
         @if ($showModal)
             <x-helpers.modal header="{{ $id == null ? 'Create New' : 'Update' }}">
-                <x-helpers.forms.payment-method :statusOptions="$statusOptions" :selectedOption="$status" />
+                <x-helpers.forms.payment-method :statusList="$statusList" :selectedStatus="$status" />
             </x-helpers.modal>
         @endif
     </div>

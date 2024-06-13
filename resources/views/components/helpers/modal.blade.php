@@ -20,7 +20,7 @@
                 </button>
             </div>
         </div>
-        <div class="min-h-6 bg-slate-50 p-4">
+        <div class="min-h-6 bg-slate-50 px-2 pt-2">
             {{ $slot }}
         </div>
         <div class="{{ $color }}  px-4 py-1 min-h-6 min-w-full rounded-b-md">{{ $footer }}</div>

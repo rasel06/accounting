@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class=" py-0  ">
-                    <x-helpers.parts.data-table.store-table :tableItems="$paymentMethods" :$limitFilter :$tableFields />
+                    <x-helpers.parts.data-table.store-table :tableItems="$storeList" :$limitFilter :$tableFields />
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
 
         @if ($showModal)
             <x-helpers.modal header="{{ $id == null ? 'Create New' : 'Update' }}">
-                <x-helpers.forms.business-location :statusOptions="$statusOptions" :selectedOption="$status" :$locations :selectedLocation="$location_id" />
+                <x-helpers.forms.stores :statusList="$statusList" :selectedStatus="$status" :$locations :selectedLocation="$location_id" />
             </x-helpers.modal>
         @endif
     </div>

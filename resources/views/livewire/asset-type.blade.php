@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class=" py-0  ">
-                    <x-helpers.parts.data-table.table :tableItems="$paymentMethods" :$limitFilter :$tableFields />
+                    <x-helpers.parts.data-table.table :tableItems="$assetTypesList" :$limitFilter :$tableFields />
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
 
         @if ($showModal)
             <x-helpers.modal header="{{ $id == null ? 'Create New' : 'Update' }}">
-                <x-helpers.forms.payment-method :statusOptions="$statusOptions" :selectedOption="$status" />
+                <x-helpers.forms.asset-type :statusList="$statusList" :selectedStatus="$status" />
             </x-helpers.modal>
         @endif
     </div>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 200);
+            $table->string('name', 200)->unique();
             $table->enum('status', ["active", "inactive"])->default('active');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();

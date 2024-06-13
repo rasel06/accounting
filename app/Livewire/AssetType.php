@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Helpers\CommonFields;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Livewire\Helpers\Modal;
@@ -17,23 +18,11 @@ class AssetType extends Component
     use WithPagination, WithoutUrlPagination, Modal;
 
     public $title = "Asset Types";
-    public $id;
-    public $userId;
 
-    public $selectedItem;
-
-    public $statusOptions = ['' => 'Choose Status', 'active' => 'Active', 'inactive' => 'In Active'];
     public $tableFields = ['name' => 'Asset Types', 'status' => 'Status'];
-
-    // ---------------------- Table Filter Attributes ------------ >
-    public $statusFilter = "";
-    public $nameFilter = "";
-    public $limitFilter = 10;
 
     // ----------------------  DB Attributes --------------------- >
     public $name = "";
-    public $status = '';
-
 
 
     public function mount()
@@ -43,9 +32,8 @@ class AssetType extends Component
 
     public function clean()
     {
+        $this->commonClean();
         $this->name = "";
-        $this->status = '';
-        $this->resetErrorBag();
     }
 
 
@@ -140,7 +128,7 @@ class AssetType extends Component
     public function render()
     {
         return view('livewire.asset-type', [
-            "paymentMethods" => $this->tableData()
+            "assetTypesList" => $this->tableData()
         ]);
     }
 }

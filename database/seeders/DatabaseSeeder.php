@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         PaymentMethod::factory(10)->create();
-        Transaction::factory(20)->create();
+        // Transaction::factory(20)->create();
 
 
         User::factory()->create([

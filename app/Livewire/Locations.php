@@ -16,16 +16,9 @@ class Locations extends Component
     use WithPagination, WithoutUrlPagination, Modal;
 
     public $title = "Business Location";
-    public $id;
-    public $userId;
-
     public $selectedItem;
 
-    public $statusOptions = ['' => 'Choose Status', 'active' => 'Active', 'inactive' => 'In Active'];
     public $tableFields = ['name' => 'Business Location', 'status' => 'Status'];
-
-
-
 
     // ---------------------- Table Filter Attributes ------------ >
     public $statusFilter = "";
@@ -34,7 +27,7 @@ class Locations extends Component
 
     // ----------------------  DB Attributes --------------------- >
     public $name = "";
-    public $status = '';
+
 
 
 
@@ -45,9 +38,8 @@ class Locations extends Component
 
     public function clean()
     {
+        $this->commonClean();
         $this->name = "";
-        $this->status = '';
-        $this->resetErrorBag();
     }
 
 
@@ -142,7 +134,7 @@ class Locations extends Component
     public function render()
     {
         return view('livewire.locations', [
-            "paymentMethods" => $this->tableData()
+            "businessLocation" => $this->tableData()
         ]);
     }
 }

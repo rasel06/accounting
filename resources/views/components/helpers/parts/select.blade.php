@@ -13,7 +13,7 @@
 <div class="mb-2">
     <label for="{{ $name }}" class="block text-sm font-medium leading-6 text-gray-600">{{ $label }}</label>
     <div class="relative mt-1 rounded-md shadow-sm">
-        <select {{ $attributes($defaults) }}>
+        <select autocomplete="off" {{ $attributes($defaults) }}>
             {{ $slot }}
         </select>
     </div>

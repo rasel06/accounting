@@ -1,4 +1,4 @@
-<sidebar class="w-1/5 h-[calc(100vh-64px)] border-r-2">
+<sidebar class="w-1/5 h-[calc(100vh-65px)] border-r-2">
 
     <ul class="space-y-2 text-gray-600">
         <li>
@@ -12,7 +12,7 @@
         </li>
 
         <li>
-            <a href="#"
+            <a href="/debit"
                 class="flex items-center p-2 text-base font-normal rounded-lg  hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
                 <span class="material-symbols-outlined">
                     terminal
@@ -21,7 +21,7 @@
             </a>
         </li>
         <li>
-            <a href="#"
+            <a href="/credit"
                 class="flex items-center p-2 text-base font-normal  rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                 <span class="material-symbols-outlined">
                     add_card

@@ -18,8 +18,21 @@ Route::view('profile', 'profile')
 
 require __DIR__ . '/auth.php';
 
+Route::group(['middleware' => ['auth']], function () {
+    // Route::get('/debit', PaymentMethod::class);
+    // Route::get('/credit', AssetType::class);
+});
 
-Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
+
+Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['auth']], function () {
+    // Route::get('/payment-method', PaymentMethod::class);
+    // Route::get('/asset-types', AssetType::class);
+    // Route::get('/store', Stores::class);
+    // Route::get('/location', Locations::class);
+});
+
+
+Route::group(['prefix' => 'settings', 'as' => 'settings.', 'middleware' => ['auth']], function () {
     Route::get('/payment-method', PaymentMethod::class);
     Route::get('/asset-types', AssetType::class);
     Route::get('/store', Stores::class);

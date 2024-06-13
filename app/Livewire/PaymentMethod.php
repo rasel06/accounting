@@ -21,7 +21,7 @@ class PaymentMethod extends Component
 
     public $selectedPayMethod;
 
-    public $statusOptions = ['' => 'Choose Status', 'active' => 'Active', 'inactive' => 'In Active'];
+    public $statusOptions = ['active' => 'Active', 'inactive' => 'In Active'];
     public $tableFields = ['name' => 'Payment Method', 'status' => 'Status'];
 
     // ---------------------- Table Filter Attributes ------------ >
@@ -31,7 +31,6 @@ class PaymentMethod extends Component
 
     // ----------------------  DB Attributes --------------------- >
     public $name = "";
-    public $status = '';
 
 
 
@@ -42,9 +41,8 @@ class PaymentMethod extends Component
 
     public function clean()
     {
+        $this->commonClean();
         $this->name = "";
-        $this->status = '';
-        $this->resetErrorBag();
     }
 
 
