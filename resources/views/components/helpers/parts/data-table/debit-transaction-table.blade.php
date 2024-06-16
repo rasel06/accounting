@@ -35,13 +35,32 @@
                             </div>
                         </x-helpers.parts.data-table.td>
 
-                        <x-helpers.parts.data-table.td>
-                            {{ $item->name }}
+                        <x-helpers.parts.data-table.td class="text-left">
+                            {{ $item->paymentMethod->name }}
                         </x-helpers.parts.data-table.td>
 
-                        <x-helpers.parts.data-table.td class="text-left  text-sm leading-5 text-gray-500">
-                            <x-helpers.parts.data-table.status :status="$item->status" />
+
+                        {{-- <x-helpers.parts.data-table.td class="text-left">
+                            {{ $item->description }}
+                        </x-helpers.parts.data-table.td> --}}
+
+                        <x-helpers.parts.data-table.td class="text-left">
+                            {{ $item->invoice_number }}
                         </x-helpers.parts.data-table.td>
+                        <x-helpers.parts.data-table.td class="text-left">
+                            {{ $item->number_of_unit }}
+                        </x-helpers.parts.data-table.td>
+                        <x-helpers.parts.data-table.td class="text-left">
+                            {{ $item->unit_price }}
+                        </x-helpers.parts.data-table.td>
+                        <x-helpers.parts.data-table.td class="text-left">
+                            {{ $item->total }}
+                        </x-helpers.parts.data-table.td>
+                        {{-- <x-helpers.parts.data-table.td class="text-left">
+                            {{ $item->remarks }}
+                        </x-helpers.parts.data-table.td> --}}
+
+
 
                         <x-helpers.parts.data-table.td class="py-1 text-sm  flex justify-end text-center">
 

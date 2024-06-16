@@ -1,6 +1,8 @@
 <?php
 
 use App\Livewire\AssetType;
+use App\Livewire\CreditTransaction;
+use App\Livewire\DebitTransaction;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\PaymentMethod;
 use App\Livewire\Locations;
@@ -19,8 +21,8 @@ Route::view('profile', 'profile')
 require __DIR__ . '/auth.php';
 
 Route::group(['middleware' => ['auth']], function () {
-    // Route::get('/debit', PaymentMethod::class);
-    // Route::get('/credit', AssetType::class);
+    Route::get('/debit-transaction', DebitTransaction::class);
+    Route::get('/credit-transaction', CreditTransaction::class);
 });
 
 

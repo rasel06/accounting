@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('credit_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('credit_account_id');  // payment_method_id
-            $table->foreignId('payment_method')->constrained();
+            //$table->foreignId('payment_method')->constrained();
             $table->longText('description');
             $table->string('invoice_number', 50);
-            $table->timestamp('invoice_date');
-            $table->string('invoice_file', 120);
+            $table->date('invoice_date')->nullable();
+            $table->string('invoice_file', 120)->nullable();
             $table->decimal('amount', 8, 2);
             $table->string('remarks', 200);
             $table->foreignId('user_id')->constrained();

@@ -12,21 +12,21 @@
         </li>
 
         <li>
-            <a href="/debit"
+            <a href="/debit-transaction"
                 class="flex items-center p-2 text-base font-normal rounded-lg  hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
                 <span class="material-symbols-outlined">
                     terminal
                 </span>
-                <span class="ml-3">Debit</span>
+                <span class="ml-3">Debit Transaction</span>
             </a>
         </li>
         <li>
-            <a href="/credit"
+            <a href="/credit-transaction"
                 class="flex items-center p-2 text-base font-normal  rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                 <span class="material-symbols-outlined">
                     add_card
                 </span>
-                <span class="ml-3">Credit</span>
+                <span class="ml-3">Credit Transaction</span>
             </a>
         </li>
         <li>
