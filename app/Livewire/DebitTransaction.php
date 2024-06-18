@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\PaymentMethod;
+use Livewire\WithFileUploads;
 use App\Livewire\Helpers\Modal;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ use App\Models\DebitTransaction as ModelsDebitTransaction;
 class DebitTransaction extends Component
 {
 
-    use WithPagination, WithoutUrlPagination, Modal;
+    use WithPagination, WithoutUrlPagination, WithFileUploads, Modal;
 
     public $title = "Debit Transaction";
 
@@ -34,6 +35,7 @@ class DebitTransaction extends Component
     public $description = "";
     public $invoice_number = "";
     public $invoice_date = "";
+    public $invoice_file;
     public $number_of_unit = "";
     public $unit_price = "";
     public $total = "";
@@ -49,21 +51,24 @@ class DebitTransaction extends Component
     public function mount()
     {
         $this->userId = Auth::id();
-        $this->paymentMethodList =
-            PaymentMethod::where('status', 'active')
-            ->orderBy('name', 'asc')
-            ->get();
+        $this->paymentMethodList = PaymentMethod::orderBy('name', 'asc')->get();
         if ($this->paymentMethodList) {
             $this->payment_method_id = $this->paymentMethodList[0]->id;
         }
-
-        PaymentMethod::where('status', 'active')->get();
     }
 
     public function clean()
     {
         $this->commonClean();
-        // $this->name = "";
+        $this->payment_method_id = $this->paymentMethodList[0]->id;
+        $this->description = "";
+        $this->invoice_number = "";
+        $this->invoice_file = "";
+        $this->invoice_date = "";
+        $this->number_of_unit = "";
+        $this->unit_price = "";
+        $this->total = "";
+        $this->remarks = "";
     }
 
 
@@ -113,6 +118,8 @@ class DebitTransaction extends Component
                     'user_id' => $this->userId,
                     'remarks' => $this->remarks
                 ]);
+
+                $this->invoice_file->storeAs(path: 'invoices', name: $this->invoice_number);
                 if ($pay_method->id > 0) {
                     $this->showModal = false;
                     $this->clean();
@@ -123,9 +130,9 @@ class DebitTransaction extends Component
 
     public function edit($id = null)
     {
-        $this->id = $id;
 
         if ($id) {
+            $this->id = $id;
             $this->select($id);
             $this->payment_method_id = $this->selectedItem->payment_method_id;
             $this->description = $this->selectedItem->description;
@@ -136,9 +143,9 @@ class DebitTransaction extends Component
             $this->total = $this->selectedItem->total;
             $this->userId = $this->selectedItem->user_id;
             $this->remarks = $this->selectedItem->remarks;
-        }
 
-        $this->showModal = true;
+            $this->showModal = true;
+        }
     }
 
     public function delete($id = null)
@@ -151,7 +158,7 @@ class DebitTransaction extends Component
 
     protected function select($id)
     {
-        $this->selectedItem = ModelsDebitTransaction::find($id);;
+        $this->selectedItem = ModelsDebitTransaction::find($id);
     }
 
 
@@ -172,8 +179,6 @@ class DebitTransaction extends Component
 
     public function render()
     {
-
-        //dd($this->tableData());
         return view('livewire.debit-transaction', [
             "debitTransactionList" => $this->tableData()
         ]);

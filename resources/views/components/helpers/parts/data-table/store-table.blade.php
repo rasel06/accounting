@@ -51,24 +51,7 @@
                         </x-helpers.parts.data-table.td>
 
                         <x-helpers.parts.data-table.td class="py-1 text-sm  flex justify-end text-center">
-
-                            <div role="group" class="text-gray-600 flex">
-                                <x-helpers.parts.data-table.button wire:click="details({{ $item->id }})"
-                                    class="rounded-l-lg text-purple-600/60 ">
-                                    <span class="material-symbols-outlined ">description</span>
-                                </x-helpers.parts.data-table.button>
-
-                                <x-helpers.parts.data-table.button wire:click="edit({{ $item->id }})"
-                                    class="text-green-600/60 ">
-                                    <span class="material-symbols-outlined ">edit</span>
-                                </x-helpers.parts.data-table.button>
-
-                                <x-helpers.parts.data-table.button wire:click="delete({{ $item->id }})"
-                                    wire:confirm="Really want to delete?" class="rounded-r-lg text-rose-600/60">
-                                    <span class="material-symbols-outlined ">delete</span>
-                                </x-helpers.parts.data-table.button>
-
-                            </div>
+                            <x-helpers.parts.data-table.actions :id="$item->id" />
                         </x-helpers.parts.data-table.td>
                     </tr>
                 @endforeach

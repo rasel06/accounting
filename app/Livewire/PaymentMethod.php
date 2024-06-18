@@ -16,18 +16,18 @@ class PaymentMethod extends Component
     use WithPagination, WithoutUrlPagination, Modal;
 
     public $title = "Payment Method";
-    public $id;
-    public $userId;
+    // public $id;
+    // public $userId;
 
     public $selectedPayMethod;
 
-    public $statusOptions = ['active' => 'Active', 'inactive' => 'In Active'];
+    // public $statusOptions = ['active' => 'Active', 'inactive' => 'In Active'];
     public $tableFields = ['name' => 'Payment Method', 'status' => 'Status'];
 
     // ---------------------- Table Filter Attributes ------------ >
-    public $statusFilter = "";
-    public $nameFilter = "";
-    public $limitFilter = 10;
+    // public $statusFilter = "";
+    // public $nameFilter = "";
+    // public $limitFilter = 10;
 
     // ----------------------  DB Attributes --------------------- >
     public $name = "";
@@ -88,15 +88,13 @@ class PaymentMethod extends Component
 
     public function edit($id = null)
     {
-        $this->id = $id;
-
         if ($id) {
+            $this->id = $id;
             $this->select($id);
             $this->name = $this->selectedPayMethod->name;
             $this->status = $this->selectedPayMethod->status;
+            $this->showModal = true;
         }
-
-        $this->showModal = true;
     }
 
     public function delete($id = null)
@@ -109,7 +107,7 @@ class PaymentMethod extends Component
 
     protected function select($id)
     {
-        $this->selectedPayMethod = PayMethods::find($id);;
+        $this->selectedPayMethod = PayMethods::find($id);
     }
 
 
