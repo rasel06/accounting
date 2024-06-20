@@ -1,5 +1,10 @@
 <?php
 
+// ---------------------------------------------------------------
+// https://laravel-news.com/crud-operations-using-laravel-livewire
+// ---------------------------------------------------------------
+
+
 namespace App\Livewire;
 
 use Livewire\Component;
@@ -31,20 +36,18 @@ class DebitTransaction extends Component
 
 
     // ----------------------  DB Attributes --------------------- >
-    public $payment_method_id = null;     // From List
-    public $description = "";
-    public $invoice_number = "";
-    public $invoice_date = "";
-    public $invoice_file;
-    public $number_of_unit = "";
-    public $unit_price = "";
-    public $total = "";
-    public $remarks = "";
+    public $paymentMethodId, $description, $invoiceNumber, $invoiceDate, $invoiceFile, $numberOfUnit, $unitPrice, $total, $remarks;
 
 
     // --------------------- List From Db ----------------------- >
     public $paymentMethodList = [];
 
+    protected $listeners = ['numberOfUnit' => 'numberOfUnitChange'];
+
+    protected function numberOfUnitChange()
+    {
+        dd($this->numberOfUnit);
+    }
 
 
 
@@ -53,78 +56,80 @@ class DebitTransaction extends Component
         $this->userId = Auth::id();
         $this->paymentMethodList = PaymentMethod::orderBy('name', 'asc')->get();
         if ($this->paymentMethodList) {
-            $this->payment_method_id = $this->paymentMethodList[0]->id;
+            $this->paymentMethodId = $this->paymentMethodList[0]->id;
         }
     }
 
     public function clean()
     {
         $this->commonClean();
-        $this->payment_method_id = $this->paymentMethodList[0]->id;
+        $this->paymentMethodId = $this->paymentMethodList[0]->id;
         $this->description = "";
-        $this->invoice_number = "";
-        $this->invoice_file = "";
-        $this->invoice_date = "";
-        $this->number_of_unit = "";
-        $this->unit_price = "";
+        $this->invoiceNumber = "";
+        $this->invoiceFile = "";
+        $this->invoiceDate = "";
+        $this->numberOfUnit = "";
+        $this->unitPrice = "";
         $this->total = "";
         $this->remarks = "";
     }
 
+    public $validationState = false;
 
     public function create($init = null)
     {
         $this->showModal = true;
 
-
         if ($init == null) {
 
+            //if ($this->validationState) {
             $this->validate([
-                'payment_method_id' => ['required'],
+                'paymentMethodId' => ['required'],
                 'description' => ['required', 'min:2', 'string', 'max:255'],
-                'invoice_number' => ['required'],
-                // 'invoice_date' => ['required'],
-                'number_of_unit' => ['required', 'decimal:0'],
-                'unit_price' => ['required', 'decimal:2'],
-                'total' => ['required', 'decimal:2'],
+                'invoiceNumber' => ['required'],
+                'invoiceDate' => ['required'],
+                'numberOfUnit' => ['required', 'numeric'],
+                'unitPrice' => ['required', 'numeric'],
+                'total' => ['required', 'numeric'],
                 'remarks' => ['required', 'min:2', 'string', 'max:255'],
             ]);
+            //}
 
             if ($this->id) {
                 $this->select($this->id);
                 $this->selectedItem->update([
-                    'payment_method_id' => $this->payment_method_id,
+                    'payment_method_id' => $this->paymentMethodId,
                     'description' => $this->description,
-                    'invoice_number' => $this->invoice_number,
-                    'invoice_date' => $this->invoice_date,
-                    'number_of_unit' => $this->number_of_unit,
-                    'unit_price' => $this->unit_price,
+                    'invoice_number' => $this->invoiceNumber,
+                    'invoice_date' => $this->invoiceDate,
+                    'number_of_unit' => $this->numberOfUnit,
+                    'unit_price' => $this->unitPrice,
                     'total' => $this->total,
                     'user_id' => $this->userId,
                     'remarks' => $this->remarks
                 ]);
                 $this->showModal = false;
-                $this->clean();
             } else {
 
-                $pay_method = ModelsDebitTransaction::create([
-                    'payment_method_id' => $this->payment_method_id,
+                $newEntry = ModelsDebitTransaction::create([
+                    'payment_method_id' => $this->paymentMethodId,
                     'description' => $this->description,
-                    'invoice_number' => $this->invoice_number,
-                    'invoice_date' => $this->invoice_date,
-                    'number_of_unit' => $this->number_of_unit,
-                    'unit_price' => $this->unit_price,
+                    'invoice_number' => $this->invoiceNumber,
+                    'invoice_date' => $this->invoiceDate,
+                    'number_of_unit' => $this->numberOfUnit,
+                    'unit_price' => $this->unitPrice,
                     'total' => $this->total,
                     'user_id' => $this->userId,
-                    'remarks' => $this->remarks
+                    'remarks' => $this->remarks,
+                    'invoice_file' => $this->invoice_number
                 ]);
 
-                $this->invoice_file->storeAs(path: 'invoices', name: $this->invoice_number);
-                if ($pay_method->id > 0) {
+                if ($newEntry->id > 0) {
+                    $this->invoice_file->storeAs(path: '/invoices', name: $newEntry->invoice_number);
                     $this->showModal = false;
-                    $this->clean();
                 }
             }
+            $this->clean();
         }
     }
 
@@ -134,12 +139,12 @@ class DebitTransaction extends Component
         if ($id) {
             $this->id = $id;
             $this->select($id);
-            $this->payment_method_id = $this->selectedItem->payment_method_id;
+            $this->paymentMethodId = $this->selectedItem->payment_method_id;
             $this->description = $this->selectedItem->description;
-            $this->invoice_number = $this->selectedItem->invoice_number;
-            $this->invoice_date = $this->selectedItem->invoice_date;
-            $this->number_of_unit = $this->selectedItem->number_of_unit;
-            $this->unit_price = $this->selectedItem->unit_price;
+            $this->invoiceNumber = $this->selectedItem->invoice_number;
+            $this->invoiceDate = $this->selectedItem->invoice_date;
+            $this->numberOfUnit = $this->selectedItem->number_of_unit;
+            $this->unitPrice = $this->selectedItem->unit_price;
             $this->total = $this->selectedItem->total;
             $this->userId = $this->selectedItem->user_id;
             $this->remarks = $this->selectedItem->remarks;

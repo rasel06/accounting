@@ -11,6 +11,9 @@ trait CommonFields
 
     public $selectedItem;
 
+    public $addMode = false;
+    public $editMode = false;
+
 
     // ---------------------- Table Filter Attributes ------------ >
     public $statusFilter = "";
@@ -27,5 +30,11 @@ trait CommonFields
         $this->id = null;
         $this->status = 'active';
         $this->resetErrorBag();
+    }
+
+
+    public function camelToSnake($input)
+    {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
     }
 }

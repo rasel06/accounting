@@ -21,13 +21,7 @@ class PaymentMethod extends Component
 
     public $selectedPayMethod;
 
-    // public $statusOptions = ['active' => 'Active', 'inactive' => 'In Active'];
     public $tableFields = ['name' => 'Payment Method', 'status' => 'Status'];
-
-    // ---------------------- Table Filter Attributes ------------ >
-    // public $statusFilter = "";
-    // public $nameFilter = "";
-    // public $limitFilter = 10;
 
     // ----------------------  DB Attributes --------------------- >
     public $name = "";

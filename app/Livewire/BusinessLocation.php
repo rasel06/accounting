@@ -10,7 +10,7 @@ use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Location;
 
-class Locations extends Component
+class BusinessLocation extends Component
 {
 
     use WithPagination, WithoutUrlPagination, Modal;

@@ -3,7 +3,7 @@
 
 
 <x-helpers.forms.panel wire:submit="create">
-    <x-helpers.parts.input wire:model="name" label="Store Name" name="name" />
+    <x-helpers.parts.input label="Store Name" name="name" />
 
 
     <x-helpers.parts.select wire:model.change="location_id" label="Store Location" name="location_id">

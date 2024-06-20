@@ -1,12 +1,13 @@
 <?php
 
-use App\Livewire\AssetType;
-use App\Livewire\CreditTransaction;
-use App\Livewire\DebitTransaction;
-use Illuminate\Support\Facades\Route;
-use App\Livewire\PaymentMethod;
-use App\Livewire\Locations;
 use App\Livewire\Stores;
+use App\Livewire\AssetType;
+use App\Livewire\Locations;
+use App\Livewire\PaymentMethod;
+use App\Livewire\BusinessLocation;
+use App\Livewire\DebitTransaction;
+use App\Livewire\CreditTransaction;
+use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
@@ -38,7 +39,7 @@ Route::group(['prefix' => 'settings', 'as' => 'settings.', 'middleware' => ['aut
     Route::get('/payment-method', PaymentMethod::class);
     Route::get('/asset-types', AssetType::class);
     Route::get('/store', Stores::class);
-    Route::get('/location', Locations::class);
+    Route::get('/business-location', BusinessLocation::class);
 });
 
 

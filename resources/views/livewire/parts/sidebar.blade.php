@@ -81,7 +81,7 @@
                         Asset Types</a>
                 </li>
                 <li>
-                    <a href="/settings/location"
+                    <a href="/settings/business-location"
                         class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">Business
                         Location</a>
                 </li>

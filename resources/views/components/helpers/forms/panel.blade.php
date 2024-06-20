@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="flex gap-2">
-                <buttonn type="reset" class="text-slate-400" wire:click="clean">
+                <buttonn type="reset" class="text-slate-400" wire:click="resetFields">
                     <span class="material-symbols-outlined">device_reset</span>
                 </buttonn>
                 <button type="submit" class="text-cyan-400">
