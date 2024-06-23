@@ -44,7 +44,7 @@ trait CommonFields
 
     public function convertToWords($number)
     {
-        return  NumberToWords::transformNumber('en', $number, 'USD');
+        return ucwords(strtolower(NumberToWords::transformNumber('en', $number, 'USD')));
     }
 
     public function convertDate($dateString)
