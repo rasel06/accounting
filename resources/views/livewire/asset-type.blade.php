@@ -7,9 +7,7 @@
 
                 <x-helpers.parts.data-table.control />
 
-                <div class=" py-0  ">
-                    <x-helpers.parts.data-table.table :tableItems="$assetTypesList" :$limitFilter :$tableFields />
-                </div>
+                <x-helpers.parts.data-table.table :tableItems="$assetTypesList" :$limitFilter :$tableFields />
             </div>
         </div>
 

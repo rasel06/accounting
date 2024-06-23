@@ -43,11 +43,8 @@
                             {{ $item->location->name }}
                         </x-helpers.parts.data-table.td>
 
-                        <x-helpers.parts.data-table.td class="text-left text-sm leading-5 text-gray-500">
-                            <span
-                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $item->status == 'active' ? 'bg-green-300 text-green-800' : 'bg-slate-300 text-slate-500' }} ">
-                                {{ $item->status }}
-                            </span>
+                        <x-helpers.parts.data-table.td class="text-center">
+                            <x-helpers.parts.data-table.status :status="$item->status" />
                         </x-helpers.parts.data-table.td>
 
                         <x-helpers.parts.data-table.td class="py-1 text-sm  flex justify-end text-center">

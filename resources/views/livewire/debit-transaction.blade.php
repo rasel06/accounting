@@ -6,9 +6,7 @@
 
             <x-helpers.parts.data-table.control :showStatus="false" />
 
-            <div class=" py-0  ">
-                <x-helpers.parts.data-table.debit-transaction-table :tableItems="$debitTransactionList" :$limitFilter :$tableFields />
-            </div>
+            <x-helpers.parts.data-table.debit-transaction-table :tableItems="$debitTransactionList" :$limitFilter :$tableFields />
         </div>
     </div>
 

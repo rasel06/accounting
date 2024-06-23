@@ -5,9 +5,7 @@
             <hr class="border-slate-500/40 ">
 
             <x-helpers.parts.data-table.control />
-            <div class=" py-0  ">
-                <x-helpers.parts.data-table.table :tableItems="$paymentMethods" :$limitFilter :$tableFields />
-            </div>
+            <x-helpers.parts.data-table.table :tableItems="$paymentMethods" :$limitFilter :$tableFields />
         </div>
     </div>
 
