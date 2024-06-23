@@ -29,7 +29,7 @@
     </div>
 
     <div class="flex items-center py-2">
-        <button wire:click.prevent="create" type="button"
+        <button wire:click.prevent="create(1)" type="button"
             class="inline-block px-2 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-500 focus:outline-none focus:shadow-outline">
             <div class="flex justify-center gap-2 items-center">
                 Create

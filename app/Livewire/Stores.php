@@ -49,10 +49,13 @@ class Stores extends Component
         }
     }
 
-    public function clean()
+    public function resetFields()
     {
-        $this->commonClean();
+        $this->commonReset();
         $this->name = "";
+        if ($this->locations) {
+            $this->location_id = $this->locations[0]->id;
+        }
     }
 
 
@@ -85,7 +88,7 @@ class Stores extends Component
                     'status' => $this->status
                 ]);
                 $this->showModal = false;
-                $this->clean();
+                $this->resetFields();
             } else {
                 $pay_method = Store::create([
                     'name' => $this->name,
@@ -95,7 +98,7 @@ class Stores extends Component
                 ]);
                 if ($pay_method->id > 0) {
                     $this->showModal = false;
-                    $this->clean();
+                    $this->resetFields();
                 }
             }
         }

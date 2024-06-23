@@ -27,6 +27,11 @@
                 'GRAD' -25,
                 'opsz' 16
         }
+
+
+        .small-icon {
+            font-size: 20px;
+        }
     </style>
 
     <!-- Scripts -->

@@ -2,6 +2,10 @@
 
 namespace App\Livewire\Helpers;
 
+use NumberToWords\NumberToWords;
+use Carbon\Carbon;
+
+
 trait CommonFields
 {
     public $id;
@@ -25,7 +29,7 @@ trait CommonFields
      * Clean the Common Fields
      * id, status,errors
      */
-    public function commonClean()
+    public function commonReset()
     {
         $this->id = null;
         $this->status = 'active';
@@ -36,5 +40,17 @@ trait CommonFields
     public function camelToSnake($input)
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
+    }
+
+    public function convertToWords($number)
+    {
+        return  NumberToWords::transformNumber('en', $number, 'USD');
+    }
+
+    public function convertDate($dateString)
+    {
+        $date = Carbon::createFromFormat('Y-m-d', $dateString);
+        $formattedDate = $date->format('M jS, Y');
+        return $formattedDate;
     }
 }

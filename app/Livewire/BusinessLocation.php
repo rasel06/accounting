@@ -36,9 +36,9 @@ class BusinessLocation extends Component
         $this->userId = Auth::id();
     }
 
-    public function clean()
+    public function resetFields()
     {
-        $this->commonClean();
+        $this->commonReset();
         $this->name = "";
     }
 
@@ -68,7 +68,7 @@ class BusinessLocation extends Component
                     'status' => $this->status
                 ]);
                 $this->showModal = false;
-                $this->clean();
+                $this->resetFields();
             } else {
                 $pay_method = Location::create([
                     'name' => $this->name,
@@ -77,7 +77,7 @@ class BusinessLocation extends Component
                 ]);
                 if ($pay_method->id > 0) {
                     $this->showModal = false;
-                    $this->clean();
+                    $this->resetFields();
                 }
             }
         }

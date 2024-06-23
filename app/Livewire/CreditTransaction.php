@@ -11,6 +11,8 @@ use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CreditTransaction as ModelCreditTransaction;
 
+
+
 class CreditTransaction extends Component
 {
 
@@ -20,13 +22,15 @@ class CreditTransaction extends Component
 
     public $tableFields = [
         'credit_account_id' => 'Credit Account',
-        //  'description' => 'Description',
+        'description' => 'Description',
         'invoice_number' => 'Invoice Number',
-        'amount' => 'Amount',
+        'invoice_date' => 'Invoice Date',
+        'invoice_file' => 'Invoice Upload',
+        'amount' => 'Total',
         // 'unit_price' => 'Unit Price',
         // 'total' => 'Total',
         'remarks' => 'Remarks',
-        'upload_file' => 'Upload File',
+        // 'invoice_file' => 'Invoice File',
     ];
 
     // ----------------------  DB Attributes --------------------- >
@@ -41,7 +45,7 @@ class CreditTransaction extends Component
     public $creditAccountList = [];
 
     protected $listeners = [
-        'deletePostListner' => 'deletePost'
+        'deletePostListener' => 'deletePost'
     ];
 
     public function updated($propertyName)
@@ -62,7 +66,7 @@ class CreditTransaction extends Component
 
     public function resetFields()
     {
-        $this->commonClean();
+        $this->commonReset();
         $this->creditAccountId = $this->creditAccountList[0]->id;
         $this->description = "";
         $this->invoiceNumber = "";
@@ -84,10 +88,13 @@ class CreditTransaction extends Component
     {
         $this->validate();
         try {
-            $uploadedFileName = $this->invoiceNumber . '.' .
-                $this->invoiceFile->guessExtension();
+            $invoiceFilePath = "";
 
-            $invoiceFilePath = $this->invoiceFile->storeAs(path: '/invoices', name: $uploadedFileName);
+            if ($this->invoiceFile) {
+                $uploadedFileName = $this->invoiceNumber . '.' .
+                    $this->invoiceFile->guessExtension();
+                $invoiceFilePath = $this->invoiceFile->storeAs(path: '/invoices', name: $uploadedFileName);
+            }
 
             $newEntry = ModelCreditTransaction::create([
                 'credit_account_id' => $this->creditAccountId,
@@ -100,10 +107,11 @@ class CreditTransaction extends Component
                 'invoice_file' => $invoiceFilePath
             ]);
 
+
             if ($newEntry->id > 0) {
                 $this->showModal = false;
             }
-            session()->flash('success', 'Transactio Added Successfully!!');
+            session()->flash('success', 'Transaction Added Successfully!!');
             $this->resetFields();
             $this->addMode = false;
         } catch (\Exception $ex) {
@@ -134,12 +142,17 @@ class CreditTransaction extends Component
         }
     }
 
+
+
     public function render()
     {
+
         return view(
             'livewire.credit-transaction',
             [
-                "tableDataList" => $this->tableData()
+                "tableDataList" => $this->tableData(),
+                // "totalAmount" => 100,
+                // "amountInWords" => $this->convertToWords(599)
             ]
         );
     }

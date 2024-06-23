@@ -10,10 +10,7 @@
     if ($size == 'lg') {
         $modalSize = 'w-4/5 h-4/5';
     }
-
 @endphp
-
-
 
 <div class=" fixed  min-h-full  min-w-full bg-slate-600/50 z-20 left-0 top-0 flex duration-1000 transition ease-in-out">
     <div class=" {{ $modalSize }} mx-auto my-auto flex flex-col justify-between drop-shadow-lg">
@@ -27,7 +24,7 @@
                 </button>
             </div>
         </div>
-        <div class="min-h-6 bg-slate-50 px-2 pt-2">
+        <div class="min-h-6 bg-slate-50 px-4 pt-2">
             {{ $slot }}
         </div>
         <div class="{{ $color }}  px-4 py-1 min-h-6 min-w-full rounded-b-md">{{ $footer }}</div>
