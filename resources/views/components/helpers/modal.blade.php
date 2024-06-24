@@ -1,4 +1,4 @@
-@props(['header' => '', 'footer' => '', 'color' => 'bg-slate-200', 'size' => 'md'])
+@props(['id' => null, 'footer' => '', 'color' => 'bg-slate-200', 'size' => 'md'])
 
 @php
     $defaults = [
@@ -16,7 +16,7 @@
     <div class=" {{ $modalSize }} mx-auto my-auto flex flex-col justify-between drop-shadow-lg">
         <div class="{{ $color }} px-2 py-1 min-h-6 min-w-full rounded-t-md">
             <div class="flex justify-between items-center">
-                <h1 class="text-slate-500">{{ $header }}</h1>
+                <h1 class="text-slate-500">{{ $id == null ? 'Create New' : 'Update' }}</h1>
                 <button class="text-slate-600" wire:click="modalClose">
                     <span class="material-symbols-outlined ">
                         close

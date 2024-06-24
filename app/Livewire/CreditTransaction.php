@@ -4,18 +4,15 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\PaymentMethod;
 use Livewire\WithFileUploads;
-use App\Livewire\Helpers\Modal;
 use Livewire\WithoutUrlPagination;
+use App\Livewire\Helpers\Modal;
+use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CreditTransaction as ModelCreditTransaction;
 
-
-
 class CreditTransaction extends Component
 {
-
     use WithPagination, WithoutUrlPagination, WithFileUploads, Modal;
 
     public $title = "Credit Transaction";
@@ -76,12 +73,24 @@ class CreditTransaction extends Component
         $this->remarks = "";
     }
 
+
+
     public function create()
     {
         $this->resetFields();
         $this->addMode = true;
         $this->editMode = false;
+        $this->invoiceNumber = $this->generateNextInvoiceNumber();
         $this->showModal = true;
+    }
+
+    public function reGenerate($type = 1)
+    {
+        if ($this->addMode == true) {
+            if ($type == 1) {
+                $this->invoiceNumber = $this->generateNextInvoiceNumber();
+            }
+        }
     }
 
     public function store()
@@ -146,13 +155,10 @@ class CreditTransaction extends Component
 
     public function render()
     {
-
         return view(
             'livewire.credit-transaction',
             [
-                "tableDataList" => $this->tableData(),
-                // "totalAmount" => 100,
-                // "amountInWords" => $this->convertToWords(599)
+                "tableDataList" => $this->tableData()
             ]
         );
     }

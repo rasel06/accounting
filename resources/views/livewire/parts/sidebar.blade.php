@@ -1,98 +1,22 @@
 <sidebar class="w-1/5 h-[calc(100vh-65px)] border-r-2">
 
     <ul class="space-y-2 text-gray-600">
-        <li>
-            <a href="#"
-                class="flex items-center p-2 text-base font-normal  rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                <span class="material-symbols-outlined">
-                    dashboard
-                </span>
-                <span class="ml-3">Dashboard</span>
-            </a>
-        </li>
 
-        <li>
-            <a href="/debit-transaction"
-                class="flex items-center p-2 text-base font-normal rounded-lg  hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
-                <span class="material-symbols-outlined">
-                    terminal
-                </span>
-                <span class="ml-3">Debit Transaction</span>
-            </a>
-        </li>
-        <li>
-            <a href="/credit-transaction"
-                class="flex items-center p-2 text-base font-normal  rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                <span class="material-symbols-outlined">
-                    add_card
-                </span>
-                <span class="ml-3">Credit Transaction</span>
-            </a>
-        </li>
-        <li>
-            <button type="button"
-                class="flex items-center w-full p-2 text-base font-normal transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                aria-controls="dropdown-report" data-collapse-toggle="dropdown-report">
-                <span class="material-symbols-outlined">
-                    lab_profile
-                </span>
-                <span class="flex-1 ml-3 text-left whitespace-nowrap" sidebar-toggle-item>Report</span>
-                <span class="material-symbols-outlined">
-                    keyboard_arrow_down
-                </span>
+        <x-helpers.parts.nav-item icon="dashboard" label="Dashboard" link="dashboard" />
+        <x-helpers.parts.nav-item icon="terminal" label="Debit Transaction" link="debit-transaction" />
+        <x-helpers.parts.nav-item icon="add_card" label="Credit Transaction" link="credit-transaction" />
 
-            </button>
-            <ul id="dropdown-report" class="hidden py-2 space-y-1">
-                <li>
-                    <a href="#"
-                        class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">Debit
-                        Report</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">Credit
-                        Report</a>
-                </li>
+        <x-helpers.parts.nav-group icon="lab_profile" label="Report">
+            <x-helpers.parts.nav-item label="Debit Txn Report" link="report/debit" :isSubMenu="true" />
+            <x-helpers.parts.nav-item label="Credit Txn Report" link="report/credit" :isSubMenu="true" />
+        </x-helpers.parts.nav-group>
 
-            </ul>
-        </li>
-        <li>
-            <button type="button"
-                class="flex items-center w-full p-2 text-base font-normal text-gray-600 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                aria-controls="dropdown-settings" data-collapse-toggle="dropdown-settings">
-                <span class="material-symbols-outlined">
-                    settings
-                </span>
-                <span class="flex-1 ml-3 text-left whitespace-nowrap" sidebar-toggle-item>Settings</span>
-                <span class="material-symbols-outlined">
-                    keyboard_arrow_down
-                </span>
-            </button>
-            <ul id="dropdown-settings"
-                class="hidden py-2 space-y-1 {{ request()->routeIs('settings.*') == true ? '' : 'hidden' }}">
-                <li>
-                    <a href="/settings/payment-method"
-                        class="flex items-center w-full p-2 text-base font-normal text-gray-600 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">
-                        Payment Method</a>
-                </li>
-                <li>
-                    <a href="/settings/asset-types"
-                        class="flex items-center w-full p-2 text-base font-normal text-gray-600 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">
-                        Asset Types</a>
-                </li>
-                <li>
-                    <a href="/settings/business-location"
-                        class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">Business
-                        Location</a>
-                </li>
-
-                <li>
-                    <a href="/settings/store"
-                        class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 pl-11">Stores</a>
-                </li>
-
-            </ul>
-        </li>
+        <x-helpers.parts.nav-group icon="settings" label="Settings" link="settings">
+            <x-helpers.parts.nav-item label="Payment Method" link="settings/payment-method" :isSubMenu="true" />
+            <x-helpers.parts.nav-item label="Asset Types" link="settings/asset-types" :isSubMenu="true" />
+            <x-helpers.parts.nav-item label="Business Location" link="settings/business-location" :isSubMenu="true" />
+            <x-helpers.parts.nav-item label="Stores" link="settings/store" :isSubMenu="true" />
+        </x-helpers.parts.nav-group>
     </ul>
 
 

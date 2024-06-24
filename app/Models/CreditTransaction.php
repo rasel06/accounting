@@ -32,7 +32,7 @@ class CreditTransaction extends Model
         'id' => 'integer',
         'user_id' => 'integer',
         'payment_method_id' => 'integer',
-        'amount' => 'decimal:0',
+        'amount' => 'decimal:2',
 
     ];
 
