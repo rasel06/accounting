@@ -12,7 +12,7 @@
 
 <li>
     <button type="button"
-        class="flex items-center w-full p-2 text-base font-normal transition duration-75  group hover:bg-slate-300 dark:text-white dark:hover:bg-gray-700"
+        class="main-menu flex items-center w-full p-2 text-base font-normal transition duration-75  group hover:bg-slate-300 dark:text-white dark:hover:bg-gray-700"
         aria-controls="dropdown-{{ strtolower($label) }}" data-collapse-toggle="dropdown-{{ strtolower($label) }}">
         <span class="material-symbols-outlined">
             {{ $icon }}
@@ -22,7 +22,7 @@
             keyboard_arrow_down
         </span>
     </button>
-    <ul id="dropdown-{{ strtolower($label) }}" class="py-2 space-y-1 {{ $status }}">
+    <ul id="dropdown-{{ strtolower($label) }}" class="py-2 space-y-1 {{ $status }} submenu">
         {{ $slot }}
     </ul>
 </li>
