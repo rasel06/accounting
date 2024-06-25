@@ -40,6 +40,7 @@ class CreditTransaction extends Component
     public $remarks;
 
     public $creditAccountList = [];
+    public $creditAccountFilter = "";
 
     protected $listeners = [
         'deletePostListener' => 'deletePost'
@@ -131,14 +132,24 @@ class CreditTransaction extends Component
     protected function tableData()
     {
         if ($this->limitFilter != '') {
-            return  ModelCreditTransaction::with(['creditAccount'])->when($this->nameFilter !== '', function ($query) {
-                return $query->where('description', 'like', '%' . $this->nameFilter . '%');
-            })->orderBy('created_at', 'desc')
+            return  ModelCreditTransaction::with(['creditAccount'])
+                ->when($this->nameFilter !== '', function ($query) {
+                    return $query->where('description', 'like', '%' . $this->nameFilter . '%')
+                        ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
+                        ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
+                })->when($this->creditAccountFilter !== '', function ($query) {
+                    return $query->where('credit_account_id',  $this->creditAccountFilter);
+                })->orderBy('created_at', 'desc')
                 ->simplePaginate($this->limitFilter);
         } else {
             return  ModelCreditTransaction::with(['creditAccount'])->when($this->nameFilter !== '', function ($query) {
-                return $query->where('description', 'like', '%' . $this->nameFilter . '%');
-            })->orderBy('created_at', 'desc')->get();
+                return $query->where('description', 'like', '%' . $this->nameFilter . '%')
+                    ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
+                    ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
+            })
+                ->when($this->creditAccountFilter !== '', function ($query) {
+                    return $query->where('credit_account_id',  $this->creditAccountFilter);
+                })->orderBy('created_at', 'desc')->get();
         }
     }
 

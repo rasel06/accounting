@@ -1,7 +1,7 @@
 @props(['showStatus' => true, 'isTransactional' => false])
 
-<div class="flex flex-wrap flex-grow justify-between py-1">
-    <div class="flex items-center py-2">
+<div class="flex flex-wrap flex-grow justify-between py-3">
+    <div class="flex items-center">
         <input wire:model.live="nameFilter"
             class="bg-gray-100 appearance-none border-2 border-gray-100 rounded w-1/2 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300"
             id="inline-search" type="text" placeholder="Search">
@@ -28,10 +28,10 @@
 
     </div>
 
-    <div class="flex items-center py-2">
+    <div class="flex items-center ">
         <button wire:click.prevent="create" type="button"
-            class="inline-block px-2 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-500 focus:outline-none focus:shadow-outline">
-            <div class="flex justify-center gap-2 items-center">
+            class="inline-block px-2 border border-transparent text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-500 focus:outline-none focus:shadow-outline">
+            <div class="flex justify-center gap-2 items-center ">
                 Create
                 <span class="material-symbols-outlined">add</span>
             </div>

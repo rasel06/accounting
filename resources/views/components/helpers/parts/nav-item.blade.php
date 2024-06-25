@@ -1,4 +1,4 @@
-@props(['icon' => '', 'label' => '', 'link' => '', 'isSubMenu' => false])
+@props(['icon' => '', 'label' => '', 'link' => '', 'subMenu' => false])
 
 
 @php
@@ -8,7 +8,7 @@
     }
 @endphp
 
-@if ($isSubMenu)
+@if ($subMenu)
     <li>
         <a href="/{{ $link }}"
             class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 group hover:bg-slate-300 dark:text-white dark:hover:bg-gray-700 pl-11 {{ $active }}">{{ $label }}</a>
