@@ -11,7 +11,7 @@
 @if ($subMenu)
     <li>
         <a wire:navigate href="/{{ $link }}"
-            class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 group hover:bg-slate-300 dark:text-white dark:hover:bg-gray-700 pl-11 {{ $active }}">{{ $label }}</a>
+            class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 group hover:bg-slate-300 dark:text-white dark:hover:bg-gray-700 pl-14 {{ $active }}">{{ $label }}</a>
     </li>
 @else
     <li>

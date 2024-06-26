@@ -1,4 +1,4 @@
-<sidebar class="w-1/5 h-[calc(100vh-65px)] border-r-2 pt-2">
+<sidebar class="w-1/5 h-[calc(100vh-65px)] border-r border-cyan-400 pt-4 ">
 
     <ul class="space-y-2 text-gray-600">
 
@@ -17,6 +17,7 @@
             <x-helpers.parts.nav-item label="Business Location" link="settings/business-location" :subMenu=true />
             <x-helpers.parts.nav-item label="Stores" link="settings/store" :subMenu=true />
         </x-helpers.parts.nav-group>
+
     </ul>
 
 </sidebar>

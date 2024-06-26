@@ -14,7 +14,7 @@ new class extends Component {
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-white border-cyan-400 border-b">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -29,9 +29,12 @@ new class extends Component {
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
 
-                    <x-nav-link wire:navigate :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link wire:navigate :href="route('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    {{-- <x-nav-link wire:navigate :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link> --}}
                 </div>
             </div>
 

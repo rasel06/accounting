@@ -60,9 +60,9 @@ class DebitTransaction extends Component
         }
     }
 
-    public function clean()
+    public function resetFields()
     {
-        $this->commonClean();
+        $this->commonReset();
         $this->paymentMethodId = $this->paymentMethodList[0]->id;
         $this->description = "";
         $this->invoiceNumber = "";
