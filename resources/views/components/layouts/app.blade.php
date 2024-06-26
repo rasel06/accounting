@@ -107,7 +107,7 @@
 
         // the default colorPalette for this dashboard
         //var colorPalette = ['#01BFD6', '#5564BE', '#F7A600', '#EDCD24', '#F74F58'];
-        var colorPalette = ['#00D8B6', '#008FFB', '#FEB019', '#FF4560', '#775DD0']
+        var colorPalette = ['#06b6d4', '#00D8B6', '#008FFB', '#FEB019', '#FF4560', '#775DD0']
 
         var spark1 = {
             chart: {
@@ -136,7 +136,7 @@
             xaxis: {
                 type: 'datetime',
             },
-            colors: ['#DCE6EC'],
+            colors: ['#06b6d4'],
             title: {
                 text: '$424,652',
                 offsetX: 30,
@@ -149,7 +149,7 @@
                 text: 'Debit',
                 offsetX: 30,
                 style: {
-                    fontSize: '14px',
+                    fontSize: '20px',
                     cssClass: 'apexcharts-yaxis-title'
                 }
             }
@@ -161,6 +161,7 @@
         spark1.subtitle.text = spark1.series.name = "Credit";
 
         spark1.title.text = '$224,652';
+        spark1.colors = ['#FF6969']
 
         new ApexCharts(document.querySelector("#credit"), spark1).render();
     </script>
