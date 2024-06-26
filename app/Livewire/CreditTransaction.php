@@ -9,6 +9,7 @@ use Livewire\WithoutUrlPagination;
 use App\Livewire\Helpers\Modal;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Title;
 use App\Models\CreditTransaction as ModelCreditTransaction;
 
 class CreditTransaction extends Component
@@ -162,8 +163,7 @@ class CreditTransaction extends Component
         }
     }
 
-
-
+    #[Title('Credit Transaction')]
     public function render()
     {
         return view(

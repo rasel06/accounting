@@ -10,6 +10,7 @@ use App\Models\AssetType as ModelAssetType;
 use Illuminate\Validation\Rule;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Title;
 
 
 class AssetType extends Component
@@ -125,6 +126,7 @@ class AssetType extends Component
 
 
 
+    #[Title('Asset Types')]
     public function render()
     {
         return view('livewire.asset-type', [

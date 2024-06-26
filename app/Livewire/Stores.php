@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Store;
+use Livewire\Attributes\Title;
 
 class Stores extends Component
 {
@@ -155,9 +156,7 @@ class Stores extends Component
     }
 
 
-
-
-
+    #[Title('Stores')]
     public function render()
     {
         return view('livewire.stores', [

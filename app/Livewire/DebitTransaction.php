@@ -14,6 +14,7 @@ use Livewire\WithFileUploads;
 use App\Livewire\Helpers\Modal;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Title;
 use App\Models\DebitTransaction as ModelsDebitTransaction;
 
 class DebitTransaction extends Component
@@ -182,6 +183,7 @@ class DebitTransaction extends Component
         }
     }
 
+    #[Title('Debit Transaction')]
     public function render()
     {
         return view('livewire.debit-transaction', [

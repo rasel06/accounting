@@ -8,6 +8,7 @@ use App\Livewire\Helpers\Modal;
 use Illuminate\Validation\Rule;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Title;
 use App\Models\PaymentMethod as PayMethods;
 
 class PaymentMethod extends Component
@@ -124,6 +125,7 @@ class PaymentMethod extends Component
 
 
 
+    #[Title('Payment Method')]
     public function render()
     {
         return view('livewire.payment-method', [

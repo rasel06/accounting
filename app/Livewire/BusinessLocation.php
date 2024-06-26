@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Location;
+use Livewire\Attributes\Title;
 
 class BusinessLocation extends Component
 {
@@ -129,8 +130,7 @@ class BusinessLocation extends Component
         }
     }
 
-
-
+    #[Title('Business Location')]
     public function render()
     {
         return view('livewire.locations', [
