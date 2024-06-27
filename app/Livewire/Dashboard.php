@@ -10,6 +10,12 @@ class Dashboard extends Component
     #[Title('Dashboard')]
     public function render()
     {
+        
         return view('livewire.dashboard');
+    }
+
+    public function dehydrate()
+    {
+
     }
 }

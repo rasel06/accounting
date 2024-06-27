@@ -1,3 +1,5 @@
+{{-- https://dev.to/nasrulhazim/livewire-chartjs-3ch5 --}}
+
 @props(['width' => 'w-2/3'])
 
 @php
@@ -19,6 +21,10 @@
 
 @endphp
 
-<div {{ $attributes }}>
+<div {{ $attributes }} x-data="{
+    init() {
+        console.log('I am called automatically')
+    }
+}">
     {{ $slot }}
 </div>

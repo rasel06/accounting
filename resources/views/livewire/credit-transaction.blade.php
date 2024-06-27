@@ -7,7 +7,7 @@
 
                 <select wire:model.change="creditAccountFilter"
                     class="border-gray-100 rounded ml-2 py-1 pr-8 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300">
-                    <option value="">Select Account</option>
+                    <option value="">Account</option>
                     @foreach ($creditAccountList as $creditAccount)
                         <option value="{{ $creditAccount->id }}">{{ $creditAccount->name }}</option>
                     @endforeach

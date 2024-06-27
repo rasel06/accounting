@@ -8,6 +8,7 @@ use App\Livewire\BusinessLocation;
 use App\Livewire\DebitTransaction;
 use App\Livewire\CreditTransaction;
 use App\Livewire\Dashboard;
+use App\Livewire\Profile;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -21,11 +22,17 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/profile', Profile::class)->name('profile');
+});
+
 require __DIR__ . '/auth.php';
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/profile', Profile::class)->name('profile');
+
     Route::get('/debit-transaction', DebitTransaction::class);
     Route::get('/credit-transaction', CreditTransaction::class);
 
