@@ -1,7 +1,7 @@
 @props(['paymentMethodList', 'selectedPaymentMethodId'])
 
 
-<x-helpers.forms.panel wire:submit="create">
+<x-helpers.forms.panel wire:submit="store">
     <x-helpers.parts.select wire:model="paymentMethodId" label="Payment Method" name="payment_method_id">
         @foreach ($paymentMethodList as $item)
             <option value="{{ $item->id }}" {{ $item->id == $selectedPaymentMethodId ? 'selected' : '' }}>
