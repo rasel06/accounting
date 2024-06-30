@@ -47,7 +47,8 @@ class CreditTransaction extends Component
     public $creditAccountFilter = "";
 
     protected $listeners = [
-        'deletePostListener' => 'deletePost'
+        //    'deletePostListener' => 'deletePost',
+        'reviewSectionRefresh' => '$refresh',
     ];
 
     public function updated($propertyName)
@@ -142,10 +143,14 @@ class CreditTransaction extends Component
         }
     }
 
-    protected function select()
+    protected function select($id = null)
     {
+        if ($id) {
+            $this->id = $id;
+        }
         $this->selectedItem = ModelCreditTransaction::find($this->id);
     }
+
 
     public function edit($id = null)
     {
@@ -166,18 +171,24 @@ class CreditTransaction extends Component
     {
         if ($id) {
             $this->select($id);
+            $filePath = public_path('storage/' . $this->selectedItem->invoice_file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
             $this->selectedItem->delete();
         }
     }
 
     public function update()
     {
-        $this->validate($this->validationRules);
+        $this->validate(array_merge($this->validationRules, [
+            'invoiceNumber' => ['required', 'regex:/^DBC5\d{5}$/', 'unique:credit_transactions,invoice_number,' . $this->id]
+        ]));
 
         try {
             $invoiceFilePath = "";
 
-            if ($this->invoiceFile) {
+            if (gettype($this->invoiceFile) !== 'string') {
                 $uploadedFileName = $this->invoiceNumber . '.' .
                     $this->invoiceFile->guessExtension();
                 $invoiceFilePath = $this->invoiceFile->storeAs(path: '/invoices', name: $uploadedFileName);
@@ -198,14 +209,18 @@ class CreditTransaction extends Component
                 $updateData = ['invoice_file' => $invoiceFilePath];
             }
 
-            $updateEntry =  $this->selectedItem->update($updateData);
+            $this->selectedItem->update($updateData);
 
-            if ($updateEntry == 1) {
-                $this->showModal = false;
-            }
-
+            // if ($this->selectedItem->wasChanged()) {
+            $this->showModal = false;
             $this->resetFields();
             $this->addMode = false;
+
+            // $this->tableData();
+
+            $this->emit('reviewSectionRefresh');
+
+            // }
         } catch (\Exception $ex) {
             session()->flash('error', 'Something goes wrong!!');
         }
