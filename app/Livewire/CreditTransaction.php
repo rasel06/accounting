@@ -4,12 +4,13 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\WithFileUploads;
-use Livewire\WithoutUrlPagination;
-use App\Livewire\Helpers\Modal;
 use App\Models\PaymentMethod;
-use Illuminate\Support\Facades\Auth;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Title;
+use App\Livewire\Helpers\Modal;
+use Illuminate\Validation\Rule;
+use Livewire\WithoutUrlPagination;
+use Illuminate\Support\Facades\Auth;
 use App\Models\CreditTransaction as ModelCreditTransaction;
 
 class CreditTransaction extends Component
@@ -40,6 +41,8 @@ class CreditTransaction extends Component
     public $amount;
     public $remarks;
 
+    public $existingInvoiceFile;
+
     public $creditAccountList = [];
     public $creditAccountFilter = "";
 
@@ -54,7 +57,7 @@ class CreditTransaction extends Component
         }
     }
 
-    protected $rules = [
+    protected $validationRules = [
         'creditAccountId' => ['required'],
         'description' => ['required', 'min:2', 'string', 'max:255'],
         'invoiceNumber' => ['required', 'regex:/^DBC5\d{5}$/', 'unique:credit_transactions,invoice_number'],
@@ -73,6 +76,8 @@ class CreditTransaction extends Component
         $this->invoiceDate = "";
         $this->amount = "";
         $this->remarks = "";
+
+        $this->existingInvoiceFile = "";
     }
 
 
@@ -80,10 +85,8 @@ class CreditTransaction extends Component
     public function create()
     {
         $this->resetFields();
-        $this->addMode = true;
-        $this->editMode = false;
+        $this->operationMode();
         $this->invoiceNumber = $this->generateNextInvoiceNumber();
-        $this->showModal = true;
     }
 
     public function reGenerate($type = 1)
@@ -97,10 +100,9 @@ class CreditTransaction extends Component
 
     public function store()
     {
-        $this->validate();
+        $this->validate($this->validationRules);
         try {
             $invoiceFilePath = "";
-
             if ($this->invoiceFile) {
                 $uploadedFileName = $this->invoiceNumber . '.' .
                     $this->invoiceFile->guessExtension();
@@ -129,6 +131,86 @@ class CreditTransaction extends Component
             session()->flash('error', 'Something goes wrong!!');
         }
     }
+
+    protected function operationMode($create = true)
+    {
+        $this->addMode = $create ? true : false;
+        $this->editMode = !$create ? true : false;
+        $this->showModal = true;
+        if (!$create) {
+            $this->select();
+        }
+    }
+
+    protected function select()
+    {
+        $this->selectedItem = ModelCreditTransaction::find($this->id);
+    }
+
+    public function edit($id = null)
+    {
+        if ($id) {
+            $this->id = $id;
+            $this->operationMode(false);
+            $this->creditAccountId = $this->selectedItem->credit_account_id;
+            $this->description = $this->selectedItem->description;
+            $this->invoiceNumber = $this->selectedItem->invoice_number;
+            $this->invoiceFile =  $this->selectedItem->invoice_file;
+            $this->invoiceDate = $this->selectedItem->invoice_date;
+            $this->amount = $this->selectedItem->amount;
+            $this->remarks = $this->selectedItem->remarks;
+        }
+    }
+
+    public function delete($id = null)
+    {
+        if ($id) {
+            $this->select($id);
+            $this->selectedItem->delete();
+        }
+    }
+
+    public function update()
+    {
+        $this->validate($this->validationRules);
+
+        try {
+            $invoiceFilePath = "";
+
+            if ($this->invoiceFile) {
+                $uploadedFileName = $this->invoiceNumber . '.' .
+                    $this->invoiceFile->guessExtension();
+                $invoiceFilePath = $this->invoiceFile->storeAs(path: '/invoices', name: $uploadedFileName);
+            }
+
+            $updateData = [
+                'credit_account_id' => $this->creditAccountId,
+                'description' => $this->description,
+                'invoice_number' => $this->invoiceNumber,
+                'invoice_date' => $this->invoiceDate,
+                'amount' => $this->amount,
+                'user_id' => $this->userId,
+                'remarks' => $this->remarks,
+
+            ];
+
+            if ($invoiceFilePath != "") {
+                $updateData = ['invoice_file' => $invoiceFilePath];
+            }
+
+            $updateEntry =  $this->selectedItem->update($updateData);
+
+            if ($updateEntry == 1) {
+                $this->showModal = false;
+            }
+
+            $this->resetFields();
+            $this->addMode = false;
+        } catch (\Exception $ex) {
+            session()->flash('error', 'Something goes wrong!!');
+        }
+    }
+
 
     protected function tableData()
     {

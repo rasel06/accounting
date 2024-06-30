@@ -23,7 +23,7 @@
 
 <div {{ $attributes }} x-data="{
     init() {
-        console.log('I am called automatically')
+        console.log('I am called automatically ')
     }
 }">
     {{ $slot }}

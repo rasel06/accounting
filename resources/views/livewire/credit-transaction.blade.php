@@ -60,7 +60,7 @@
 
     @if ($showModal)
         <x-helpers.modal :id>
-            <x-helpers.forms.credit-transaction :$creditAccountList :selectedCreditAccountId="$creditAccountId" />
+            <x-helpers.forms.credit-transaction :$creditAccountList :selectedCreditAccountId="$this->creditAccountId" />
         </x-helpers.modal>
     @endif
 </div>
