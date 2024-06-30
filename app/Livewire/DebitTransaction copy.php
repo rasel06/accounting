@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Title;
 use App\Models\DebitTransaction as ModelsDebitTransaction;
 
-class DebitTransaction1 extends Component
+class DebitTransaction extends Component
 {
 
     use WithPagination, WithoutUrlPagination, WithFileUploads, Modal;
