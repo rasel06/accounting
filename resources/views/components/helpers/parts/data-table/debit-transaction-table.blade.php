@@ -25,7 +25,7 @@
                     </x-helpers.parts.data-table.th>
                 </tr>
             </thead>
-            <tbody class="bg-white">
+            <tbody class="bg-white text-sm">
                 @if ($tableItems)
                     @foreach ($tableItems as $item)
                         <tr class="text-gray-600 bg-slate-300/30 odd:bg-white">
@@ -79,7 +79,7 @@
 
     @if ($limitFilter != '')
         <div class="pt-2 ">
-            {{-- {{ $tableItems->links() }} --}}
+            {{ $tableItems->links() }}
         </div>
     @endif
 </div>

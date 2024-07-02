@@ -37,7 +37,9 @@ class DebitTransaction extends Model
         'id' => 'integer',
         'user_id' => 'integer',
         'payment_method_id' => 'integer',
-        'number_of_unit' => 'decimal:2',
+        'number_of_unit' => 'integer',
+        'unit_price' => 'decimal:2',
+        'total' => 'decimal:2',
 
     ];
 

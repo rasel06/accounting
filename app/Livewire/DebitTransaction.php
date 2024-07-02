@@ -16,15 +16,16 @@ use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DebitTransaction as ModelDebitTransaction;
 
+
 class DebitTransaction extends Component
 {
-    // use WithFileUploads, Modal;;
-
     use WithPagination, WithoutUrlPagination, WithFileUploads, Modal;
 
     public $paymentMethodId, $description, $invoiceNumber, $invoiceFile, $invoiceDate, $numberOfUnit, $unitPrice, $total, $remarks;
-    public $transactionId;
+    public $paymentMethodList = [];
+    public $showModal = false;
 
+    public $creditAccountFilter = '';
 
     public $tableFields = [
         'credit_account_id' => 'Payment Method',
@@ -38,31 +39,18 @@ class DebitTransaction extends Component
         'remarks' => 'Remarks'
     ];
 
-
     protected $rules = [
-        // 'paymentMethodId' => 'required|string',
-        // 'description' => 'required|string',
+        'paymentMethodId' => 'required',
+        'description' => 'required',
+        'invoiceNumber' => ['required', 'regex:/^DBD5\d{5}$/', 'unique:debit_transactions,invoice_number'],
         // 'invoiceNumber' => 'required|integer',
-        // 'invoiceFile' => 'nullable|file|max:1024',
-        // 'invoiceDate' => 'required|date',
-        // 'numberOfUnit' => 'required|integer',
-        // 'unitPrice' => 'required|numeric',
-        // 'total' => 'required|numeric',
-        // 'remarks' => 'nullable|string',
-
-
-        'paymentMethodId' => ['required'],
-        'description' => ['required', 'min:2', 'string', 'max:255'],
-        'invoiceNumber' => ['required'],
-        'invoiceDate' => ['required'],
-        'numberOfUnit' => ['required', 'numeric'],
-        'unitPrice' => ['required', 'numeric'],
-        'total' => ['required', 'numeric'],
-        'remarks' => ['required', 'min:2', 'string', 'max:255'],
-
+        // 'invoiceFile' => 'required|file|max:1024', // Adjust size limit as needed
+        'invoiceDate' => 'required|date',
+        'numberOfUnit' => 'required|integer',
+        'unitPrice' => 'required|numeric',
+        'total' => 'required|numeric',
+        'remarks' => 'nullable|string',
     ];
-
-    public $paymentMethodList = [];
 
     public function mount()
     {
@@ -74,28 +62,44 @@ class DebitTransaction extends Component
     }
 
 
-    protected function tableData()
+    private function tableData()
     {
         if ($this->limitFilter != '') {
-            return  ModelDebitTransaction::with(['paymentMethod'])->when($this->nameFilter !== '', function ($query) {
-                return $query->where('description', 'like', '%' . $this->nameFilter . '%');
-            })
-                ->orderBy('created_at', 'desc')
+            return  ModelDebitTransaction::with(['paymentMethod'])
+                ->when($this->nameFilter !== '', function ($query) {
+                    return $query->where('description', 'like', '%' . $this->nameFilter . '%')
+                        ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
+                        ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
+                })->when($this->creditAccountFilter !== '', function ($query) {
+                    return $query->where('payment_method_id',  $this->creditAccountFilter);
+                })->orderBy('created_at', 'desc')
                 ->simplePaginate($this->limitFilter);
         } else {
             return  ModelDebitTransaction::with(['paymentMethod'])->when($this->nameFilter !== '', function ($query) {
-                return $query->where('description', 'like', '%' . $this->nameFilter . '%');
-            })->orderBy('created_at', 'desc')->get();
+                return $query->where('description', 'like', '%' . $this->nameFilter . '%')
+                    ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
+                    ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
+            })
+                ->when($this->creditAccountFilter !== '', function ($query) {
+                    return $query->where('payment_method_id',  $this->creditAccountFilter);
+                })->orderBy('created_at', 'desc')->get();
         }
     }
+
     public function render()
     {
-        return view('livewire.debit-transaction',  ["debitTransactionList" => $this->tableData()]);
+        return view(
+            'livewire.debit-transaction',
+            [
+                "debitTransactionList" => $this->tableData()
+            ]
+        );
     }
 
     public function create()
     {
         $this->resetInputFields();
+        $this->invoiceNumber = $this->generateNextInvoiceNumber('debit');
         $this->openModal();
     }
 
@@ -111,17 +115,74 @@ class DebitTransaction extends Component
 
     private function resetInputFields()
     {
-        $this->reset(['paymentMethodId', 'description', 'invoiceNumber', 'invoiceFile', 'invoiceDate', 'numberOfUnit', 'unitPrice', 'total', 'remarks', 'transactionId']);
+        if ($this->paymentMethodList) {
+            $this->paymentMethodId = $this->paymentMethodList[0]->id;
+        } else {
+            $this->paymentMethodId = '';
+        }
+
+        $this->description = '';
+        $this->invoiceNumber = '';
+        $this->invoiceFile = '';
+        $this->invoiceDate = '';
+        $this->numberOfUnit = '';
+        $this->unitPrice = '';
+        $this->total = '';
+        $this->remarks = '';
+        $this->id = null;
     }
+
+    public function reGenerate($type = 1)
+    {
+        if ($this->id) {
+            if ($type == 1) {
+                $this->invoiceNumber = $this->generateNextInvoiceNumber('debit');
+            }
+        }
+    }
+
+    public function updated($field)
+    {
+        if ($field === 'numberOfUnit' || $field === 'unitPrice') {
+            $this->calculateTotal();
+        }
+    }
+
+    private function calculateTotal()
+    {
+        $numberOfUnit = (float) $this->numberOfUnit;
+        $unitPrice = (float) $this->unitPrice;
+        $this->total = $numberOfUnit * $unitPrice;
+    }
+
+    public function hydrate()
+    {
+        // $this->dispatch('myEventName', ['total' => $this->total]);
+        $this->dispatch('myEventName', $this->total);
+    }
+
 
     public function store()
     {
+        if ($this->id) {
+            $this->rules['invoiceNumber'] = ['required', 'regex:/^DBD5\d{5}$/', 'unique:debit_transactions,invoice_number,' . $this->id];
+        }
+
         $this->validate();
 
-        $data = [
+        $filePath = "";
+        if (gettype($this->invoiceFile) !== 'string') {
+
+            $uploadedFileName = $this->invoiceNumber . '.' .
+                $this->invoiceFile->guessExtension();
+            $filePath = $this->invoiceFile->storeAs(path: '/invoices', name: $uploadedFileName);
+        }
+
+        $processedData = [
             'payment_method_id' => $this->paymentMethodId,
             'description' => $this->description,
             'invoice_number' => $this->invoiceNumber,
+            'invoice_file' => $filePath,
             'invoice_date' => $this->invoiceDate,
             'number_of_unit' => $this->numberOfUnit,
             'unit_price' => $this->unitPrice,
@@ -129,13 +190,20 @@ class DebitTransaction extends Component
             'remarks' => $this->remarks,
         ];
 
-        if ($this->invoiceFile) {
-            $data['invoice_file'] = $this->invoiceFile->store('invoices');
+        if ($this->id && gettype($this->invoiceFile) === 'string') {
+            unset($processedData['invoice_file']);
         }
 
-        DebitTransaction::updateOrCreate(['id' => $this->transactionId], $data);
+        if (!$this->id) {
+            $processedData['user_id'] = $this->userId;
+        }
 
-        session()->flash('message', $this->transactionId ? 'Transaction Updated Successfully.' : 'Transaction Created Successfully.');
+        ModelDebitTransaction::updateOrCreate(['id' => $this->id], $processedData);
+
+        session()->flash(
+            'message',
+            $this->id ? 'Transaction Updated Successfully.' : 'Transaction Created Successfully.'
+        );
 
         $this->closeModal();
         $this->resetInputFields();
@@ -143,22 +211,29 @@ class DebitTransaction extends Component
 
     public function edit($id)
     {
-        $transaction = DebitTransaction::findOrFail($id);
-        $this->transactionId = $id;
-        $this->fill($transaction->toArray());
+        $transaction = ModelDebitTransaction::findOrFail($id);
+        $this->id = $id;
+        $this->paymentMethodId = $transaction->payment_method_id;
+        $this->description = $transaction->description;
+        $this->invoiceNumber = $transaction->invoice_number;
+        $this->invoiceFile = $transaction->invoice_file;
+        $this->invoiceDate = $transaction->invoice_date;
+        $this->numberOfUnit = $transaction->number_of_unit;
+        $this->unitPrice = $transaction->unit_price;
+        $this->total = $transaction->total;
+        $this->remarks = $transaction->remarks;
+
         $this->openModal();
     }
 
     public function delete($id)
     {
-        DebitTransaction::find($id)->delete();
+        $selectedItem = ModelDebitTransaction::findOrFail($id);
+        $filePath = public_path('storage/' . $selectedItem->invoice_file);
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+        $selectedItem->delete();
         session()->flash('message', 'Transaction Deleted Successfully.');
     }
 }
-
-
-//  #[Title('Debit Transaction')]
-//     public function render()
-//     {
-//         return view('livewire.debit-transaction',  ["debitTransactionList" => $this->tableData()]);
-//     }

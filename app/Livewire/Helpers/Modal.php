@@ -12,6 +12,6 @@ trait Modal
     {
         $this->showModal = false;
         $this->resetErrorBag();
-        $this->resetFields();
+        $this->resetInputFields();
     }
 }

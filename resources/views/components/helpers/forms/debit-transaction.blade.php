@@ -13,7 +13,7 @@
     <x-helpers.parts.input name="description" />
 
     <div class="grid grid-cols-2 gap-4">
-        <x-helpers.parts.input name="invoiceNumber" />
+        <x-helpers.parts.input name="invoiceNumber" :fillAble="$this->id ? false : true" />
         <x-helpers.parts.input name="invoiceDate" type="date" />
     </div>
 
