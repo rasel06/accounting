@@ -18,11 +18,11 @@
         <a wire:navigate href="/{{ $link }}"
             class="flex items-center p-2 text-base font-normal dark:text-white hover:bg-slate-300 dark:hover:bg-gray-700 {{ $active }} ">
             @if ($icon != '')
-                <span class="material-symbols-outlined">
+                <span class="material-symbols-outlined ">
                     {{ $icon }}
                 </span>
             @endif
-            <span class="ml-3">{{ $label }}</span>
+            <span class="ml-3 hidden lg:block">{{ $label }}</span>
         </a>
     </li>
 @endif

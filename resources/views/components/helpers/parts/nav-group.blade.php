@@ -10,7 +10,7 @@ isOpen = (currentMenu == parentMenu) ? true : false;">
         <span class="material-symbols-outlined">
             {{ $icon }}
         </span>
-        <span class="flex-1 ml-3 text-left whitespace-nowrap">{{ $label }}</span>
+        <span class="flex-1 ml-3 text-left hidden lg:block">{{ $label }}</span>
         <span class="material-symbols-outlined menu-icon transition-transform" :class="isOpen ? ' rotate-90 ' : ''">
             keyboard_arrow_down
         </span>
