@@ -26,54 +26,60 @@
                 </tr>
             </thead>
             <tbody class="bg-white">
-                @foreach ($tableItems as $item)
-                    <tr class="text-gray-600 bg-slate-300/30 odd:bg-white">
+                @if ($tableItems)
+                    @foreach ($tableItems as $item)
+                        <tr class="text-gray-600 bg-slate-300/30 odd:bg-white">
 
-                        <x-helpers.parts.data-table.td>
-                            <div class="text-sm leading-5 ">
-                                {{ $loop->iteration }}
-                            </div>
-                        </x-helpers.parts.data-table.td>
+                            <x-helpers.parts.data-table.td>
+                                <div class="text-sm leading-5 ">
+                                    {{ $loop->iteration }}
+                                </div>
+                            </x-helpers.parts.data-table.td>
 
-                        <x-helpers.parts.data-table.td class="text-left">
-                            {{ $item->paymentMethod->name }}
-                        </x-helpers.parts.data-table.td>
-
-
-                        {{-- <x-helpers.parts.data-table.td class="text-left">
-                            {{ $item->description }}
-                        </x-helpers.parts.data-table.td> --}}
-
-                        <x-helpers.parts.data-table.td class="text-left">
-                            {{ $item->invoice_number }}
-                        </x-helpers.parts.data-table.td>
-                        <x-helpers.parts.data-table.td class="text-left">
-                            {{ $item->number_of_unit }}
-                        </x-helpers.parts.data-table.td>
-                        <x-helpers.parts.data-table.td class="text-left">
-                            {{ $item->unit_price }}
-                        </x-helpers.parts.data-table.td>
-                        <x-helpers.parts.data-table.td class="text-left">
-                            {{ $item->total }}
-                        </x-helpers.parts.data-table.td>
-                        {{-- <x-helpers.parts.data-table.td class="text-left">
-                            {{ $item->remarks }}
-                        </x-helpers.parts.data-table.td> --}}
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $item->paymentMethod->name }}
+                            </x-helpers.parts.data-table.td>
 
 
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $item->description }}
+                            </x-helpers.parts.data-table.td>
 
-                        <x-helpers.parts.data-table.td class="py-1 text-sm  flex justify-end text-center">
-                            <x-helpers.parts.data-table.actions :id="$item->id" />
-                        </x-helpers.parts.data-table.td>
-                    </tr>
-                @endforeach
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $item->invoice_number }}
+                            </x-helpers.parts.data-table.td>
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $this->convertDate($item->invoice_date) }}
+                            </x-helpers.parts.data-table.td>
+                            <x-helpers.parts.data-table.td class="text-left">
+                                <x-helpers.parts.image :file="$item->invoice_file" />
+                            </x-helpers.parts.data-table.td>
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $item->number_of_unit }}
+                            </x-helpers.parts.data-table.td>
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $item->unit_price }}
+                            </x-helpers.parts.data-table.td>
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $item->total }}
+                            </x-helpers.parts.data-table.td>
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $item->remarks }}
+                            </x-helpers.parts.data-table.td>
+                            <x-helpers.parts.data-table.td class="py-1 text-sm  flex justify-end text-center">
+                                <x-helpers.parts.data-table.actions :id="$item->id" />
+                            </x-helpers.parts.data-table.td>
+                        </tr>
+                    @endforeach
+                @endif
+
             </tbody>
         </table>
     </div>
 
     @if ($limitFilter != '')
         <div class="pt-2 ">
-            {{ $tableItems->links() }}
+            {{-- {{ $tableItems->links() }} --}}
         </div>
     @endif
 </div>
