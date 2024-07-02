@@ -15,10 +15,19 @@ trait CommonFields
     public $statusList = ['active' => 'Active', 'inactive' => 'In Active'];
     public $status = 'active';
 
+    public $module = '';
+
     public $selectedItem;
 
     public $addMode = false;
     public $editMode = false;
+
+    public function getModule()
+    {
+        $classPart = explode("\\", get_class());
+        print_r($classPart);
+        $this->module = $this->convertTextFromCamelCase(end($classPart));
+    }
 
 
     // ---------------------- Table Filter Attributes ------------ >
@@ -42,6 +51,11 @@ trait CommonFields
     public function camelToSnake($input)
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
+    }
+
+    public function convertTextFromCamelCase($text, $separetor = ' ')
+    {
+        return preg_replace('/(?<!^)([A-Z])/', $separetor . '$1', $text);
     }
 
     public function convertToWords($number)
@@ -81,7 +95,7 @@ trait CommonFields
             $invoicePrefix = 'DBD';
         }
 
-        $numericPart = 10001;
+        $numericPart = 50001;
 
         if ($lastInvoice) {
             $lastInvoiceNumber = $lastInvoice->invoice_number;

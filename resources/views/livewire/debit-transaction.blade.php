@@ -8,7 +8,7 @@
             <x-helpers.parts.data-table.debit-transaction-table :tableItems="$debitTransactionList" :$limitFilter :$tableFields />
 
 
-            <x-helpers.parts.toast />
+            <x-helpers.parts.toast type="warning" />
 
             {{-- F:\laravel-projects\blueprint-test\resources\views\components\helpers\parts\toast.blade.php --}}
 

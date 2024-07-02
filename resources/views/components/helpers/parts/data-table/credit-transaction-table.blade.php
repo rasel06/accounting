@@ -4,10 +4,6 @@
     $totalAmount = 0;
 @endphp
 
-@php
-    // dd($tableItems);
-@endphp
-
 {{-- -my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8  --}}
 <div class="pb-3 ">
     <div class="align-middle inline-block w-full shadow overflow-x-auto sm:rounded-lg">

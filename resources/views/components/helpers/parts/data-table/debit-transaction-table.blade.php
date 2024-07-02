@@ -1,7 +1,9 @@
 @props(['tableItems', 'limitFilter', 'tableFields' => []])
 
 
-
+@php
+    $totalAmount = 0;
+@endphp
 
 {{-- -my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8  --}}
 <div class="pb-3 ">
@@ -11,7 +13,6 @@
             <thead>
                 <tr
                     class="bg-slate-500 border-b font-extrabold border-gray-200 text-xs leading-4 text-gray-100 uppercase tracking-wider">
-
                     <x-helpers.parts.data-table.th class="text-left">
                         Serial
                     </x-helpers.parts.data-table.th>
@@ -61,7 +62,10 @@
                                 {{ $item->unit_price }}
                             </x-helpers.parts.data-table.td>
                             <x-helpers.parts.data-table.td class="text-left">
-                                {{ $item->total }}
+                                @php
+                                    $totalAmount += $item->total;
+                                    echo number_format($item->total, 2, '.', ',');
+                                @endphp
                             </x-helpers.parts.data-table.td>
                             <x-helpers.parts.data-table.td class="text-left">
                                 {{ $item->remarks }}
@@ -74,6 +78,18 @@
                 @endif
 
             </tbody>
+
+            <x-helpers.parts.data-table.table-footer class="">
+                <x-helpers.parts.data-table.th class="text-left text-xs">In Word :</x-helpers.parts.data-table.th>
+                <x-helpers.parts.data-table.th colspan="6" class="text-left normal-case text-xs">
+                    {{ $this->convertToWords($totalAmount) }}
+                </x-helpers.parts.data-table.th>
+                <x-helpers.parts.data-table.th class="text-right text-xs">Total</x-helpers.parts.data-table.th>
+                <x-helpers.parts.data-table.th class="text-left text-xs">
+                    {{ number_format($totalAmount, 2, '.', ',') }}
+                </x-helpers.parts.data-table.th>
+                <x-helpers.parts.data-table.th colspan="3" class="text-right" />
+            </x-helpers.parts.data-table.table-footer>
         </table>
     </div>
 

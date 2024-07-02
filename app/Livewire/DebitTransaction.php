@@ -54,6 +54,7 @@ class DebitTransaction extends Component
 
     public function mount()
     {
+        $this->getModule();
         $this->userId = Auth::id();
         $this->paymentMethodList = PaymentMethod::orderBy('name', 'asc')->get();
         if ($this->paymentMethodList) {
@@ -143,7 +144,7 @@ class DebitTransaction extends Component
 
     public function updated($field)
     {
-        if ($field === 'numberOfUnit' || $field === 'unitPrice') {
+        if ($field === 'numberOfUnit' || $field === 'unitPrice' || $field === 'total') {
             $this->calculateTotal();
         }
     }
@@ -171,7 +172,7 @@ class DebitTransaction extends Component
         $this->validate();
 
         $filePath = "";
-        if (gettype($this->invoiceFile) !== 'string') {
+        if (gettype($this->invoiceFile) !== 'string' && $this->invoiceFile) {
 
             $uploadedFileName = $this->invoiceNumber . '.' .
                 $this->invoiceFile->guessExtension();
@@ -200,10 +201,21 @@ class DebitTransaction extends Component
 
         ModelDebitTransaction::updateOrCreate(['id' => $this->id], $processedData);
 
+        // session()->flash(
+        //     'message',
+        //     $this->id ? 'Transaction Updated Successfully.' : 'Transaction Created Successfully.'
+        // );
+
         session()->flash(
             'message',
-            $this->id ? 'Transaction Updated Successfully.' : 'Transaction Created Successfully.'
+            [
+                'success' => true,
+                'mode' => $this->id ? 'Update' : 'Create',
+
+            ]
+            // $this->id ? 'Transaction Updated Successfully.' : 'Transaction Created Successfully.'
         );
+
 
         $this->closeModal();
         $this->resetInputFields();
