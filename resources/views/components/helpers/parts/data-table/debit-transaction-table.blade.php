@@ -58,10 +58,10 @@
                             <x-helpers.parts.data-table.td class="text-left">
                                 {{ $item->number_of_unit }}
                             </x-helpers.parts.data-table.td>
-                            <x-helpers.parts.data-table.td class="text-left">
+                            <x-helpers.parts.data-table.td class="text-right">
                                 {{ $item->unit_price }}
                             </x-helpers.parts.data-table.td>
-                            <x-helpers.parts.data-table.td class="text-left">
+                            <x-helpers.parts.data-table.td class="text-right">
                                 @php
                                     $totalAmount += $item->total;
                                     echo number_format($item->total, 2, '.', ',');
@@ -82,11 +82,11 @@
             <x-helpers.parts.data-table.table-footer class=" text-xs">
                 <x-helpers.parts.data-table.th colspan="2" class="text-left">In Word
                     :</x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th colspan="5" class="text-left normal-case">
+                <x-helpers.parts.data-table.th colspan="5" class="text-left">
                     {{ $this->convertToWords($totalAmount) }}
                 </x-helpers.parts.data-table.th>
                 <x-helpers.parts.data-table.th class="text-right ">Total</x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th class="text-left">
+                <x-helpers.parts.data-table.th class="text-right">
                     {{ number_format($totalAmount, 2, '.', ',') }}
                 </x-helpers.parts.data-table.th>
                 <x-helpers.parts.data-table.th colspan="3" class="text-right" />

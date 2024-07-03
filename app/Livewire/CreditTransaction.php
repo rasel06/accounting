@@ -208,13 +208,9 @@ class CreditTransaction extends Component
 
             $this->selectedItem->update($updateData);
 
-            // if ($this->selectedItem->wasChanged()) {
             $this->showModal = false;
             $this->resetInputFields();
             $this->addMode = false;
-
-            // $this->tableData();
-
             $this->emit('reviewSectionRefresh');
 
             // }

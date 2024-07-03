@@ -20,6 +20,7 @@ use App\Models\DebitTransaction as ModelsDebitTransaction;
 class DebitTransaction1 extends Component
 {
 
+    // https://github.com/masmerise/livewire-toaster?tab=readme-ov-file#installation
     use WithPagination, WithoutUrlPagination, WithFileUploads, Modal;
 
     public $title = "Debit Transaction";

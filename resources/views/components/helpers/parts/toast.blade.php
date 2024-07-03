@@ -34,7 +34,7 @@
 
     @endphp
     <div
-        class="drop-shadow-md fixed mt-4 top-0  right-0 min-h-6  px-2 py-2 rounded-l text-sm flex justify-center items-center animate-toasts {{ $bg_color }}">
+        class="drop-shadow-md overflow-hidden fixed mb-4 bottom-0  right-0 min-h-6  px-2 py-2 rounded-l text-sm flex justify-center items-center animate-toasts {{ $bg_color }}">
         <span class="material-symbols-outlined">{{ $icon }}</span>
         {{ ucwords($message) }}
     </div>
