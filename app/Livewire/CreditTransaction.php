@@ -46,10 +46,7 @@ class CreditTransaction extends Component
     public $creditAccountList = [];
     public $creditAccountFilter = "";
 
-    protected $listeners = [
-        //    'deletePostListener' => 'deletePost',
-        'reviewSectionRefresh' => '$refresh',
-    ];
+
 
     public function updated($propertyName)
     {
@@ -67,7 +64,7 @@ class CreditTransaction extends Component
         'remarks' => ['required', 'min:2', 'string', 'max:255'],
     ];
 
-    public function resetFields()
+    public function resetInputFields()
     {
         $this->commonReset();
         $this->creditAccountId = $this->creditAccountList[0]->id;
@@ -85,7 +82,7 @@ class CreditTransaction extends Component
 
     public function create()
     {
-        $this->resetFields();
+        $this->resetInputFields();
         $this->operationMode();
         $this->invoiceNumber = $this->generateNextInvoiceNumber();
     }
@@ -126,7 +123,7 @@ class CreditTransaction extends Component
                 $this->showModal = false;
             }
             session()->flash('success', 'Transaction Added Successfully!!');
-            $this->resetFields();
+            $this->resetInputFields();
             $this->addMode = false;
         } catch (\Exception $ex) {
             session()->flash('error', 'Something goes wrong!!');
@@ -213,7 +210,7 @@ class CreditTransaction extends Component
 
             // if ($this->selectedItem->wasChanged()) {
             $this->showModal = false;
-            $this->resetFields();
+            $this->resetInputFields();
             $this->addMode = false;
 
             // $this->tableData();

@@ -79,13 +79,14 @@
 
             </tbody>
 
-            <x-helpers.parts.data-table.table-footer class="">
-                <x-helpers.parts.data-table.th class="text-left text-xs">In Word :</x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th colspan="6" class="text-left normal-case text-xs">
+            <x-helpers.parts.data-table.table-footer class=" text-xs">
+                <x-helpers.parts.data-table.th colspan="2" class="text-left">In Word
+                    :</x-helpers.parts.data-table.th>
+                <x-helpers.parts.data-table.th colspan="5" class="text-left normal-case">
                     {{ $this->convertToWords($totalAmount) }}
                 </x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th class="text-right text-xs">Total</x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th class="text-left text-xs">
+                <x-helpers.parts.data-table.th class="text-right ">Total</x-helpers.parts.data-table.th>
+                <x-helpers.parts.data-table.th class="text-left">
                     {{ number_format($totalAmount, 2, '.', ',') }}
                 </x-helpers.parts.data-table.th>
                 <x-helpers.parts.data-table.th colspan="3" class="text-right" />

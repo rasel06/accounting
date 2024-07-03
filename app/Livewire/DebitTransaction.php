@@ -13,6 +13,7 @@ use App\Models\PaymentMethod;
 use Livewire\WithFileUploads;
 use App\Livewire\Helpers\Modal;
 use Livewire\WithoutUrlPagination;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DebitTransaction as ModelDebitTransaction;
 
@@ -25,7 +26,7 @@ class DebitTransaction extends Component
     public $paymentMethodList = [];
     public $showModal = false;
 
-    public $creditAccountFilter = '';
+    public $paymentMethodFilter = '';
 
     public $tableFields = [
         'credit_account_id' => 'Payment Method',
@@ -71,8 +72,8 @@ class DebitTransaction extends Component
                     return $query->where('description', 'like', '%' . $this->nameFilter . '%')
                         ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
                         ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
-                })->when($this->creditAccountFilter !== '', function ($query) {
-                    return $query->where('payment_method_id',  $this->creditAccountFilter);
+                })->when($this->paymentMethodFilter !== '', function ($query) {
+                    return $query->where('payment_method_id',  $this->paymentMethodFilter);
                 })->orderBy('created_at', 'desc')
                 ->simplePaginate($this->limitFilter);
         } else {
@@ -81,8 +82,8 @@ class DebitTransaction extends Component
                     ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
                     ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
             })
-                ->when($this->creditAccountFilter !== '', function ($query) {
-                    return $query->where('payment_method_id',  $this->creditAccountFilter);
+                ->when($this->paymentMethodFilter !== '', function ($query) {
+                    return $query->where('payment_method_id',  $this->paymentMethodFilter);
                 })->orderBy('created_at', 'desc')->get();
         }
     }
@@ -101,18 +102,10 @@ class DebitTransaction extends Component
     {
         $this->resetInputFields();
         $this->invoiceNumber = $this->generateNextInvoiceNumber('debit');
-        $this->openModal();
-    }
-
-    public function openModal()
-    {
         $this->showModal = true;
     }
 
-    public function closeModal()
-    {
-        $this->showModal = false;
-    }
+
 
     private function resetInputFields()
     {
@@ -151,17 +144,10 @@ class DebitTransaction extends Component
 
     private function calculateTotal()
     {
-        $numberOfUnit = (float) $this->numberOfUnit;
+        $numberOfUnit = (int) $this->numberOfUnit;
         $unitPrice = (float) $this->unitPrice;
-        $this->total = $numberOfUnit * $unitPrice;
+        $this->total = number_format($numberOfUnit * $unitPrice, 2, '.', '');
     }
-
-    public function hydrate()
-    {
-        // $this->dispatch('myEventName', ['total' => $this->total]);
-        $this->dispatch('myEventName', $this->total);
-    }
-
 
     public function store()
     {
@@ -171,54 +157,43 @@ class DebitTransaction extends Component
 
         $this->validate();
 
-        $filePath = "";
-        if (gettype($this->invoiceFile) !== 'string' && $this->invoiceFile) {
+        try {
 
-            $uploadedFileName = $this->invoiceNumber . '.' .
-                $this->invoiceFile->guessExtension();
-            $filePath = $this->invoiceFile->storeAs(path: '/invoices', name: $uploadedFileName);
+            $filePath = "";
+            if (gettype($this->invoiceFile) !== 'string' && $this->invoiceFile) {
+                $uploadedFileName = $this->invoiceNumber . '.' . $this->invoiceFile->guessExtension();
+                $filePath = $this->invoiceFile->storeAs('/invoices', $uploadedFileName);
+            }
+
+            $processedData = [
+                'payment_method_id' => $this->paymentMethodId,
+                'description' => $this->description,
+                'invoice_number' => $this->invoiceNumber,
+                'invoice_file' => $filePath,
+                'invoice_date' => $this->invoiceDate,
+                'number_of_unit' => $this->numberOfUnit,
+                'unit_price' => $this->unitPrice,
+                'total' => $this->total,
+                'remarks' => $this->remarks,
+            ];
+
+            if ($this->id && gettype($this->invoiceFile) === 'string') {
+                unset($processedData['invoice_file']);
+            }
+
+            if (!$this->id) {
+                $processedData['user_id'] = $this->userId;
+            }
+
+            ModelDebitTransaction::updateOrCreate(['id' => $this->id], $processedData);
+
+            $this->notify();
+            $this->showModal = false;
+            $this->resetInputFields();
+        } catch (\Exception $e) {
+            Log::error('Failed to store debit transaction: ' . $e->getMessage());
+            $this->notify('error');
         }
-
-        $processedData = [
-            'payment_method_id' => $this->paymentMethodId,
-            'description' => $this->description,
-            'invoice_number' => $this->invoiceNumber,
-            'invoice_file' => $filePath,
-            'invoice_date' => $this->invoiceDate,
-            'number_of_unit' => $this->numberOfUnit,
-            'unit_price' => $this->unitPrice,
-            'total' => $this->total,
-            'remarks' => $this->remarks,
-        ];
-
-        if ($this->id && gettype($this->invoiceFile) === 'string') {
-            unset($processedData['invoice_file']);
-        }
-
-        if (!$this->id) {
-            $processedData['user_id'] = $this->userId;
-        }
-
-        ModelDebitTransaction::updateOrCreate(['id' => $this->id], $processedData);
-
-        // session()->flash(
-        //     'message',
-        //     $this->id ? 'Transaction Updated Successfully.' : 'Transaction Created Successfully.'
-        // );
-
-        session()->flash(
-            'message',
-            [
-                'success' => true,
-                'mode' => $this->id ? 'Update' : 'Create',
-
-            ]
-            // $this->id ? 'Transaction Updated Successfully.' : 'Transaction Created Successfully.'
-        );
-
-
-        $this->closeModal();
-        $this->resetInputFields();
     }
 
     public function edit($id)
@@ -235,17 +210,25 @@ class DebitTransaction extends Component
         $this->total = $transaction->total;
         $this->remarks = $transaction->remarks;
 
-        $this->openModal();
+        $this->showModal = true;
     }
+
 
     public function delete($id)
     {
-        $selectedItem = ModelDebitTransaction::findOrFail($id);
-        $filePath = public_path('storage/' . $selectedItem->invoice_file);
-        if (file_exists($filePath)) {
-            unlink($filePath);
+        try {
+            $selectedItem = ModelDebitTransaction::findOrFail($id);
+            if (isset($selectedItem->invoice_file) && $selectedItem->invoice_file != "") {
+                $filePath = public_path('storage/' . $selectedItem->invoice_file);
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+            $selectedItem->delete();
+            $this->notify('success', 'delete');
+        } catch (\Exception $e) {
+            Log::error('Failed to Delete Debit transaction: ' . $e->getMessage());
+            $this->notify('error', 'delete');
         }
-        $selectedItem->delete();
-        session()->flash('message', 'Transaction Deleted Successfully.');
     }
 }

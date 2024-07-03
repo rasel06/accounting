@@ -25,7 +25,6 @@ trait CommonFields
     public function getModule()
     {
         $classPart = explode("\\", get_class());
-        print_r($classPart);
         $this->module = $this->convertTextFromCamelCase(end($classPart));
     }
 
@@ -36,10 +35,6 @@ trait CommonFields
     public $limitFilter = 10;
 
 
-    /***
-     * Clean the Common Fields
-     * id, status,errors
-     */
     public function commonReset()
     {
         $this->id = null;
@@ -47,15 +42,41 @@ trait CommonFields
         $this->resetErrorBag();
     }
 
+    public function pastTense($verb = null)
+    {
+        return preg_replace('/(\w+?)e?\b/', '$1ed', $verb, 1);
+    }
 
     public function camelToSnake($input)
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
     }
 
-    public function convertTextFromCamelCase($text, $separetor = ' ')
+    public function convertTextFromCamelCase($text, $separator = ' ')
     {
-        return preg_replace('/(?<!^)([A-Z])/', $separetor . '$1', $text);
+        return preg_replace('/(?<!^)([A-Z])/', $separator . '$1', $text);
+    }
+
+    /**
+     * Notify Message to  users
+     *
+     * @param string $status
+     * $status = success|failed|error
+     *
+     * @param string $operation
+     * $operation = create|update|delete
+     *
+     */
+    public function notify($status = 'success', $operation = null)
+    {
+        $operationMode = ($operation != null) ? $operation : ($this->id ? 'update' : 'create');
+        session()->flash(
+            'notify',
+            [
+                'status' => $status,
+                'operation' => $operationMode
+            ]
+        );
     }
 
     public function convertToWords($number)
@@ -95,15 +116,17 @@ trait CommonFields
             $invoicePrefix = 'DBD';
         }
 
-        $numericPart = 50001;
+        $numericPart = 50000;
 
         if ($lastInvoice) {
+            $tmpId =  ((int) $numericPart + $lastInvoice->id);
             $lastInvoiceNumber = $lastInvoice->invoice_number;
-            $numericPart = intval(substr($lastInvoiceNumber, 3));
+            $existingNumericPart = intval(substr($lastInvoiceNumber, 3));
+            $numericPart = ($tmpId >= $existingNumericPart) ? $tmpId : $existingNumericPart;
         }
 
         $newInvoiceNumber = $numericPart + 1;
-        $newInvoiceNumberFormatted = $invoicePrefix . str_pad($newInvoiceNumber, 6, '0', STR_PAD_LEFT);
+        $newInvoiceNumberFormatted = $invoicePrefix . str_pad($newInvoiceNumber, 5, '0', STR_PAD_LEFT);
 
         return $newInvoiceNumberFormatted;
     }
