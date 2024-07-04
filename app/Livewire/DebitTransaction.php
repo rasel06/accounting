@@ -11,7 +11,6 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\PaymentMethod;
 use Livewire\WithFileUploads;
-use Masmerise\Toaster\Toaster;
 use App\Livewire\Helpers\Modal;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Log;
@@ -187,8 +186,7 @@ class DebitTransaction extends Component
             }
 
             ModelDebitTransaction::updateOrCreate(['id' => $this->id], $processedData);
-            Toaster::success('User created!');
-            // $this->notify();
+            $this->notify();
             $this->showModal = false;
             $this->resetInputFields();
         } catch (\Exception $e) {
@@ -210,7 +208,6 @@ class DebitTransaction extends Component
         $this->unitPrice = $transaction->unit_price;
         $this->total = $transaction->total;
         $this->remarks = $transaction->remarks;
-
         $this->showModal = true;
     }
 

@@ -33,9 +33,10 @@
         $bg_color = $bg_color . '/' . $opcity;
 
     @endphp
-    <div
-        class="drop-shadow-md overflow-hidden fixed mb-4 bottom-0  right-0 min-h-6  px-2 py-2 rounded-l text-sm flex justify-center items-center animate-toasts {{ $bg_color }}">
+
+    <div @animationend="$el.remove()"
+        class="animate-toasts drop-shadow-md overflow-hidden fixed mb-4 bottom-0  right-0 min-h-6  px-2 py-2 rounded-l text-sm flex justify-center items-center  {{ $bg_color }}">
         <span class="material-symbols-outlined">{{ $icon }}</span>
-        {{ ucwords($message) }}
+        {{ ucwords($message) }} {{ $this->id }}
     </div>
 @endif
