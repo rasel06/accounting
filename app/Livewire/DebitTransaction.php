@@ -74,7 +74,7 @@ class DebitTransaction extends Component
     private function tableData()
     {
         if ($this->limitFilter != '') {
-            return  ModelDebitTransaction::with(['paymentMethod'])
+            return  ModelDebitTransaction::with(['paymentMethod', 'store'])
                 ->when($this->nameFilter !== '', function ($query) {
                     return $query->where('description', 'like', '%' . $this->nameFilter . '%')
                         ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
@@ -84,7 +84,7 @@ class DebitTransaction extends Component
                 })->orderBy('created_at', 'desc')
                 ->simplePaginate($this->limitFilter);
         } else {
-            return  ModelDebitTransaction::with(['paymentMethod'])->when($this->nameFilter !== '', function ($query) {
+            return  ModelDebitTransaction::with(['paymentMethod', 'store'])->when($this->nameFilter !== '', function ($query) {
                 return $query->where('description', 'like', '%' . $this->nameFilter . '%')
                     ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
                     ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
@@ -120,6 +120,12 @@ class DebitTransaction extends Component
             $this->paymentMethodId = $this->paymentMethodList[0]->id;
         } else {
             $this->paymentMethodId = '';
+        }
+
+        if ($this->storeList) {
+            $this->storeId = $this->storeList[0]->id;
+        } else {
+            $this->storeId = '';
         }
 
         $this->description = '';
@@ -175,6 +181,7 @@ class DebitTransaction extends Component
             }
 
             $processedData = [
+                'store_id' => $this->storeId,
                 'payment_method_id' => $this->paymentMethodId,
                 'description' => $this->description,
                 'invoice_number' => $this->invoiceNumber,
@@ -212,6 +219,7 @@ class DebitTransaction extends Component
             $this->selectedId = $transaction->invoice_number;
 
             $this->id = $id;
+            $this->storeId = $transaction->store_id;
             $this->paymentMethodId = $transaction->payment_method_id;
             $this->description = $transaction->description;
             $this->invoiceNumber = $transaction->invoice_number;

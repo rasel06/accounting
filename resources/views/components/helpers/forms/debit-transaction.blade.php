@@ -25,8 +25,6 @@
 
     <div class="grid grid-cols-2 gap-4">
         <x-helpers.parts.input name="invoiceNumber" :fillAble="$this->id ? false : true" />
-
-        {{ $this->id }}
         <x-helpers.parts.input name="invoiceDate" type="date" />
     </div>
 
@@ -38,8 +36,6 @@
 
     <div class="grid grid-cols-2 gap-4">
         <x-helpers.parts.input name="remarks" />
-        {{-- <x-helpers.parts.input name="invoiceFile" type="file" /> --}}
-
         @if ($this->id == null)
             <x-helpers.parts.input name="invoiceFile" type="file" :defer="true" />
         @else
@@ -48,10 +44,8 @@
                 @if ($this->invoiceFile)
                     <x-helpers.parts.image :file="$this->invoiceFile" size="size-20" />
                 @endif
-            </div class="grid grid-cols-2 gap-4">
+            </div>
         @endif
-
-
     </div>
 
 
