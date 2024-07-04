@@ -5,7 +5,7 @@
         $filePath = $path . '/' . $file;
     @endphp
     @if (file_exists(public_path($filePath)))
-        <img wire:click="showInvoice" class="{{ $size }} inline cursor-pointer" src="{{ asset($filePath) }}">
+        <img class="{{ $size }} inline cursor-pointer" src="{{ asset($filePath) }}">
     @else
         <span class="text-rose-500">N/F</span>
     @endif

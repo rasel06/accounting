@@ -15,6 +15,7 @@ return new class extends Migration
 
         Schema::create('debit_transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('store_id');
             $table->foreignId('payment_method_id');
             //$table->foreignId('payment_method')->constrained();
             $table->longText('description');

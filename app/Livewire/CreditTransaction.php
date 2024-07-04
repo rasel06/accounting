@@ -10,6 +10,7 @@ use Livewire\Attributes\Title;
 use App\Livewire\Helpers\Modal;
 use Illuminate\Validation\Rule;
 use Livewire\WithoutUrlPagination;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CreditTransaction as ModelCreditTransaction;
 
@@ -17,45 +18,23 @@ class CreditTransaction extends Component
 {
     use WithPagination, WithoutUrlPagination, WithFileUploads, Modal;
 
-    public $title = "Credit Transaction";
-
-    public $tableFields = [
-        'credit_account_id' => 'Credit Account',
-        'description' => 'Description',
-        'invoice_number' => 'Invoice Number',
-        'invoice_date' => 'Invoice Date',
-        'invoice_file' => 'Invoice Upload',
-        'amount' => 'Total',
-        // 'unit_price' => 'Unit Price',
-        // 'total' => 'Total',
-        'remarks' => 'Remarks',
-        // 'invoice_file' => 'Invoice File',
-    ];
-
     // ----------------------  DB Attributes --------------------- >
-    public $creditAccountId;
-    public $description;
-    public $invoiceNumber;
-    public $invoiceDate;
-    public $invoiceFile;
-    public $amount;
-    public $remarks;
-
-    public $existingInvoiceFile;
+    public $creditAccountId, $description, $invoiceNumber, $invoiceDate, $invoiceFile, $amount, $remarks;
 
     public $creditAccountList = [];
     public $creditAccountFilter = "";
 
+    public $tableFields = [
+        'credit_account_id' => ['Credit Account'],
+        'description' => ['Description'],
+        'invoice_number' => ['Invoice Number'],
+        'invoice_date' => ['Invoice Date'],
+        'invoice_file' => ['Invoice Upload', 'w-10'],
+        'amount' => ['Total'],
+        'remarks' => ['Remarks']
+    ];
 
-
-    public function updated($propertyName)
-    {
-        if ($propertyName === 'invoiceNumber') {
-            $this->invoiceNumber = strtoupper($this->invoiceNumber);
-        }
-    }
-
-    protected $validationRules = [
+    protected $rules = [
         'creditAccountId' => ['required'],
         'description' => ['required', 'min:2', 'string', 'max:255'],
         'invoiceNumber' => ['required', 'regex:/^DBC5\d{5}$/', 'unique:credit_transactions,invoice_number'],
@@ -64,161 +43,16 @@ class CreditTransaction extends Component
         'remarks' => ['required', 'min:2', 'string', 'max:255'],
     ];
 
-    public function resetInputFields()
+
+    public function mount()
     {
-        $this->commonReset();
-        $this->creditAccountId = $this->creditAccountList[0]->id;
-        $this->description = "";
-        $this->invoiceNumber = "";
-        $this->invoiceFile = "";
-        $this->invoiceDate = "";
-        $this->amount = "";
-        $this->remarks = "";
-
-        $this->existingInvoiceFile = "";
-    }
-
-
-
-    public function create()
-    {
-        $this->resetInputFields();
-        $this->operationMode();
-        $this->invoiceNumber = $this->generateNextInvoiceNumber();
-    }
-
-    public function reGenerate($type = 1)
-    {
-        if ($this->addMode == true) {
-            if ($type == 1) {
-                $this->invoiceNumber = $this->generateNextInvoiceNumber();
-            }
+        $this->getModule();
+        $this->userId = Auth::id();
+        $this->creditAccountList = PaymentMethod::orderBy('name', 'asc')->get();
+        if ($this->creditAccountList) {
+            $this->creditAccountId = $this->creditAccountList[0]->id;
         }
     }
-
-    public function store()
-    {
-        $this->validate($this->validationRules);
-        try {
-            $invoiceFilePath = "";
-            if ($this->invoiceFile) {
-                $uploadedFileName = $this->invoiceNumber . '.' .
-                    $this->invoiceFile->guessExtension();
-                $invoiceFilePath = $this->invoiceFile->storeAs(path: '/invoices', name: $uploadedFileName);
-            }
-
-            $newEntry = ModelCreditTransaction::create([
-                'credit_account_id' => $this->creditAccountId,
-                'description' => $this->description,
-                'invoice_number' => $this->invoiceNumber,
-                'invoice_date' => $this->invoiceDate,
-                'amount' => $this->amount,
-                'user_id' => $this->userId,
-                'remarks' => $this->remarks,
-                'invoice_file' => $invoiceFilePath
-            ]);
-
-
-            if ($newEntry->id > 0) {
-                $this->showModal = false;
-            }
-            session()->flash('success', 'Transaction Added Successfully!!');
-            $this->resetInputFields();
-            $this->addMode = false;
-        } catch (\Exception $ex) {
-            session()->flash('error', 'Something goes wrong!!');
-        }
-    }
-
-    protected function operationMode($create = true)
-    {
-        $this->addMode = $create ? true : false;
-        $this->editMode = !$create ? true : false;
-        $this->showModal = true;
-        if (!$create) {
-            $this->select();
-        }
-    }
-
-    protected function select($id = null)
-    {
-        if ($id) {
-            $this->id = $id;
-        }
-        $this->selectedItem = ModelCreditTransaction::find($this->id);
-    }
-
-
-    public function edit($id = null)
-    {
-        if ($id) {
-            $this->id = $id;
-            $this->operationMode(false);
-            $this->creditAccountId = $this->selectedItem->credit_account_id;
-            $this->description = $this->selectedItem->description;
-            $this->invoiceNumber = $this->selectedItem->invoice_number;
-            $this->invoiceFile =  $this->selectedItem->invoice_file;
-            $this->invoiceDate = $this->selectedItem->invoice_date;
-            $this->amount = $this->selectedItem->amount;
-            $this->remarks = $this->selectedItem->remarks;
-        }
-    }
-
-    public function delete($id = null)
-    {
-        if ($id) {
-            $this->select($id);
-            $filePath = public_path('storage/' . $this->selectedItem->invoice_file);
-            if (file_exists($filePath)) {
-                unlink($filePath);
-            }
-            $this->selectedItem->delete();
-        }
-    }
-
-    public function update()
-    {
-        $this->validate(array_merge($this->validationRules, [
-            'invoiceNumber' => ['required', 'regex:/^DBC5\d{5}$/', 'unique:credit_transactions,invoice_number,' . $this->id]
-        ]));
-
-        try {
-            $invoiceFilePath = "";
-
-            if (gettype($this->invoiceFile) !== 'string') {
-                $uploadedFileName = $this->invoiceNumber . '.' .
-                    $this->invoiceFile->guessExtension();
-                $invoiceFilePath = $this->invoiceFile->storeAs(path: '/invoices', name: $uploadedFileName);
-            }
-
-            $updateData = [
-                'credit_account_id' => $this->creditAccountId,
-                'description' => $this->description,
-                'invoice_number' => $this->invoiceNumber,
-                'invoice_date' => $this->invoiceDate,
-                'amount' => $this->amount,
-                'user_id' => $this->userId,
-                'remarks' => $this->remarks,
-
-            ];
-
-            if ($invoiceFilePath != "") {
-                $updateData = ['invoice_file' => $invoiceFilePath];
-            }
-
-            $this->selectedItem->update($updateData);
-
-            $this->showModal = false;
-            $this->resetInputFields();
-            $this->addMode = false;
-            $this->emit('reviewSectionRefresh');
-
-            // }
-        } catch (\Exception $ex) {
-            session()->flash('error', 'Something goes wrong!!');
-        }
-    }
-
 
     protected function tableData()
     {
@@ -244,15 +78,6 @@ class CreditTransaction extends Component
         }
     }
 
-    public function mount()
-    {
-        $this->userId = Auth::id();
-        $this->creditAccountList = PaymentMethod::orderBy('name', 'asc')->get();
-        if ($this->creditAccountList) {
-            $this->creditAccountId = $this->creditAccountList[0]->id;
-        }
-    }
-
     #[Title('Credit Transaction')]
     public function render()
     {
@@ -262,5 +87,144 @@ class CreditTransaction extends Component
                 "tableDataList" => $this->tableData()
             ]
         );
+    }
+
+
+    public function create()
+    {
+        $this->resetInputFields();
+        $this->invoiceNumber = $this->generateNextInvoiceNumber();
+        $this->showModal = true;
+    }
+
+
+    public function updated($propertyName)
+    {
+        if ($propertyName === 'invoiceNumber') {
+            $this->invoiceNumber = strtoupper($this->invoiceNumber);
+        }
+    }
+
+
+
+    public function resetInputFields()
+    {
+
+        if ($this->creditAccountList) {
+            $this->creditAccountId = $this->creditAccountList[0]->id;
+        } else {
+            $this->creditAccountId = '';
+        }
+
+        $this->commonReset();
+        $this->creditAccountId = $this->creditAccountList[0]->id;
+        $this->description = "";
+        $this->invoiceNumber = "";
+        $this->invoiceFile = "";
+        $this->invoiceDate = "";
+        $this->amount = "";
+        $this->remarks = "";
+        $this->id = null;
+    }
+
+
+    public function reGenerate($type = 1)
+    {
+        if ($type == 1) {
+            $this->invoiceNumber = $this->generateNextInvoiceNumber();
+        }
+    }
+
+    public function store()
+    {
+
+        if ($this->id) {
+            $this->rules['invoiceNumber'] = ['required', 'regex:/^DBC5\d{5}$/', 'unique:credit_transactions,invoice_number,' . $this->id];
+        }
+
+        if (gettype($this->invoiceFile) !== 'string' && $this->invoiceFile) {
+            $this->rules['invoiceFile'] = 'required|max:1024';
+        }
+
+        $this->validate();
+
+        try {
+
+            $filePath = "";
+            if (gettype($this->invoiceFile) !== 'string' && $this->invoiceFile) {
+                $uploadedFileName = $this->invoiceNumber . '.' . $this->invoiceFile->guessExtension();
+                $filePath = $this->invoiceFile->storeAs('/invoices/credit', $uploadedFileName);
+            }
+
+            $processedData = [
+                'credit_account_id' => $this->creditAccountId,
+                'description' => $this->description,
+                'invoice_number' => $this->invoiceNumber,
+                'invoice_date' => $this->invoiceDate,
+                'amount' => $this->amount,
+                'user_id' => $this->userId,
+                'remarks' => $this->remarks,
+                'invoice_file' => $filePath
+            ];
+
+            if ($this->id && gettype($this->invoiceFile) === 'string') {
+                unset($processedData['invoice_file']);
+            }
+
+            if (!$this->id) {
+                $processedData['user_id'] = $this->userId;
+            }
+
+            ModelCreditTransaction::updateOrCreate(['id' => $this->id], $processedData);
+            $this->notify();
+            $this->showModal = false;
+            $this->resetInputFields();
+        } catch (\Exception $e) {
+            Log::error('Failed to store Credit transaction: ' . $e->getMessage());
+            $this->notify('error');
+        }
+    }
+
+
+    public function edit($id = null)
+    {
+        if ($id) {
+            $selectedItem = ModelCreditTransaction::findOrFail($id);
+            $this->selectedId = $selectedItem->invoice_number;
+
+            $this->id = $id;
+            $this->creditAccountId = $selectedItem->credit_account_id;
+            $this->description = $selectedItem->description;
+            $this->invoiceNumber = $selectedItem->invoice_number;
+            $this->invoiceFile =  $selectedItem->invoice_file;
+            $this->invoiceDate = $selectedItem->invoice_date;
+            $this->amount = $selectedItem->amount;
+            $this->remarks = $selectedItem->remarks;
+
+            $this->showModal = true;
+        }
+    }
+
+    public function delete($id = null)
+    {
+        if ($id) {
+            try {
+                $selectedItem = ModelCreditTransaction::findOrFail($id);
+
+                $this->selectedId = $selectedItem->invoice_number;
+
+                if (isset($selectedItem->invoice_file) && $selectedItem->invoice_file != "") {
+                    $filePath = public_path('storage/' . $selectedItem->invoice_file);
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                }
+                $selectedItem->delete();
+                $this->notify('success', 'delete');
+            } catch (\Exception $e) {
+                Log::error('Failed to Delete Credit transaction: ' . $e->getMessage());
+                $this->notify('error', 'delete');
+            }
+        }
     }
 }

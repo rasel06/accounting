@@ -15,8 +15,8 @@
                             Serial
                         </x-helpers.parts.data-table.th>
                         @foreach ($tableFields as $key => $value)
-                            <x-helpers.parts.data-table.th class="text-center">
-                                {{ $value }}
+                            <x-helpers.parts.data-table.th class="text-center {{ isset($value[1]) ? $value[1] : '' }}">
+                                {{ $value[0] }}
                             </x-helpers.parts.data-table.th>
                         @endforeach
                         <x-helpers.parts.data-table.th class="text-right ">
@@ -28,9 +28,7 @@
                     @foreach ($tableItems as $item)
                         <tr class="text-gray-600 bg-slate-300/30 odd:bg-white">
                             <x-helpers.parts.data-table.td>
-                                <div class=" leading-5 ">
-                                    {{ $loop->iteration }}
-                                </div>
+                                {{ $loop->iteration }}
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">

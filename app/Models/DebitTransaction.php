@@ -16,6 +16,7 @@ class DebitTransaction extends Model
      * @var array
      */
     protected $fillable = [
+        'store_id',
         'payment_method_id',
         'description',
         'invoice_number',
@@ -52,5 +53,10 @@ class DebitTransaction extends Model
     public function paymentMethod(): BelongsTo
     {
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
+
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Store::class, 'store_id');
     }
 }

@@ -7,6 +7,13 @@
             <x-helpers.parts.data-table.control />
 
             <x-helpers.parts.data-table.table :tableItems="$assetTypesList" :$limitFilter :$tableFields />
+
+
+            <div class="bg-slate-300 w-full h-40 flex gap-4 justify-between pb-4">
+                <div class="w-1/2 bg-white rounded-lg">Cash</div>
+                <div class="w-1/2 bg-white rounded-lg">Inventory</div>
+            </div>
+
         </div>
     </div>
 

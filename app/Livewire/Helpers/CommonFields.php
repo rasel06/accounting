@@ -19,6 +19,8 @@ trait CommonFields
 
     public $selectedItem;
 
+    public $selectedId = '';
+
     public $addMode = false;
     public $editMode = false;
 

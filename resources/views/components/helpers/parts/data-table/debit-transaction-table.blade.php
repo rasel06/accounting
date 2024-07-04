@@ -9,7 +9,7 @@
 <div class="pb-3 ">
 
     <div class="align-middle inline-block w-full shadow overflow-x-auto sm:rounded-lg border-b border-gray-200 ">
-        <table class="min-w-full text-slate-900 ">
+        <table class="min-w-full text-slate-900 text-sm">
             <thead>
                 <tr
                     class="bg-slate-500 border-b font-extrabold border-gray-200 text-xs leading-4 text-gray-100 uppercase tracking-wider">
@@ -17,8 +17,8 @@
                         Serial
                     </x-helpers.parts.data-table.th>
                     @foreach ($tableFields as $key => $value)
-                        <x-helpers.parts.data-table.th class="text-left">
-                            {{ $value }}
+                        <x-helpers.parts.data-table.th class="text-center {{ isset($value[1]) ? $value[1] : '' }}">
+                            {{ $value[0] }}
                         </x-helpers.parts.data-table.th>
                     @endforeach
                     <x-helpers.parts.data-table.th class="text-right">
@@ -26,21 +26,22 @@
                     </x-helpers.parts.data-table.th>
                 </tr>
             </thead>
-            <tbody class="bg-white text-sm">
+            <tbody class="bg-white ">
                 @if ($tableItems)
                     @foreach ($tableItems as $item)
                         <tr class="text-gray-600 bg-slate-300/30 odd:bg-white">
 
                             <x-helpers.parts.data-table.td>
-                                <div class="text-sm leading-5 ">
-                                    {{ $loop->iteration }}
-                                </div>
+                                {{ $loop->iteration }}
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">
                                 {{ $item->paymentMethod->name }}
                             </x-helpers.parts.data-table.td>
 
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $item->paymentMethod->name }}
+                            </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">
                                 {{ $item->description }}
@@ -52,7 +53,7 @@
                             <x-helpers.parts.data-table.td class="text-left">
                                 {{ $this->convertDate($item->invoice_date) }}
                             </x-helpers.parts.data-table.td>
-                            <x-helpers.parts.data-table.td class="text-left">
+                            <x-helpers.parts.data-table.td class="text-center">
                                 <x-helpers.parts.image :file="$item->invoice_file" />
                             </x-helpers.parts.data-table.td>
                             <x-helpers.parts.data-table.td class="text-left">
@@ -82,7 +83,7 @@
             <x-helpers.parts.data-table.table-footer class=" text-xs">
                 <x-helpers.parts.data-table.th colspan="2" class="text-left">In Word
                     :</x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th colspan="5" class="text-left">
+                <x-helpers.parts.data-table.th colspan="6" class="text-left">
                     {{ $this->convertToWords($totalAmount) }}
                 </x-helpers.parts.data-table.th>
                 <x-helpers.parts.data-table.th class="text-right ">Total</x-helpers.parts.data-table.th>

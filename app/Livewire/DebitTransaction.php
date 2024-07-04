@@ -16,36 +16,38 @@ use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DebitTransaction as ModelDebitTransaction;
-
+use App\Models\Store;
 
 class DebitTransaction extends Component
 {
     use WithPagination, WithoutUrlPagination, WithFileUploads, Modal;
 
-    public $paymentMethodId, $description, $invoiceNumber, $invoiceFile, $invoiceDate, $numberOfUnit, $unitPrice, $total, $remarks;
+    public $storeId, $paymentMethodId, $description, $invoiceNumber, $invoiceFile, $invoiceDate, $numberOfUnit, $unitPrice, $total, $remarks;
     public $paymentMethodList = [];
-    public $showModal = false;
+    public $storeList = [];
 
     public $paymentMethodFilter = '';
 
+    //  Add store_id
+
     public $tableFields = [
-        'credit_account_id' => 'Payment Method',
-        'description' => 'Description',
-        'invoice_number' => 'Invoice Number',
-        'invoice_date' => 'Invoice Date',
-        'invoice_file' => 'Invoice Upload',
-        'number_of_unit' => 'Unit',
-        'unit_price' => 'Unit Price',
-        'total' => 'Total',
-        'remarks' => 'Remarks'
+        'store_id' => ['Store'],
+        'payment_method_id' => ['Payment Method'],
+        'description' => ['Description'],
+        'invoice_number' => ['Invoice Number'],
+        'invoice_date' => ['Invoice Date'],
+        'invoice_file' => ['Invoice Upload', 'w-10 '],
+        'number_of_unit' => ['Unit'],
+        'unit_price' => ['Unit Price'],
+        'total' => ['Total'],
+        'remarks' => ['Remarks']
     ];
 
     protected $rules = [
+        // 'storeId' => 'required',
         'paymentMethodId' => 'required',
         'description' => 'required',
         'invoiceNumber' => ['required', 'regex:/^DBD5\d{5}$/', 'unique:debit_transactions,invoice_number'],
-        // 'invoiceNumber' => 'required|integer',
-        // 'invoiceFile' => 'required|file|max:1024', // Adjust size limit as needed
         'invoiceDate' => 'required|date',
         'numberOfUnit' => 'required|integer',
         'unitPrice' => 'required|numeric',
@@ -60,6 +62,11 @@ class DebitTransaction extends Component
         $this->paymentMethodList = PaymentMethod::orderBy('name', 'asc')->get();
         if ($this->paymentMethodList) {
             $this->paymentMethodId = $this->paymentMethodList[0]->id;
+        }
+
+        $this->storeList = Store::with(['location'])->orderBy('name', 'asc')->get();
+        if ($this->storeList) {
+            $this->storeId = $this->storeList[0]->id;
         }
     }
 
@@ -128,10 +135,8 @@ class DebitTransaction extends Component
 
     public function reGenerate($type = 1)
     {
-        if ($this->id) {
-            if ($type == 1) {
-                $this->invoiceNumber = $this->generateNextInvoiceNumber('debit');
-            }
+        if ($type == 1) {
+            $this->invoiceNumber = $this->generateNextInvoiceNumber('debit');
         }
     }
 
@@ -155,6 +160,10 @@ class DebitTransaction extends Component
             $this->rules['invoiceNumber'] = ['required', 'regex:/^DBD5\d{5}$/', 'unique:debit_transactions,invoice_number,' . $this->id];
         }
 
+        if (gettype($this->invoiceFile) !== 'string' && $this->invoiceFile) {
+            $this->rules['invoiceFile'] = 'required|max:1024';
+        }
+
         $this->validate();
 
         try {
@@ -162,7 +171,7 @@ class DebitTransaction extends Component
             $filePath = "";
             if (gettype($this->invoiceFile) !== 'string' && $this->invoiceFile) {
                 $uploadedFileName = $this->invoiceNumber . '.' . $this->invoiceFile->guessExtension();
-                $filePath = $this->invoiceFile->storeAs('/invoices', $uploadedFileName);
+                $filePath = $this->invoiceFile->storeAs('/invoices/debit', $uploadedFileName);
             }
 
             $processedData = [
@@ -197,18 +206,24 @@ class DebitTransaction extends Component
 
     public function edit($id)
     {
-        $transaction = ModelDebitTransaction::findOrFail($id);
-        $this->id = $id;
-        $this->paymentMethodId = $transaction->payment_method_id;
-        $this->description = $transaction->description;
-        $this->invoiceNumber = $transaction->invoice_number;
-        $this->invoiceFile = $transaction->invoice_file;
-        $this->invoiceDate = $transaction->invoice_date;
-        $this->numberOfUnit = $transaction->number_of_unit;
-        $this->unitPrice = $transaction->unit_price;
-        $this->total = $transaction->total;
-        $this->remarks = $transaction->remarks;
-        $this->showModal = true;
+        if ($id) {
+            $transaction = ModelDebitTransaction::findOrFail($id);
+
+            $this->selectedId = $transaction->invoice_number;
+
+            $this->id = $id;
+            $this->paymentMethodId = $transaction->payment_method_id;
+            $this->description = $transaction->description;
+            $this->invoiceNumber = $transaction->invoice_number;
+            $this->invoiceFile = $transaction->invoice_file;
+            $this->invoiceDate = $transaction->invoice_date;
+            $this->numberOfUnit = $transaction->number_of_unit;
+            $this->unitPrice = $transaction->unit_price;
+            $this->total = $transaction->total;
+            $this->remarks = $transaction->remarks;
+
+            $this->showModal = true;
+        }
     }
 
 
@@ -216,6 +231,9 @@ class DebitTransaction extends Component
     {
         try {
             $selectedItem = ModelDebitTransaction::findOrFail($id);
+
+            $this->selectedId = $selectedItem->invoice_number;
+
             if (isset($selectedItem->invoice_file) && $selectedItem->invoice_file != "") {
                 $filePath = public_path('storage/' . $selectedItem->invoice_file);
                 if (file_exists($filePath)) {

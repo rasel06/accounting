@@ -17,7 +17,7 @@
 
     <x-slot name="modal">
         <x-helpers.modal :id>
-            <x-helpers.forms.debit-transaction :$paymentMethodList :selectedPaymentMethodId="$paymentMethodId" />
+            <x-helpers.forms.debit-transaction :$paymentMethodList :selectedPaymentMethodId="$paymentMethodId" :$storeList :selectedStoreId="$storeId" />
         </x-helpers.modal>
     </x-slot>
 
