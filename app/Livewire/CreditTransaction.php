@@ -49,7 +49,7 @@ class CreditTransaction extends Component
         $this->getModule();
         $this->userId = Auth::id();
         $this->creditAccountList = PaymentMethod::orderBy('name', 'asc')->get();
-        if ($this->creditAccountList) {
+        if (count($this->creditAccountList) > 0) {
             $this->creditAccountId = $this->creditAccountList[0]->id;
         }
     }

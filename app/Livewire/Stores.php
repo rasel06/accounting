@@ -45,7 +45,7 @@ class Stores extends Component
         $this->locations = Location::where('status', 'active')
             ->orderBy('name', 'asc')
             ->get();
-        if ($this->locations) {
+        if (count($this->locations) > 0) {
             $this->location_id = $this->locations[0]->id;
         }
     }

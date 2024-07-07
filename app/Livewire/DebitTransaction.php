@@ -47,7 +47,7 @@ class DebitTransaction extends Component
         // 'storeId' => 'required',
         'paymentMethodId' => 'required',
         'description' => 'required',
-        'invoiceNumber' => ['required', 'regex:/^DBD5\d{5}$/', 'unique:debit_transactions,invoice_number'],
+        'invoiceNumber' => ['required', 'regex:/^DBD5\d{4}$/', 'unique:debit_transactions,invoice_number'],
         'invoiceDate' => 'required|date',
         'numberOfUnit' => 'required|integer',
         'unitPrice' => 'required|numeric',
@@ -60,12 +60,12 @@ class DebitTransaction extends Component
         $this->getModule();
         $this->userId = Auth::id();
         $this->paymentMethodList = PaymentMethod::orderBy('name', 'asc')->get();
-        if ($this->paymentMethodList) {
+        if (count($this->paymentMethodList) > 0) {
             $this->paymentMethodId = $this->paymentMethodList[0]->id;
         }
 
         $this->storeList = Store::with(['location'])->orderBy('name', 'asc')->get();
-        if ($this->storeList) {
+        if (count($this->storeList) > 0) {
             $this->storeId = $this->storeList[0]->id;
         }
     }
@@ -116,13 +116,13 @@ class DebitTransaction extends Component
 
     private function resetInputFields()
     {
-        if ($this->paymentMethodList) {
+        if (count($this->paymentMethodList) > 0) {
             $this->paymentMethodId = $this->paymentMethodList[0]->id;
         } else {
             $this->paymentMethodId = '';
         }
 
-        if ($this->storeList) {
+        if (count($this->storeList) > 0) {
             $this->storeId = $this->storeList[0]->id;
         } else {
             $this->storeId = '';
@@ -251,8 +251,9 @@ class DebitTransaction extends Component
             $selectedItem->delete();
             $this->notify('success', 'delete');
         } catch (\Exception $e) {
-            Log::error('Failed to Delete Debit transaction: ' . $e->getMessage());
+            session()->flash('server_error', $e->getMessage());
             $this->notify('error', 'delete');
+            Log::error('Failed to Delete Debit transaction: ' . $e->getMessage());
         }
     }
 }

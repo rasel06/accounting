@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\PaymentMethod;
+use App\Models\User;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -16,8 +18,8 @@ return new class extends Migration
         Schema::create('debit_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('store_id');
-            $table->foreignId('payment_method_id');
-            //$table->foreignId('payment_method')->constrained();
+            // $table->foreignId('payment_method_id');
+            $table->foreignIdFor(PaymentMethod::class, 'payment_method_id')->constrained();
             $table->longText('description');
             $table->string('invoice_number', 50);
             $table->date('invoice_date')->nullable();
@@ -26,7 +28,7 @@ return new class extends Migration
             $table->decimal('unit_price', 8, 2);
             $table->decimal('total', 8, 2);
             $table->string('remarks', 200);
-            $table->foreignId('user_id')->constrained();
+            $table->foreignIdFor(User::class)->constrained();
             $table->timestamps();
         });
 

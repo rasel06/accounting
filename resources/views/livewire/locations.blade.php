@@ -1,21 +1,16 @@
-<div>
-    <div class="w-full mx-auto px-4  bg-slate-300 rounded-lg ">
-        <div class="flex flex-col items-stretch">
-            <h1 class="text-xl font-bold text-cyan-500 py-2">Business Location <span>::</span> </h1>
-            <hr class="border-slate-500/40 ">
+<x-helpers.parts.content-panel>
+    <x-slot name="heading">
+        Business Location
+    </x-slot>
 
-            <x-helpers.parts.data-table.control />
+    <x-helpers.parts.data-table.control />
+    <x-helpers.parts.data-table.table :tableItems="$businessLocation" :$limitFilter :$tableFields />
 
-            <x-helpers.parts.data-table.table :tableItems="$businessLocation" :$limitFilter :$tableFields />
-        </div>
-    </div>
 
-    {{-- Modal for create new item --}}
-
-    @if ($showModal)
+    <x-slot name="modal">
         <x-helpers.modal :id>
             <x-helpers.forms.business-location :statusList="$statusList" :selectedStatus="$status" />
         </x-helpers.modal>
-    @endif
+    </x-slot>
 
-</div>
+</x-helpers.parts.content-panel>

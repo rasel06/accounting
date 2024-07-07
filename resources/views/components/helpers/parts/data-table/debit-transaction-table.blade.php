@@ -36,7 +36,7 @@
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">
-                                {{ $item->paymentMethod->name }}
+                                {{ $item->store->name }}
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">
