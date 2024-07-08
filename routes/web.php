@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Assets;
 use App\Livewire\Stores;
 use App\Livewire\AssetType;
 use App\Livewire\Locations;
@@ -35,6 +36,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/debit-transaction', DebitTransaction::class);
     Route::get('/credit-transaction', CreditTransaction::class);
+    Route::get('/assets', Assets::class);
 
 
     Route::group(['prefix' => 'report', 'as' => 'report.'], function () {

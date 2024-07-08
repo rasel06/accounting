@@ -5,6 +5,9 @@
         <x-helpers.parts.nav-item icon="dashboard" label="Dashboard" link="dashboard" />
         <x-helpers.parts.nav-item icon="terminal" label="Debit Transaction" link="debit-transaction" />
         <x-helpers.parts.nav-item icon="add_card" label="Credit Transaction" link="credit-transaction" />
+        <x-helpers.parts.nav-item icon="view_list" label="Assets" link="assets" />
+
+
 
         <x-helpers.parts.nav-group icon="lab_profile" label="Report" link="report">
             <x-helpers.parts.nav-item label="Debit Txn Report" link="report/debit" :subMenu=true />

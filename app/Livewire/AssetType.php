@@ -2,15 +2,16 @@
 
 namespace App\Livewire;
 
-use App\Livewire\Helpers\CommonFields;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Title;
 use App\Livewire\Helpers\Modal;
-use App\Models\AssetType as ModelAssetType;
 use Illuminate\Validation\Rule;
 use Livewire\WithoutUrlPagination;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Title;
+use App\Livewire\Helpers\CommonFields;
+use App\Models\AssetType as ModelAssetType;
 
 
 class AssetType extends Component
@@ -18,92 +19,30 @@ class AssetType extends Component
 
     use WithPagination, WithoutUrlPagination, Modal;
 
-    public $title = "Asset Types";
+    public $name = "";
 
     public $tableFields = ['name' => 'Asset Types', 'status' => 'Status'];
 
-    // ----------------------  DB Attributes --------------------- >
-    public $name = "";
+
+    protected $rules = [
+        'name' => [
+            'required',
+            'min:2',
+            'string',
+            'max:255',
+            'unique:asset_types,name'
+        ],
+        'status' => [
+            'required'
+        ],
+    ];
 
 
     public function mount()
     {
+        $this->getModule();
         $this->userId = Auth::id();
     }
-
-    public function resetFields()
-    {
-        $this->commonReset();
-        $this->name = "";
-    }
-
-
-    public function create($init = null)
-    {
-        $this->showModal = true;
-
-        if ($init == null) {
-            $this->validate([
-                'name' => [
-                    'required',
-                    'min:2',
-                    'string',
-                    'max:255',
-                    Rule::unique('asset_types')->ignore($this->id),
-                ],
-                'status' => [
-                    'required'
-                ],
-            ]);
-            if ($this->id) {
-                $this->select($this->id);
-                $this->selectedItem->update([
-                    'name' => $this->name,
-                    'user_id' => $this->userId,
-                    'status' => $this->status
-                ]);
-                $this->showModal = false;
-                $this->resetFields();
-            } else {
-                $pay_method = ModelAssetType::create([
-                    'name' => $this->name,
-                    'user_id' => $this->userId,
-                    'status' => $this->status
-                ]);
-                if ($pay_method->id > 0) {
-                    $this->showModal = false;
-                    $this->resetFields();
-                }
-            }
-        }
-    }
-
-    public function edit($id = null)
-    {
-        $this->id = $id;
-
-        if ($id) {
-            $this->select($id);
-            $this->name = $this->selectedItem->name;
-            $this->status = $this->selectedItem->status;
-        }
-
-        $this->showModal = true;
-    }
-
-    public function delete($id = null)
-    {
-        if ($id) {
-            $this->select($id);
-            $this->selectedItem->delete();
-        }
-    }
-
-    protected function select($id)
-    {
-        $this->selectedItem = ModelAssetType::find($id);;
-    }
-
 
     protected function tableData()
     {
@@ -121,6 +60,73 @@ class AssetType extends Component
             })->when($this->nameFilter !== '', function ($query) {
                 return $query->where('name', 'like', '%' . $this->nameFilter . '%');
             })->orderBy('created_at', 'desc')->get();
+        }
+    }
+
+    public function resetInputFields()
+    {
+        $this->commonReset();
+        $this->name = "";
+    }
+
+
+    public function create($init = null)
+    {
+        $this->resetInputFields();
+        $this->showModal = true;
+    }
+
+    public function store()
+    {
+        if ($this->id) {
+            $this->rules['name'] = ['required', 'unique:asset_types,name,' . $this->id];
+        }
+
+        $this->validate();
+
+        try {
+            $processedData = [
+                'name' => $this->name,
+                'status' => $this->status,
+            ];
+
+            if (!$this->id) {
+                $processedData['user_id'] = $this->userId;
+            }
+
+            ModelAssetType::updateOrCreate(['id' => $this->id], $processedData);
+            $this->notify();
+            $this->showModal = false;
+            $this->resetInputFields();
+        } catch (\Exception $e) {
+            Log::error('Failed to Asset Types: ' . $e->getMessage());
+            $this->notify('error');
+        }
+    }
+
+
+    public function edit($id = null)
+    {
+        if ($id) {
+            $location = ModelAssetType::findOrFail($id);
+            $this->id = $id;
+            $this->name = $location->name;
+            $this->status = $location->status;
+
+            $this->showModal = true;
+        }
+    }
+
+    public function delete($id = null)
+    {
+        try {
+            $location = ModelAssetType::findOrFail($id);
+            $location->delete();
+            $this->notify('success', 'delete');
+        } catch (\Exception $e) {
+            session()->flash('server_error', $e->getMessage());
+            $this->notify('error', 'delete');
+            Log::error('Failed to Asset Types : ' . $e->getMessage());
         }
     }
 

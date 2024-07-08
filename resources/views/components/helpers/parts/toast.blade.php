@@ -41,7 +41,7 @@
     @endphp
 
     <div @animationend="$el.remove()"
-        class="flex gap-2 animate-toasts drop-shadow-md overflow-hidden fixed mt-4 top-0  right-0 min-h-6  px-2 py-2 rounded-l text-sm justify-center items-center  {{ $bg_color }} ">
+        class="flex gap-2 animate-toasts drop-shadow-md overflow-hidden fixed mt-4 top-0  right-0 min-h-6  px-2 py-2 rounded-l-full text-sm justify-center items-center  {{ $bg_color }} ">
         <div class="bg-white/80 size-8 rounded-full flex items-center justify-center font-bold">
             <span class="material-symbols-outlined text-{{ $color }}">{{ $icon }}</span>
         </div>

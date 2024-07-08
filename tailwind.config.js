@@ -29,7 +29,7 @@ export default {
             },
         },
         animation: {
-            toasts: "toasts 5s forwards", // 1s delay + 1s transition
+            toasts: "toasts 2s forwards", // 1s delay + 1s transition
         },
     },
 

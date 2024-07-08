@@ -1,8 +1,6 @@
 @props(['statusList', 'selectedStatus'])
 
-
-
-<x-helpers.forms.panel wire:submit="create">
+<x-helpers.forms.panel wire:submit="store">
     <x-helpers.parts.input label="Payment Method" name="name" />
     <x-helpers.parts.select wire:model.change="status" label="Payment Method status" name="status">
         @foreach ($statusList as $key => $value)

@@ -1,0 +1,21 @@
+Total Asset
+    Cash        (Credit Txn (date ranged) total amt) - (Debit Txn (date ranged) total amt)  10 - 5 = 5
+
+    ASSET:
+    Inventory
+        CRUD
+            Serial
+            Description
+            Store
+            Asset (other than cash type)
+            Account (payment Method)
+            Date
+            Amount
+            Remarks
+
+
+                                                                                                 20
+-----------------------------------------------------------------------------------------------------
+
+
+

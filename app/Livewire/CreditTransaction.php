@@ -37,7 +37,7 @@ class CreditTransaction extends Component
     protected $rules = [
         'creditAccountId' => ['required'],
         'description' => ['required', 'min:2', 'string', 'max:255'],
-        'invoiceNumber' => ['required', 'regex:/^DBC5\d{5}$/', 'unique:credit_transactions,invoice_number'],
+        'invoiceNumber' => ['required', 'regex:/^DBC5\d{4}$/', 'unique:credit_transactions,invoice_number'],
         'invoiceDate' => ['required'],
         'amount' => ['required', 'numeric'],
         'remarks' => ['required', 'min:2', 'string', 'max:255'],

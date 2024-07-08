@@ -1,7 +1,5 @@
 @props(['statusList', 'selectedStatus', 'locations', 'selectedLocation'])
 
-
-
 <x-helpers.forms.panel wire:submit="store">
     <x-helpers.parts.input label="Country Name" name="name" />
     <x-helpers.parts.select wire:model.change="status" label="Country Status" name="status">

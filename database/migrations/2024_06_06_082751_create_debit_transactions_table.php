@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\PaymentMethod;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,8 +18,7 @@ return new class extends Migration
 
         Schema::create('debit_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_id');
-            // $table->foreignId('payment_method_id');
+            $table->foreignIdFor(Store::class, 'store_id')->constrained();
             $table->foreignIdFor(PaymentMethod::class, 'payment_method_id')->constrained();
             $table->longText('description');
             $table->string('invoice_number', 50);

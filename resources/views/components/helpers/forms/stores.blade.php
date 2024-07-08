@@ -2,7 +2,7 @@
 
 
 
-<x-helpers.forms.panel wire:submit="create">
+<x-helpers.forms.panel wire:submit="store">
     <x-helpers.parts.input label="Store Name" name="name" />
 
 

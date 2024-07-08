@@ -14,18 +14,24 @@ use App\Models\PaymentMethod;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Title;
 use App\Livewire\Helpers\Modal;
+use App\Models\Asset;
+use App\Models\AssetType;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DebitTransaction as ModelDebitTransaction;
 
-class DebitTransaction extends Component
+class Assets extends Component
 {
     use WithPagination, WithoutUrlPagination, WithFileUploads, Modal;
 
-    public $storeId, $paymentMethodId, $description, $invoiceNumber, $invoiceFile, $invoiceDate, $numberOfUnit, $unitPrice, $total, $remarks;
-    public $paymentMethodList = [];
+    public  $description, $storeId, $assetTypeId, $accountId, $txnDate,  $amount, $remarks;
+
+
+
+    public $accountList = [];
     public $storeList = [];
+    public $assetTypeList = [];
 
     public $paymentMethodFilter = '';
 
@@ -44,15 +50,15 @@ class DebitTransaction extends Component
         'remarks' => ['Remarks']
     ];
 
+    // $description, $storeId, $assetId, $accountId, $txnDate,  $amount, $remarks;
+
     protected $rules = [
-        // 'storeId' => 'required',
-        'paymentMethodId' => 'required',
         'description' => 'required',
-        'invoiceNumber' => ['required', 'regex:/^DBD5\d{4}$/', 'unique:debit_transactions,invoice_number'],
-        'invoiceDate' => 'required|date',
-        'numberOfUnit' => 'required|integer',
-        'unitPrice' => 'required|numeric',
-        'total' => 'required|numeric',
+        'storeId' => 'required',
+        'assetTypeId' => 'required',
+        'accountId' => 'required',
+        'txnDate' => 'required|date',
+        'amount' => 'required|numeric',
         'remarks' => 'nullable|string',
     ];
 
@@ -60,14 +66,21 @@ class DebitTransaction extends Component
     {
         $this->getModule();
         $this->userId = Auth::id();
-        $this->paymentMethodList = PaymentMethod::orderBy('name', 'asc')->get();
-        if (count($this->paymentMethodList) > 0) {
-            $this->paymentMethodId = $this->paymentMethodList[0]->id;
+        $this->accountList = PaymentMethod::orderBy('name', 'asc')->get();
+        if (count($this->accountList) > 0) {
+            $this->accountId = $this->accountList[0]->id;
         }
 
         $this->storeList = Store::with(['location'])->orderBy('name', 'asc')->get();
         if (count($this->storeList) > 0) {
             $this->storeId = $this->storeList[0]->id;
+        }
+
+        $this->assetTypeList = AssetType::whereRaw('LOWER(name) != ?', ['cash'])
+            ->orderBy('name', 'asc')->get();
+
+        if (count($this->assetTypeList) > 0) {
+            $this->assetTypeId = $this->assetTypeList[0]->id;
         }
     }
 
@@ -96,11 +109,11 @@ class DebitTransaction extends Component
         }
     }
 
-    #[Title('Debit Transaction')]
+    #[Title('Assets')]
     public function render()
     {
         return view(
-            'livewire.debit-transaction',
+            'livewire.assets',
             [
                 "debitTransactionList" => $this->tableData()
             ]
@@ -110,7 +123,6 @@ class DebitTransaction extends Component
     public function create()
     {
         $this->resetInputFields();
-        $this->invoiceNumber = $this->generateNextInvoiceNumber('debit');
         $this->showModal = true;
     }
 
@@ -118,10 +130,10 @@ class DebitTransaction extends Component
 
     private function resetInputFields()
     {
-        if (count($this->paymentMethodList) > 0) {
-            $this->paymentMethodId = $this->paymentMethodList[0]->id;
+        if (count($this->accountList) > 0) {
+            $this->accountId = $this->accountList[0]->id;
         } else {
-            $this->paymentMethodId = '';
+            $this->accountId = '';
         }
 
         if (count($this->storeList) > 0) {
@@ -130,37 +142,23 @@ class DebitTransaction extends Component
             $this->storeId = '';
         }
 
+        if (count($this->assetTypeList) > 0) {
+            $this->assetTypeId = $this->assetTypeList[0]->id;
+        } else {
+            $this->storeId = '';
+        }
+
         $this->description = '';
-        $this->invoiceNumber = '';
-        $this->invoiceFile = '';
-        $this->invoiceDate = '';
-        $this->numberOfUnit = '';
-        $this->unitPrice = '';
-        $this->total = '';
+        // $this->invoiceNumber = '';
+        // $this->invoiceFile = '';
+        // $this->invoiceDate = '';
+        // $this->numberOfUnit = '';
+        // $this->unitPrice = '';
+        // $this->total = '';
         $this->remarks = '';
         $this->id = null;
     }
 
-    public function reGenerate($type = 1)
-    {
-        if ($type == 1) {
-            $this->invoiceNumber = $this->generateNextInvoiceNumber('debit');
-        }
-    }
-
-    public function updated($field)
-    {
-        if ($field === 'numberOfUnit' || $field === 'unitPrice' || $field === 'total') {
-            $this->calculateTotal();
-        }
-    }
-
-    private function calculateTotal()
-    {
-        $numberOfUnit = (int) $this->numberOfUnit;
-        $unitPrice = (float) $this->unitPrice;
-        $this->total = number_format($numberOfUnit * $unitPrice, 2, '.', '');
-    }
 
     public function store()
     {
@@ -184,7 +182,7 @@ class DebitTransaction extends Component
 
             $processedData = [
                 'store_id' => $this->storeId,
-                'payment_method_id' => $this->paymentMethodId,
+                'payment_method_id' => $this->accountId,
                 'description' => $this->description,
                 'invoice_number' => $this->invoiceNumber,
                 'invoice_file' => $filePath,
@@ -222,14 +220,14 @@ class DebitTransaction extends Component
 
             $this->id = $id;
             $this->storeId = $transaction->store_id;
-            $this->paymentMethodId = $transaction->payment_method_id;
+            $this->accountId = $transaction->accountId;
             $this->description = $transaction->description;
-            $this->invoiceNumber = $transaction->invoice_number;
-            $this->invoiceFile = $transaction->invoice_file;
-            $this->invoiceDate = $transaction->invoice_date;
-            $this->numberOfUnit = $transaction->number_of_unit;
-            $this->unitPrice = $transaction->unit_price;
-            $this->total = $transaction->total;
+            // $this->invoiceNumber = $transaction->invoice_number;
+            // $this->invoiceFile = $transaction->invoice_file;
+            // $this->invoiceDate = $transaction->invoice_date;
+            // $this->numberOfUnit = $transaction->number_of_unit;
+            // $this->unitPrice = $transaction->unit_price;
+            // $this->total = $transaction->total;
             $this->remarks = $transaction->remarks;
 
             $this->showModal = true;
