@@ -1,29 +1,26 @@
 <?php
 
-// ---------------------------------------------------------------
-// https://laravel-news.com/crud-operations-using-laravel-livewire
-// ---------------------------------------------------------------
-
-
 namespace App\Livewire;
 
 use App\Models\Store;
 use Livewire\Component;
+use App\Models\AssetType;
 use Livewire\WithPagination;
 use App\Models\PaymentMethod;
-use Livewire\WithFileUploads;
 use Livewire\Attributes\Title;
 use App\Livewire\Helpers\Modal;
-use App\Models\Asset;
-use App\Models\AssetType;
+use App\Models\Note as ModelNote;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Asset as ModelAsset;
 
-class Assets extends Component
+
+class Notes extends Component
 {
-    use WithPagination, WithoutUrlPagination, WithFileUploads, Modal;
+
+    // ['title', 'user_id',  'store_id', 'account_id', 'is_important', 'note_date', 'details', 'remarks'];
+
+    use WithPagination, WithoutUrlPagination, Modal;
 
     public  $description, $storeId, $assetTypeId, $accountId, $txnDate,  $amount, $remarks;
 
@@ -39,25 +36,28 @@ class Assets extends Component
 
     //  Add store_id
 
+
+    // ['title', 'user_id',  'store_id', 'account_id', 'is_important', 'note_date', 'details', 'remarks'];
+
     public $tableFields = [
-        'description' => ['Description'],
+        'title' => ['title'],
         'store_id' => ['Store'],
-        'asset_type_id' => ['Asset Type'],
         'account_id' => ['Account'],
-        'txn_date' => ['Date'],
-        'amount' => ['Amount'],
+        'is_important' => ['Is Important'],
+        'note_date' => ['Date'],
+        'details' => ['Details'],
         'remarks' => ['Remarks']
     ];
 
     // $description, $storeId, $assetId, $accountId, $txnDate,  $amount, $remarks;
 
     protected $rules = [
-        'description' => 'required',
-        'storeId' => 'required',
-        'assetTypeId' => 'required',
-        'accountId' => 'required',
-        'txnDate' => 'required|date',
-        'amount' => 'required|numeric',
+        'title' => 'required',
+        'storeId' => '',
+        'accountId' => '',
+        'isImportant' => 'required',
+        'noteDate' => 'required|date',
+        'details' => 'details',
         'remarks' => 'nullable|string',
     ];
 
@@ -90,7 +90,7 @@ class Assets extends Component
     private function tableData()
     {
         if ($this->limitFilter != '') {
-            return  ModelAsset::with(['assetType', 'store', 'account'])
+            return  ModelNote::with(['assetType', 'store', 'account'])
                 ->when($this->nameFilter !== '', function ($query) {
                     return $query->where('description', 'like', '%' . $this->nameFilter . '%');
                 })->when($this->paymentMethodFilter !== '', function ($query) {
@@ -98,7 +98,7 @@ class Assets extends Component
                 })->orderBy('created_at', 'desc')
                 ->simplePaginate($this->limitFilter);
         } else {
-            return  ModelAsset::with(['assetType', 'store', 'account'])->when($this->nameFilter !== '', function ($query) {
+            return  ModelNote::with(['assetType', 'store', 'account'])->when($this->nameFilter !== '', function ($query) {
                 return $query->where('description', 'like', '%' . $this->nameFilter . '%');
                 // ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
                 // ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
@@ -113,7 +113,7 @@ class Assets extends Component
     public function render()
     {
         return view(
-            'livewire.assets',
+            'livewire.notes',
             [
                 "debitTransactionList" => $this->tableData()
             ]
@@ -179,7 +179,7 @@ class Assets extends Component
                 $processedData['user_id'] = $this->userId;
             }
 
-            ModelAsset::updateOrCreate(['id' => $this->id], $processedData);
+            ModelNote::updateOrCreate(['id' => $this->id], $processedData);
             $this->notify();
             $this->showModal = false;
             $this->resetInputFields();
@@ -192,7 +192,7 @@ class Assets extends Component
     public function edit($id)
     {
         if ($id) {
-            $asset = ModelAsset::findOrFail($id);
+            $asset = ModelNote::findOrFail($id);
 
             $this->id = $id;
             $this->description = $asset->description;
@@ -210,7 +210,7 @@ class Assets extends Component
     public function delete($id)
     {
         try {
-            $selectedItem = ModelAsset::findOrFail($id);
+            $selectedItem = ModelNote::findOrFail($id);
 
             $this->selectedId = $selectedItem->invoice_number;
 

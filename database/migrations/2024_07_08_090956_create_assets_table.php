@@ -16,28 +16,17 @@ return new class extends Migration
     {
         Schema::create('assets', function (Blueprint $table) {
             $table->id();
-
-            //     'description' => 'required',
-            // 'storeId' => 'required',
-            // 'assetId' => 'required',
-            // 'accountId' => 'required',
-            // 'txnDate' => 'required|date',
-            // 'amount' => 'required|numeric',
-            // 'remarks' => 'nullable|string',
-
             $table->longText('description');
-            $table->foreignIdFor(Store::class)->constrained();
+            $table->foreignIdFor(Store::class)->constrained()->onUpdate('cascade');
             $table->unsignedInteger('account_id');
-            $table->foreign('account_id')->references('id')->on('payment_methods');
-            $table->foreignIdFor(AssetType::class)->constrained();
+            $table->foreign('account_id')->references('id')->on('payment_methods')->onUpdate('cascade');
+            $table->foreignIdFor(AssetType::class)->constrained()->onUpdate('cascade');
             $table->date('txn_date')->nullable();
             $table->decimal('amount', 8, 2);
             $table->longText('remarks', 200);
             $table->foreignIdFor(User::class)->constrained();
-
             $table->timestamps();
-
-            // $table->unique(['mytext', 'user_id']);
+            // $table->unique(['store_id', 'account_id', 'asset_type_id'], 'store_account_assetType_id');
         });
     }
 
@@ -46,6 +35,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Schema::table('assets', function (Blueprint $table) {
+        //     $table->dropUnique('store_account_assetType_id');
+        // });
         Schema::dropIfExists('assets');
     }
 };

@@ -6,6 +6,7 @@
         <x-helpers.parts.nav-item icon="terminal" label="Debit Transaction" link="debit-transaction" />
         <x-helpers.parts.nav-item icon="add_card" label="Credit Transaction" link="credit-transaction" />
         <x-helpers.parts.nav-item icon="view_list" label="Assets" link="assets" />
+        <x-helpers.parts.nav-item icon="note_add" label="Notes" link="notes" />
 
 
 

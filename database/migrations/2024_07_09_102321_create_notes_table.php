@@ -1,0 +1,38 @@
+<?php
+
+use App\Models\User;
+use App\Models\Store;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('notes', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->boolean('is_important')->default(false);
+            $table->foreignIdFor(Store::class)->nullable()->constrained()->onUpdate('cascade');
+            $table->unsignedInteger('account_id')->nullable();
+            $table->foreign('account_id')->references('id')->on('payment_methods')->onUpdate('cascade');
+            $table->date('note_date')->nullable();
+            $table->longText('details');
+            $table->string('remarks');
+            $table->foreignIdFor(User::class)->constrained();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('notes');
+    }
+};

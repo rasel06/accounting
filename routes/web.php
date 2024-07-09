@@ -9,6 +9,7 @@ use App\Livewire\BusinessLocation;
 use App\Livewire\DebitTransaction;
 use App\Livewire\CreditTransaction;
 use App\Livewire\Dashboard;
+use App\Livewire\Notes;
 use App\Livewire\Profile;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/debit-transaction', DebitTransaction::class);
     Route::get('/credit-transaction', CreditTransaction::class);
     Route::get('/assets', Assets::class);
+    Route::get('/notes', Notes::class);
 
 
     Route::group(['prefix' => 'report', 'as' => 'report.'], function () {

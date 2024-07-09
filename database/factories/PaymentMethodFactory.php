@@ -22,8 +22,8 @@ class PaymentMethodFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'status' => $this->faker->randomElement(["active","inactive"]),
+            'name' => $this->faker->company(),
+            'status' => $this->faker->randomElement(["active", "inactive"]),
             'user_id' => User::factory(),
         ];
     }
