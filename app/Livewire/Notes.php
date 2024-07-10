@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Store;
 use Livewire\Component;
 use App\Models\AssetType;
+use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use App\Models\PaymentMethod;
 use Livewire\Attributes\Title;
@@ -17,12 +18,9 @@ use Illuminate\Support\Facades\Auth;
 
 class Notes extends Component
 {
-
-    // ['title', 'user_id',  'store_id', 'account_id', 'is_important', 'note_date', 'details', 'remarks'];
-
     use WithPagination, WithoutUrlPagination, Modal;
 
-    public  $title, $isImportant, $storeId = '',  $accountId = '', $noteDate, $details,  $remarks;
+    public  $title, $isImportant, $storeId = null,  $accountId = null, $noteDate, $details,  $remarks;
 
     public $accountList = [];
     public $storeList = [];
@@ -58,17 +56,10 @@ class Notes extends Component
 
         $this->userId = Auth::id();
         $this->accountList = PaymentMethod::orderBy('name', 'asc')->get();
-        // if (count($this->accountList) > 0) {
-        //     $this->accountId = $this->accountList[0]->id;
-        // }
 
         $this->storeList = Store::with(['location'])->orderBy('name', 'asc')->get();
-        // if (count($this->storeList) > 0) {
-        //     $this->storeId = $this->storeList[0]->id;
-        // $this->showModal = true;
-        // }
 
-        $this->showModal = true;
+        // $this->showModal = true;
     }
 
 
@@ -95,18 +86,6 @@ class Notes extends Component
     }
 
 
-
-
-    // public function updating($field)
-    // {
-    //     dd($field);
-    //     if ($field === 'showModal') {
-    //         $this->dispatchBrowserEvent('contentChanged', ['id' => $this->id]);
-    //     }
-    // }
-
-
-
     #[Title('Notes')]
     public function render()
     {
@@ -128,9 +107,8 @@ class Notes extends Component
 
     private function resetInputFields()
     {
-
-        $this->accountId = '';
-        $this->storeId = '';
+        $this->accountId = null;
+        $this->storeId = null;
         $this->title = '';
         $this->noteDate = date('Y-m-d');
         $this->isImportant = false;
@@ -169,6 +147,12 @@ class Notes extends Component
         }
     }
 
+    #[On('toggle-modal')]
+    public function toggleModal()
+    {
+        $this->showModal = !$this->showModal;
+    }
+
     public function edit($id)
     {
         if ($id) {
@@ -185,6 +169,8 @@ class Notes extends Component
             $this->details = $note->details;
             $this->remarks = $note->remarks;
             $this->showModal = true;
+            // $this->toggleModal();
+            // $this->dispatch('toggle-modal');
         }
     }
 

@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    @if ($this->showModal)
+    {{-- @if ($this->showModal)
         {{ $modal }}
-    @endif
+    @endif --}}
 </div>

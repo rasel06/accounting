@@ -73,6 +73,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js"></script>
     {{-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+    <script>
+        function summerNote() {
+
+            console.log("jQuery loaded" + $('.summernote').length);
+
+            // $('.summernote').summernote({
+            //     placeholder: 'Note Details',
+            //     tabsize: 2,
+            //     height: 120,
+            //     toolbar: [
+            //         ['style', ['style']],
+            //         ['font', ['bold', 'underline', 'clear']],
+            //         ['color', ['color']],
+            //         ['para', ['ul', 'ol', 'paragraph']],
+            //         ['table', ['table']],
+            //     ]
+            // });
+        }
+        $(document).ready(function() {
+            // summerNote()
+        });
+    </script>
     {{-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> --}}
 </body>
 
