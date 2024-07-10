@@ -22,9 +22,7 @@ class Notes extends Component
 
     use WithPagination, WithoutUrlPagination, Modal;
 
-    public  $description, $storeId, $assetTypeId, $accountId, $txnDate,  $amount, $remarks;
-
-
+    public  $title, $isImportant, $storeId = '',  $accountId = '', $noteDate, $details,  $remarks;
 
     public $accountList = [];
     public $storeList = [];
@@ -32,32 +30,23 @@ class Notes extends Component
 
     public $paymentMethodFilter = '';
 
-
-
-    //  Add store_id
-
-
-    // ['title', 'user_id',  'store_id', 'account_id', 'is_important', 'note_date', 'details', 'remarks'];
-
     public $tableFields = [
         'title' => ['title'],
         'store_id' => ['Store'],
         'account_id' => ['Account'],
-        'is_important' => ['Is Important'],
+        'is_important' => ['Important'],
         'note_date' => ['Date'],
         'details' => ['Details'],
         'remarks' => ['Remarks']
     ];
 
-    // $description, $storeId, $assetId, $accountId, $txnDate,  $amount, $remarks;
-
     protected $rules = [
         'title' => 'required',
-        'storeId' => '',
-        'accountId' => '',
+        // 'storeId' => '',
+        // 'accountId' => '',
         'isImportant' => 'required',
         'noteDate' => 'required|date',
-        'details' => 'details',
+        'details' => 'required',
         'remarks' => 'nullable|string',
     ];
 
@@ -69,28 +58,24 @@ class Notes extends Component
 
         $this->userId = Auth::id();
         $this->accountList = PaymentMethod::orderBy('name', 'asc')->get();
-        if (count($this->accountList) > 0) {
-            $this->accountId = $this->accountList[0]->id;
-        }
+        // if (count($this->accountList) > 0) {
+        //     $this->accountId = $this->accountList[0]->id;
+        // }
 
         $this->storeList = Store::with(['location'])->orderBy('name', 'asc')->get();
-        if (count($this->storeList) > 0) {
-            $this->storeId = $this->storeList[0]->id;
-        }
+        // if (count($this->storeList) > 0) {
+        //     $this->storeId = $this->storeList[0]->id;
+        // $this->showModal = true;
+        // }
 
-        $this->assetTypeList = AssetType::whereRaw('LOWER(name) != ?', ['cash'])
-            ->orderBy('name', 'asc')->get();
-
-        if (count($this->assetTypeList) > 0) {
-            $this->assetTypeId = $this->assetTypeList[0]->id;
-        }
+        $this->showModal = true;
     }
 
 
     private function tableData()
     {
         if ($this->limitFilter != '') {
-            return  ModelNote::with(['assetType', 'store', 'account'])
+            return  ModelNote::with(['store', 'account'])
                 ->when($this->nameFilter !== '', function ($query) {
                     return $query->where('description', 'like', '%' . $this->nameFilter . '%');
                 })->when($this->paymentMethodFilter !== '', function ($query) {
@@ -98,7 +83,7 @@ class Notes extends Component
                 })->orderBy('created_at', 'desc')
                 ->simplePaginate($this->limitFilter);
         } else {
-            return  ModelNote::with(['assetType', 'store', 'account'])->when($this->nameFilter !== '', function ($query) {
+            return  ModelNote::with(['store', 'account'])->when($this->nameFilter !== '', function ($query) {
                 return $query->where('description', 'like', '%' . $this->nameFilter . '%');
                 // ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
                 // ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
@@ -109,7 +94,20 @@ class Notes extends Component
         }
     }
 
-    #[Title('Assets')]
+
+
+
+    // public function updating($field)
+    // {
+    //     dd($field);
+    //     if ($field === 'showModal') {
+    //         $this->dispatchBrowserEvent('contentChanged', ['id' => $this->id]);
+    //     }
+    // }
+
+
+
+    #[Title('Notes')]
     public function render()
     {
         return view(
@@ -130,27 +128,13 @@ class Notes extends Component
 
     private function resetInputFields()
     {
-        if (count($this->accountList) > 0) {
-            $this->accountId = $this->accountList[0]->id;
-        } else {
-            $this->accountId = '';
-        }
 
-        if (count($this->storeList) > 0) {
-            $this->storeId = $this->storeList[0]->id;
-        } else {
-            $this->storeId = '';
-        }
-
-        if (count($this->assetTypeList) > 0) {
-            $this->assetTypeId = $this->assetTypeList[0]->id;
-        } else {
-            $this->storeId = '';
-        }
-
-        $this->description = '';
-        $this->txnDate = date('Y-m-d');
-        $this->amount = '';
+        $this->accountId = '';
+        $this->storeId = '';
+        $this->title = '';
+        $this->noteDate = date('Y-m-d');
+        $this->isImportant = false;
+        $this->details = '';
         $this->remarks = '';
         $this->id = null;
     }
@@ -158,20 +142,16 @@ class Notes extends Component
 
     public function store()
     {
-        // if ($this->id) {
-        //     $this->rules['description'] = ['required', 'unique:assets,description,' . $this->id];
-        // }
-
         $this->validate();
 
         try {
             $processedData = [
-                'description' => $this->description,
+                'title' => $this->title,
                 'store_id' => $this->storeId,
-                'asset_type_id' => $this->assetTypeId,
                 'account_id' => $this->accountId,
-                'txn_date' => $this->txnDate,
-                'amount' => $this->amount,
+                'is_important' => $this->isImportant,
+                'details' => $this->details,
+                'note_date' => $this->noteDate,
                 'remarks' => $this->remarks,
             ];
 
@@ -184,7 +164,7 @@ class Notes extends Component
             $this->showModal = false;
             $this->resetInputFields();
         } catch (\Exception $e) {
-            Log::error('Failed to store Asset : ' . $e->getMessage());
+            Log::error('Failed to store Note: ' . $e->getMessage());
             $this->notify('error');
         }
     }
@@ -192,16 +172,18 @@ class Notes extends Component
     public function edit($id)
     {
         if ($id) {
-            $asset = ModelNote::findOrFail($id);
+            $note = ModelNote::findOrFail($id);
+
+            // dd($note);
 
             $this->id = $id;
-            $this->description = $asset->description;
-            $this->storeId = $asset->store_id;
-            $this->assetTypeId = $asset->asset_type_id;
-            $this->accountId = $asset->account_id;
-            $this->txnDate = $asset->txn_date;
-            $this->amount = $asset->amount;
-            $this->remarks = $asset->remarks;
+            $this->title = $note->title;
+            $this->storeId = $note->store_id;
+            $this->accountId = $note->account_id;
+            $this->isImportant = $note->is_important;
+            $this->noteDate = $note->note_date;
+            $this->details = $note->details;
+            $this->remarks = $note->remarks;
             $this->showModal = true;
         }
     }
@@ -211,21 +193,12 @@ class Notes extends Component
     {
         try {
             $selectedItem = ModelNote::findOrFail($id);
-
-            $this->selectedId = $selectedItem->invoice_number;
-
-            if (isset($selectedItem->invoice_file) && $selectedItem->invoice_file != "") {
-                $filePath = public_path('storage/' . $selectedItem->invoice_file);
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
-            }
             $selectedItem->delete();
             $this->notify('success', 'delete');
         } catch (\Exception $e) {
             session()->flash('server_error', $e->getMessage());
             $this->notify('error', 'delete');
-            Log::error('Failed to Delete Asset : ' . $e->getMessage());
+            Log::error('Failed to Delete Note : ' . $e->getMessage());
         }
     }
 }

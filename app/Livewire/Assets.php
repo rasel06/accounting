@@ -145,7 +145,7 @@ class Assets extends Component
         if (count($this->assetTypeList) > 0) {
             $this->assetTypeId = $this->assetTypeList[0]->id;
         } else {
-            $this->storeId = '';
+            $this->assetTypeId = '';
         }
 
         $this->description = '';
@@ -158,10 +158,6 @@ class Assets extends Component
 
     public function store()
     {
-        // if ($this->id) {
-        //     $this->rules['description'] = ['required', 'unique:assets,description,' . $this->id];
-        // }
-
         $this->validate();
 
         try {
@@ -211,15 +207,6 @@ class Assets extends Component
     {
         try {
             $selectedItem = ModelAsset::findOrFail($id);
-
-            $this->selectedId = $selectedItem->invoice_number;
-
-            if (isset($selectedItem->invoice_file) && $selectedItem->invoice_file != "") {
-                $filePath = public_path('storage/' . $selectedItem->invoice_file);
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
-            }
             $selectedItem->delete();
             $this->notify('success', 'delete');
         } catch (\Exception $e) {

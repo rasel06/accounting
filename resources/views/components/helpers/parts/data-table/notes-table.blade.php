@@ -35,7 +35,7 @@
                                 {{ $loop->iteration }}
                             </x-helpers.parts.data-table.td>
                             <x-helpers.parts.data-table.td class="text-left">
-                                {{ $item->description }}
+                                {{ $item->title }}
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">
@@ -43,22 +43,20 @@
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">
-                                {{ $item->assetType->name }}
+                                {{ $item->account ? $item->account->name : '' }}
+                            </x-helpers.parts.data-table.td>
+
+
+                            <x-helpers.parts.data-table.td class="text-left">
+                                {{ $item->is_important }}
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">
-                                {{ $item->account->name }}
-                            </x-helpers.parts.data-table.td>
-
-                            <x-helpers.parts.data-table.td class="text-left">
-                                {{ $this->convertDate($item->txn_date) }}
+                                {{ $item->note_date }}
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-right">
-                                @php
-                                    $totalAmount += $item->amount;
-                                    echo number_format($item->amount, 2, '.', ',');
-                                @endphp
+                                {{ $item->details }}
                             </x-helpers.parts.data-table.td>
                             <x-helpers.parts.data-table.td class="text-right">
                                 {{ $item->remarks }}

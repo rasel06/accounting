@@ -8,6 +8,13 @@ trait Modal
 
     public $showModal = false;
 
+    public function resetFields()
+    {
+        $this->resetErrorBag();
+        $this->resetInputFields();
+    }
+
+
     public function modalClose()
     {
         $this->showModal = false;
