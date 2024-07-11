@@ -48,7 +48,6 @@
 
 
                             <x-helpers.parts.data-table.td class="text-left">
-
                                 @if ($item->is_important == 1)
                                     <div
                                         class="size-8 bg-green-500 flex justify-center items-center content-center rounded-full">
@@ -60,7 +59,7 @@
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">
-                                {{ $item->note_date }}
+                                {{ $this->convertDate($item->note_date) }}
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-right">

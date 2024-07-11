@@ -129,7 +129,7 @@ class Notes extends Component
                 'title' => $this->title,
                 'store_id' => $this->storeId,
                 'account_id' => $this->accountId,
-                'is_important' => ($this->isImportant == '') ? 0 : $this->isImportant,
+                'is_important' => (!isset($this->isImportant) || $this->isImportant === null || $this->isImportant === '' || $this->isImportant == 0) ? 0 : 1,
                 'details' => $this->details,
                 'note_date' => $this->noteDate,
                 'remarks' => $this->remarks,
