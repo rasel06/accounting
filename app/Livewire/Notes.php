@@ -124,7 +124,6 @@ class Notes extends Component
         $this->validate();
         try {
 
-
             $processedData = [
                 'title' => $this->title,
                 'store_id' => $this->storeId,
@@ -135,15 +134,12 @@ class Notes extends Component
                 'remarks' => $this->remarks,
             ];
 
-            // dd($this->isImportant);
-
             if (!$this->id) {
                 $processedData['user_id'] = $this->userId;
             }
 
             ModelNote::updateOrCreate(['id' => $this->id], $processedData);
             $this->notify();
-            // $this->showModal = false;
             $this->dispatch('toggle-modal', value: false);
             $this->resetInputFields();
         } catch (\Exception $e) {
@@ -162,9 +158,6 @@ class Notes extends Component
     {
         if ($id) {
             $note = ModelNote::findOrFail($id);
-
-            // dd($note);
-
             $this->id = $id;
             $this->title = $note->title;
             $this->storeId = $note->store_id;
@@ -173,8 +166,6 @@ class Notes extends Component
             $this->noteDate = $note->note_date;
             $this->details = $note->details;
             $this->remarks = $note->remarks;
-            // $this->showModal = true;
-            // $this->toggleModal();
             $this->dispatch('toggle-modal', value: true);
         }
     }
