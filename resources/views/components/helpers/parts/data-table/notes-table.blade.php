@@ -48,7 +48,15 @@
 
 
                             <x-helpers.parts.data-table.td class="text-left">
-                                {{ $item->is_important }}
+
+                                @if ($item->is_important == 1)
+                                    <div
+                                        class="size-8 bg-rose-500 flex justify-center items-center content-center rounded-full">
+                                        <span class="material-symbols-outlined text-white font-extrabold">
+                                            {{ $item->is_important == 1 ? 'done_all' : '' }}
+                                        </span>
+                                    </div>
+                                @endif
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-left">
@@ -56,12 +64,12 @@
                             </x-helpers.parts.data-table.td>
 
                             <x-helpers.parts.data-table.td class="text-right">
-                                {{ $item->details }}
+                                {!! $item->details !!}
                             </x-helpers.parts.data-table.td>
                             <x-helpers.parts.data-table.td class="text-right">
                                 {{ $item->remarks }}
                             </x-helpers.parts.data-table.td>
-                            <x-helpers.parts.data-table.td class="py-1 text-sm  flex justify-end text-center">
+                            <x-helpers.parts.data-table.td class="text-center ">
                                 <x-helpers.parts.data-table.actions :id="$item->id" />
                             </x-helpers.parts.data-table.td>
                         </tr>

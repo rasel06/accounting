@@ -9,7 +9,7 @@
 @endphp
 
 
-<div role="group" class="text-gray-600 flex ">
+<div role="group" class="text-gray-600 flex">
     <x-helpers.parts.data-table.button wire:click="details({{ $id }})" class="rounded-l-lg text-purple-600/60 ">
         <span class="material-symbols-outlined {{ $iconSmall }}">description</span>
     </x-helpers.parts.data-table.button>

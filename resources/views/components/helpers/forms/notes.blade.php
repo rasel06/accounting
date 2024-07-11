@@ -3,11 +3,7 @@
 
 <x-helpers.forms.panel wire:submit="store">
 
-
-
-
     <div class="grid grid-cols-4 gap-4">
-
         <div class="col-span-3">
             <x-helpers.parts.input name="title" />
         </div>
@@ -16,10 +12,11 @@
             <div class="mb-2 ">
                 <label for="is_important" class="block text-sm font-medium leading-6 text-gray-600">Important
                     ?</label>
-                <div class="relative mt-1 rounded-md shadow-sm flex justify-evenly p-2">
-                    <input wire:model="isImportant" value="{{ $this->isImportant ? 1 : 0 }}"
-                        {{ $this->isImportant ? 'checked' : '' }} name="is_important" type="checkbox" autocomplete="off"
-                        class="min-h-5 min-w-5 rounded-full">
+                <div class="relative mt-1 rounded-md shadow-sm flex justify-evenly p-2" x-data="{ isChecked: @entangle('isImportant') }"
+                    x-init="$watch('$wire.isImportant', value => isChecked = value)">
+                    <input @change="$wire.set('isImportant', isChecked ? 1 : 0)" wire:model="isImportant"
+                        :checked="isChecked ? true : false" :value="isChecked ? 1 : 0" x-model="isChecked"
+                        name="is_important" type="checkbox" class="min-h-5 min-w-5 rounded-full">
                 </div>
             </div>
         </div>
@@ -56,20 +53,18 @@
 
 
 
-    <div class="mb-2">
+    <div class="mb-2" wire:ignore>
         <label for="details" class="block text-sm font-medium leading-6 text-gray-600">Details</label>
         <div class="relative mt-1 rounded-md shadow-sm">
 
             {{-- <div id="editor"> --}}
 
+            {{-- <div id="details">{!! $this->details !!}</div> --}}
 
-            <div wire:ignore>
-
-                <textarea wire:model="details"
-                    class="summernote block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-300 sm:text-sm sm:leading-6"
-                    name="details" id="details">{{ $this->details }}</textarea>
-
-            </div>
+            <textarea wire:model="details" name="details" id="details" input="details"
+                class="summernote block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-300 sm:text-sm sm:leading-6">
+                {!! $this->details !!}
+            </textarea>
 
 
         </div>

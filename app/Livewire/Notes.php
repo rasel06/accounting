@@ -40,9 +40,9 @@ class Notes extends Component
 
     protected $rules = [
         'title' => 'required',
-        // 'storeId' => '',
-        // 'accountId' => '',
-        'isImportant' => 'required',
+        'storeId' => 'nullable',
+        'accountId' => 'nullable',
+        // 'isImportant' => 'required',
         'noteDate' => 'required|date',
         'details' => 'required',
         'remarks' => 'nullable|string',
@@ -58,8 +58,6 @@ class Notes extends Component
         $this->accountList = PaymentMethod::orderBy('name', 'asc')->get();
 
         $this->storeList = Store::with(['location'])->orderBy('name', 'asc')->get();
-
-        // $this->showModal = true;
     }
 
 
@@ -100,7 +98,8 @@ class Notes extends Component
     public function create()
     {
         $this->resetInputFields();
-        $this->showModal = true;
+        // $this->showModal = true;
+        $this->dispatch('toggle-modal', value: true);
     }
 
 
@@ -111,7 +110,7 @@ class Notes extends Component
         $this->storeId = null;
         $this->title = '';
         $this->noteDate = date('Y-m-d');
-        $this->isImportant = false;
+        $this->isImportant = null;
         $this->details = '';
         $this->remarks = '';
         $this->id = null;
@@ -121,17 +120,20 @@ class Notes extends Component
     public function store()
     {
         $this->validate();
-
         try {
+
+
             $processedData = [
                 'title' => $this->title,
                 'store_id' => $this->storeId,
                 'account_id' => $this->accountId,
-                'is_important' => $this->isImportant,
+                'is_important' => ($this->isImportant == '') ? 0 : $this->isImportant,
                 'details' => $this->details,
                 'note_date' => $this->noteDate,
                 'remarks' => $this->remarks,
             ];
+
+            // dd($this->isImportant);
 
             if (!$this->id) {
                 $processedData['user_id'] = $this->userId;
@@ -139,7 +141,8 @@ class Notes extends Component
 
             ModelNote::updateOrCreate(['id' => $this->id], $processedData);
             $this->notify();
-            $this->showModal = false;
+            // $this->showModal = false;
+            $this->dispatch('toggle-modal', value: false);
             $this->resetInputFields();
         } catch (\Exception $e) {
             Log::error('Failed to store Note: ' . $e->getMessage());
@@ -147,10 +150,10 @@ class Notes extends Component
         }
     }
 
-    #[On('toggle-modal')]
-    public function toggleModal()
+    #[On('toggle-modal',)]
+    public function modalControl($value = false)
     {
-        $this->showModal = !$this->showModal;
+        $this->showModal = $value;
     }
 
     public function edit($id)
@@ -168,9 +171,9 @@ class Notes extends Component
             $this->noteDate = $note->note_date;
             $this->details = $note->details;
             $this->remarks = $note->remarks;
-            $this->showModal = true;
+            // $this->showModal = true;
             // $this->toggleModal();
-            // $this->dispatch('toggle-modal');
+            $this->dispatch('toggle-modal', value: true);
         }
     }
 

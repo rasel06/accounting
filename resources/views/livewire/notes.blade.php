@@ -1,4 +1,4 @@
-<x-helpers.parts.content-panel>
+<x-helpers.parts.modal-content-panel>
     <x-slot name="heading">Notes</x-slot>
 
     <x-helpers.parts.data-table.control :showStatus="false">
@@ -22,17 +22,48 @@
 
     {{-- https://codepen.io/natedog213/pen/eYgpVjL?editors=1010 --}}
 
-    {{-- <div x-data={hidden:$wire.showModal}>
-        <button @click="hidden =  $wire.showModal=!$wire.showModal;">B</button>
-        <h1 x-show="hidden" x-text="$wire.showModal"></h1>
-        <h1 x-show="hidden" x-text=" 'rasel' "></h1>
-        <h1 x-show="hidden" x-text=" 'zaman' "></h1>
-    </div> --}}
+    <div x-data="{ open: $wire.showModal }" x-init="$watch('$wire.showModal', value => open = value)">
+        <h1 x-show="open" x-text="open"></h1>
+        <div x-show="open"
+            class="font-sans antialiased fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center">
+            <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                class="fixed inset-0 transition-opacity">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
 
-    <h1 x-text="$wire.showModal"></h1>
+            <div x-show="open" x-transition:enter="ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave="ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                class="bg-rose-200 rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
 
-    <div x-data={open:$wire.showModal,}>
+                <div class="flex w-full bg-slate-300 justify-end py-2 px-4">
+                    <button @click="$wire.showModal = !$wire.showModal" type="button"
+                        class=" self-end max-w-6 justify-center w-full rounded-full border border-gray-300  bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+                        X
+                    </button>
+                </div>
 
+                <div class="bg-white lg:p-0 lg:pr-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start overflow-y-auto max-h-100">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <x-helpers.forms.notes :$accountList :selectedAccountId="$accountId" :$storeList :selectedStoreId="$storeId" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    {{-- <div x-data={open:$wire.showModal}>
+        <h1 x-show="$wire.showModal" x-text="open"></h1>
         <div x-show="open"
             class="font-sans antialiased fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center">
             <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
@@ -88,67 +119,68 @@
                 </div>
             </div>
         </div>
+    </div> --}}
 
-    </div>
-
-</x-helpers.parts.content-panel>
+</x-helpers.parts.modal-content-panel>
 
 
 @script
     <script>
         $wire.on('toggle-modal', () => {
 
-            console.log("sdsdsdsdsdsdsd" + $wire.showModal);
+            if ($('#details').length > 0) {
+                $('#details').summernote({
+                    disableDragAndDrop: false,
+                    placeholder: 'Note Details',
+                    toolbar: [
+                        // ['style', ['style']],
+                        // ['font', ['bold', 'underline', 'clear', 'color']],
+                        // ['color', ['color']],
+                        // ['para', ['ul', 'ol', 'paragraph']],
+                        // ['table', ['table']],
 
-            //summerNote()
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        // ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']]
 
-            // $(document).ready(function() {
-            // $('#details').summernote({
-            //     placeholder: 'Note Details',
-            //     tabsize: 2,
-            //     height: 120,
+                    ],
+                    callbacks: {
+                        onChange: function(contents, $editable) {
+                            @this.set('details', contents);
+                        }
+                    }
+                });
+
+                $('#details').summernote('code', $wire.details);
+
+            }
+
+            // });
+        });
+
+
+        $(document).ready(function() {
+
+            // let details = $('#details').summernote({
             //     toolbar: [
             //         ['style', ['style']],
             //         ['font', ['bold', 'underline', 'clear']],
             //         ['color', ['color']],
             //         ['para', ['ul', 'ol', 'paragraph']],
             //         ['table', ['table']],
-            //     ]
+            //         ['insert', ['link', 'picture', 'video']],
+            //         ['view', ['fullscreen', 'codeview', 'help']]
+            //     ],
+            //     callbacks: {
+            //         onChange: function(contents, $editable) {
+            //             console.log(contents);
+            //             @this.set('details', contents);
+            //         }
+            //     }
             // });
-            // });
-        });
-
-        // document.addEventListener("DOMContentLoaded", function() {
-        //     @this.on('showModalUpdated', function() {
-        //         // Call your JavaScript function here
-        //         myJsFunction();
-        //     });
-        // });
-
-
-        // document.addEventListener("DOMContentLoaded", function() {
-        //     @this.on('update', function(value) {
-        //         // Call your JavaScript function here
-        //         myJsFunction(value);
-        //     });
-        // });
-        $(document).ready(function() {
-
-            $('#details').summernote({
-                placeholder: 'Note Details',
-                tabsize: 2,
-                height: 120,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    // ['insert', ['link', 'picture', 'video']],
-                    // ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-
 
         });
     </script>
