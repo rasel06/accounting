@@ -66,19 +66,21 @@ class Notes extends Component
         if ($this->limitFilter != '') {
             return  ModelNote::with(['store', 'account'])
                 ->when($this->nameFilter !== '', function ($query) {
-                    return $query->where('description', 'like', '%' . $this->nameFilter . '%');
+                    return $query->where('details', 'like', '%' . $this->nameFilter . '%')
+                        ->orWhere('title', 'like', '%' . $this->nameFilter . '%')
+                        ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
                 })->when($this->paymentMethodFilter !== '', function ($query) {
-                    return $query->where('payment_method_id',  $this->paymentMethodFilter);
+                    return $query->where('account',  $this->paymentMethodFilter);
                 })->orderBy('created_at', 'desc')
                 ->simplePaginate($this->limitFilter);
         } else {
             return  ModelNote::with(['store', 'account'])->when($this->nameFilter !== '', function ($query) {
-                return $query->where('description', 'like', '%' . $this->nameFilter . '%');
-                // ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
-                // ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
+                return $query->where('details', 'like', '%' . $this->nameFilter . '%')
+                    ->orWhere('title', 'like', '%' . $this->nameFilter . '%')
+                    ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
             })
                 ->when($this->paymentMethodFilter !== '', function ($query) {
-                    return $query->where('payment_method_id',  $this->paymentMethodFilter);
+                    return $query->where('account_id',  $this->paymentMethodFilter);
                 })->orderBy('created_at', 'desc')->get();
         }
     }

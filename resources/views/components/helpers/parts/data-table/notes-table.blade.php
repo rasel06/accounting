@@ -51,7 +51,7 @@
 
                                 @if ($item->is_important == 1)
                                     <div
-                                        class="size-8 bg-rose-500 flex justify-center items-center content-center rounded-full">
+                                        class="size-8 bg-green-500 flex justify-center items-center content-center rounded-full">
                                         <span class="material-symbols-outlined text-white font-extrabold">
                                             {{ $item->is_important == 1 ? 'done_all' : '' }}
                                         </span>
@@ -78,18 +78,7 @@
 
             </tbody>
 
-            <x-helpers.parts.data-table.table-footer class=" text-xs">
-                <x-helpers.parts.data-table.th colspan="2" class="text-left">In Word
-                    :</x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th colspan="3" class="text-left">
-                    {{ $totalAmount > 0 ? $this->convertToWords($totalAmount) : '' }}
-                </x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th class="text-right ">Total</x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th class="text-right">
-                    {{ $totalAmount > 0 ? number_format($totalAmount, 2, '.', ',') : '' }}
-                </x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th colspan="3" class="text-right" />
-            </x-helpers.parts.data-table.table-footer>
+
         </table>
     </div>
 
