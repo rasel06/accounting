@@ -18,7 +18,6 @@ class TotalAssetReport extends Component
     public function loadReportData()
     {
         $this->reportData['debit_transactions'] =    DebitTransaction::get();
-        // print_r($reportData['debitTransaction']);
     }
 
     public function mount()
@@ -37,10 +36,14 @@ class TotalAssetReport extends Component
     #[Title('Total Asset Report')]
     public function render()
     {
+        // if (isset($this->reportData['debit_transactions'])) {
+        //     print_r($this->reportData['debit_transactions']);
+        // }
+
         return view(
             'livewire.total-asset-report',
             [
-                "reportData" => $this->reportData
+                "reportData" => $this->reportData,
             ]
         );
     }
