@@ -17,7 +17,11 @@
                         Serial
                     </x-helpers.parts.data-table.th>
                     @foreach ($tableFields as $key => $value)
-                        <x-helpers.parts.data-table.th class="text-center {{ isset($value[1]) ? $value[1] : '' }}">
+                        @php
+                            $sortBy = isset($value['sortable']) ? $key : '';
+                        @endphp
+                        <x-helpers.parts.data-table.th :sortBy="$sortBy"
+                            class="text-center {{ isset($value[1]) ? $value[1] : '' }}">
                             {{ $value[0] }}
                         </x-helpers.parts.data-table.th>
                     @endforeach
@@ -47,13 +51,15 @@
                             </x-helpers.parts.data-table.td>
 
 
-                            <x-helpers.parts.data-table.td class="text-left">
+                            <x-helpers.parts.data-table.td class="text-center ">
                                 @if ($item->is_important == 1)
-                                    <div
-                                        class="size-8 bg-green-500 flex justify-center items-center content-center rounded-full">
-                                        <span class="material-symbols-outlined text-white font-extrabold">
-                                            {{ $item->is_important == 1 ? 'done_all' : '' }}
-                                        </span>
+                                    <div class="w-full h-full flex items-center justify-center content-center">
+                                        <div
+                                            class="size-6 bg-green-500 flex justify-center items-center content-center rounded-full">
+                                            <span class="material-symbols-outlined text-white ">
+                                                {{ $item->is_important == 1 ? 'done_all' : '' }}
+                                            </span>
+                                        </div>
                                     </div>
                                 @endif
                             </x-helpers.parts.data-table.td>

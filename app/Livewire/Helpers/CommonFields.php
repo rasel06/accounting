@@ -24,6 +24,20 @@ trait CommonFields
     public $addMode = false;
     public $editMode = false;
 
+
+    public $sortByColumn = 'created_at';
+    public $sortType = 'asc';
+
+
+    public function sortBy($column = 'created_at', $sortType = 'asc')
+    {
+        $this->sortByColumn = $column;
+        $this->sortType = $sortType;
+        $this->tableData();
+    }
+
+
+
     public function getModule()
     {
         $classPart = explode("\\", get_class());

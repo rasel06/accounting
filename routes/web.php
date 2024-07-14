@@ -1,16 +1,17 @@
 <?php
 
+use App\Livewire\Notes;
 use App\Livewire\Assets;
 use App\Livewire\Stores;
+use App\Livewire\Profile;
 use App\Livewire\AssetType;
+use App\Livewire\Dashboard;
 use App\Livewire\Locations;
 use App\Livewire\PaymentMethod;
 use App\Livewire\BusinessLocation;
 use App\Livewire\DebitTransaction;
+use App\Livewire\TotalAssetReport;
 use App\Livewire\CreditTransaction;
-use App\Livewire\Dashboard;
-use App\Livewire\Notes;
-use App\Livewire\Profile;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -40,12 +41,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/assets', Assets::class);
     Route::get('/notes', Notes::class);
 
-
     Route::group(['prefix' => 'report', 'as' => 'report.'], function () {
+        Route::get('/total-asset', TotalAssetReport::class);
         Route::get('/debit', PaymentMethod::class);
         Route::get('/credit', AssetType::class);
     });
-
 
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::get('/payment-method', PaymentMethod::class);

@@ -1,3 +1,3 @@
-<td {{ $attributes->merge(['class' => 'px-2 whitespace-no-wrap ']) }}>
+<td {{ $attributes->merge(['class' => 'px-2 ']) }}>
     {{ $slot }}
 </td>

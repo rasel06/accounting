@@ -28,12 +28,13 @@ class Notes extends Component
 
     public $paymentMethodFilter = '';
 
+
     public $tableFields = [
-        'title' => ['title'],
+        'title' => ['title', 'sortable' => true],
         'store_id' => ['Store'],
         'account_id' => ['Account'],
-        'is_important' => ['Important'],
-        'note_date' => ['Date'],
+        'is_important' => ['Important', 'sortable' => true],
+        'note_date' => ['Date', 'sortable' => true],
         'details' => ['Details'],
         'remarks' => ['Remarks']
     ];
@@ -51,15 +52,14 @@ class Notes extends Component
     public function mount()
     {
         $this->getModule();
-
         $this->limitFilter = '';
-
         $this->userId = Auth::id();
-        $this->accountList = PaymentMethod::orderBy('name', 'asc')->get();
 
+        $this->sortByColumn = 'note_date';
+
+        $this->accountList = PaymentMethod::orderBy('name', 'asc')->get();
         $this->storeList = Store::with(['location'])->orderBy('name', 'asc')->get();
     }
-
 
     private function tableData()
     {
@@ -71,7 +71,7 @@ class Notes extends Component
                         ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
                 })->when($this->paymentMethodFilter !== '', function ($query) {
                     return $query->where('account',  $this->paymentMethodFilter);
-                })->orderBy('created_at', 'desc')
+                })->orderBy($this->sortByColumn, $this->sortType)
                 ->simplePaginate($this->limitFilter);
         } else {
             return  ModelNote::with(['store', 'account'])->when($this->nameFilter !== '', function ($query) {
@@ -81,7 +81,7 @@ class Notes extends Component
             })
                 ->when($this->paymentMethodFilter !== '', function ($query) {
                     return $query->where('account_id',  $this->paymentMethodFilter);
-                })->orderBy('created_at', 'desc')->get();
+                })->orderBy($this->sortByColumn, $this->sortType)->get();
         }
     }
 
@@ -100,7 +100,6 @@ class Notes extends Component
     public function create()
     {
         $this->resetInputFields();
-        // $this->showModal = true;
         $this->dispatch('toggle-modal', value: true);
     }
 

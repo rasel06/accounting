@@ -11,6 +11,8 @@
 
 
         <x-helpers.parts.nav-group icon="lab_profile" label="Report" link="report">
+
+            <x-helpers.parts.nav-item label="Total Asset Report" link="report/total-asset" :subMenu=true />
             <x-helpers.parts.nav-item label="Debit Txn Report" link="report/debit" :subMenu=true />
             <x-helpers.parts.nav-item label="Credit Txn Report" link="report/credit" :subMenu=true />
         </x-helpers.parts.nav-group>
