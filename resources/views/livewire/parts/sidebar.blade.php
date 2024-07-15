@@ -3,8 +3,8 @@
     <ul class="space-y-2 text-gray-600">
 
         <x-helpers.parts.nav-item icon="dashboard" label="Dashboard" link="dashboard" />
-        <x-helpers.parts.nav-item icon="terminal" label="Debit Transaction" link="debit-transaction" />
         <x-helpers.parts.nav-item icon="add_card" label="Credit Transaction" link="credit-transaction" />
+        <x-helpers.parts.nav-item icon="terminal" label="Debit Transaction" link="debit-transaction" />
         <x-helpers.parts.nav-item icon="view_list" label="Assets" link="assets" />
         <x-helpers.parts.nav-item icon="note_add" label="Notes" link="notes" />
 
@@ -13,8 +13,8 @@
         <x-helpers.parts.nav-group icon="lab_profile" label="Report" link="report">
 
             <x-helpers.parts.nav-item label="Total Asset Report" link="report/total-asset" :subMenu=true />
-            <x-helpers.parts.nav-item label="Debit Txn Report" link="report/debit" :subMenu=true />
-            <x-helpers.parts.nav-item label="Credit Txn Report" link="report/credit" :subMenu=true />
+            {{-- <x-helpers.parts.nav-item label="Debit Txn Report" link="report/debit" :subMenu=true />
+            <x-helpers.parts.nav-item label="Credit Txn Report" link="report/credit" :subMenu=true /> --}}
         </x-helpers.parts.nav-group>
 
         <x-helpers.parts.nav-group icon="settings" label="Settings" link="settings">

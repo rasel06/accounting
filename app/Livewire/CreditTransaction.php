@@ -24,6 +24,9 @@ class CreditTransaction extends Component
     public $creditAccountList = [];
     public $creditAccountFilter = "";
 
+    public $creditTxnFromDate;
+    public $creditTxnToDate;
+
     public $tableFields = [
         'credit_account_id' => ['Credit Account'],
         'description' => ['Description'],

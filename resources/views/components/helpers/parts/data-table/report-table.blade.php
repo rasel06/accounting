@@ -11,8 +11,6 @@
             <thead>
                 <tr
                     class="bg-slate-500 border-b font-extrabold border-gray-200 text-xs leading-4 text-gray-100 uppercase tracking-wider">
-
-
                 </tr>
             </thead>
             <tbody class="bg-white">

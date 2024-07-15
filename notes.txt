@@ -21,7 +21,7 @@ Total Asset
         Store_id       NM
         account_id     NM
         date
-        details     itihash (TEXT EDITOR)
+        details     notes details (TEXT EDITOR)
         Remarks
 
 
