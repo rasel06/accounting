@@ -13,6 +13,7 @@ use Livewire\WithoutUrlPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CreditTransaction as ModelCreditTransaction;
+use Carbon\Carbon;
 
 class CreditTransaction extends Component
 {
@@ -30,10 +31,10 @@ class CreditTransaction extends Component
     public $tableFields = [
         'credit_account_id' => ['Credit Account'],
         'description' => ['Description'],
-        'invoice_number' => ['Invoice Number'],
-        'invoice_date' => ['Invoice Date'],
+        'invoice_number' => ['Invoice Number', 'sortable' => true],
+        'invoice_date' => ['Invoice Date', 'sortable' => true],
         'invoice_file' => ['Invoice Upload', 'w-10'],
-        'amount' => ['Total'],
+        'amount' => ['Total', 'sortable' => true],
         'remarks' => ['Remarks']
     ];
 
@@ -49,6 +50,7 @@ class CreditTransaction extends Component
 
     public function mount()
     {
+        $this->sortByColumn = 'invoice_date';
         $this->getModule();
         $this->userId = Auth::id();
         $this->creditAccountList = PaymentMethod::orderBy('name', 'asc')->get();
@@ -59,25 +61,45 @@ class CreditTransaction extends Component
 
     protected function tableData()
     {
+
         if ($this->limitFilter != '') {
-            return  ModelCreditTransaction::with(['creditAccount'])
+            $data =  ModelCreditTransaction::with(['creditAccount'])
                 ->when($this->nameFilter !== '', function ($query) {
                     return $query->where('description', 'like', '%' . $this->nameFilter . '%')
                         ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
                         ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
-                })->when($this->creditAccountFilter !== '', function ($query) {
-                    return $query->where('credit_account_id',  $this->creditAccountFilter);
-                })->orderBy('created_at', 'desc')
-                ->simplePaginate($this->limitFilter);
-        } else {
-            return  ModelCreditTransaction::with(['creditAccount'])->when($this->nameFilter !== '', function ($query) {
-                return $query->where('description', 'like', '%' . $this->nameFilter . '%')
-                    ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
-                    ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
-            })
+                })
                 ->when($this->creditAccountFilter !== '', function ($query) {
                     return $query->where('credit_account_id',  $this->creditAccountFilter);
-                })->orderBy('created_at', 'desc')->get();
+                })
+                ->when($this->creditTxnFromDate != null && $this->creditTxnToDate == null, function ($query) {
+                    return $query->where('invoice_date', '>=', $this->creditTxnFromDate);
+                })
+                ->when($this->creditTxnFromDate != null && $this->creditTxnToDate != null, function ($query) {
+                    return $query->whereBetween('invoice_date', [$this->creditTxnFromDate, $this->creditTxnToDate]);
+                })
+                ->orderBy($this->sortByColumn, $this->sortType)
+                ->simplePaginate($this->limitFilter);
+
+            return $data;
+        } else {
+            return ModelCreditTransaction::with(['creditAccount'])
+                ->when($this->nameFilter !== '', function ($query) {
+                    return $query->where('description', 'like', '%' . $this->nameFilter . '%')
+                        ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
+                        ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
+                })
+                ->when($this->creditAccountFilter !== '', function ($query) {
+                    return $query->where('credit_account_id',  $this->creditAccountFilter);
+                })
+                ->when($this->creditTxnFromDate != null && $this->creditTxnToDate == null, function ($query) {
+                    return $query->where('invoice_date', '>=', $this->creditTxnFromDate);
+                })
+                ->when($this->creditTxnFromDate != null && $this->creditTxnToDate != null, function ($query) {
+                    return $query->whereBetween('invoice_date', [$this->creditTxnFromDate, $this->creditTxnToDate]);
+                })
+                ->orderBy($this->sortByColumn, $this->sortType)
+                ->get();
         }
     }
 

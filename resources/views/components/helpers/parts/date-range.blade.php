@@ -22,7 +22,7 @@
 
 <div class="ml-2">
 
-
+    {{-- $wire.set('isImportant', isChecked ? 1 : 0) --}}
     <div wire:ignore class="flex gap-2 text-slate-500" x-data="{
         fromDate: '',
         toDate: '',
@@ -33,11 +33,13 @@
                 this.toDate = this.fromDate;
             }
         }
-    }">
+    }" x-init="$watch('fromDate', (val) => {
+        updateToDateMin
+    });">
         <div class="flex items-center gap-1">
             <label for="fromDate">From:</label>
             <input id="{{ $fromId }}" wire:model.live="{{ $fromDate }}" {{ $attributes($defaults) }}
-                x-model="fromDate" :max="today" @change="updateToDateMin">
+                x-model="fromDate" :max="today">
         </div>
         <div class="flex items-center gap-1">
             <label for="toDate">To:</label>

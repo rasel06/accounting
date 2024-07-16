@@ -35,6 +35,9 @@ class Assets extends Component
 
     public $paymentMethodFilter = '';
 
+    public $assetFromDate;
+    public $assetToDate;
+
 
 
     //  Add store_id
@@ -44,8 +47,8 @@ class Assets extends Component
         'store_id' => ['Store'],
         'asset_type_id' => ['Asset Type'],
         'account_id' => ['Account'],
-        'txn_date' => ['Date'],
-        'amount' => ['Amount'],
+        'txn_date' => ['Date', 'sortable' => true],
+        'amount' => ['Amount', 'sortable' => true],
         'remarks' => ['Remarks']
     ];
 
@@ -63,6 +66,7 @@ class Assets extends Component
 
     public function mount()
     {
+        $this->sortByColumn = 'txn_date';
         $this->getModule();
 
         $this->limitFilter = '';
@@ -95,17 +99,30 @@ class Assets extends Component
                     return $query->where('description', 'like', '%' . $this->nameFilter . '%');
                 })->when($this->paymentMethodFilter !== '', function ($query) {
                     return $query->where('payment_method_id',  $this->paymentMethodFilter);
-                })->orderBy('created_at', 'desc')
+                })
+                ->when($this->assetFromDate != null && $this->assetToDate == null, function ($query) {
+                    return $query->where('invoice_date', '>=', $this->assetFromDate);
+                })
+                ->when($this->assetFromDate != null && $this->assetToDate != null, function ($query) {
+                    return $query->whereBetween('invoice_date', [$this->assetFromDate, $this->assetToDate]);
+                })
+                ->orderBy($this->sortByColumn, $this->sortType)
                 ->simplePaginate($this->limitFilter);
         } else {
             return  ModelAsset::with(['assetType', 'store', 'account'])->when($this->nameFilter !== '', function ($query) {
                 return $query->where('description', 'like', '%' . $this->nameFilter . '%');
-                // ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
-                // ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
             })
                 ->when($this->paymentMethodFilter !== '', function ($query) {
                     return $query->where('payment_method_id',  $this->paymentMethodFilter);
-                })->orderBy('created_at', 'desc')->get();
+                })
+                ->when($this->assetFromDate != null && $this->assetToDate == null, function ($query) {
+                    return $query->where('txn_date', '>=', $this->assetFromDate);
+                })
+                ->when($this->assetFromDate != null && $this->assetToDate != null, function ($query) {
+                    return $query->whereBetween('txn_date', [$this->assetFromDate, $this->assetToDate]);
+                })
+                ->orderBy($this->sortByColumn, $this->sortType)
+                ->get();
         }
     }
 

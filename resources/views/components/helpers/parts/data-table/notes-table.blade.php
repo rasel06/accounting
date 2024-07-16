@@ -13,21 +13,11 @@
             <thead>
                 <tr
                     class="bg-slate-500 border-b font-extrabold border-gray-200 text-xs leading-4 text-gray-100 uppercase tracking-wider">
-                    <x-helpers.parts.data-table.th class="text-left">
-                        Serial
-                    </x-helpers.parts.data-table.th>
-                    @foreach ($tableFields as $key => $value)
-                        @php
-                            $sortBy = isset($value['sortable']) ? $key : '';
-                        @endphp
-                        <x-helpers.parts.data-table.th :sortBy="$sortBy"
-                            class="text-center {{ isset($value[1]) ? $value[1] : '' }}">
-                            {{ $value[0] }}
-                        </x-helpers.parts.data-table.th>
-                    @endforeach
-                    <x-helpers.parts.data-table.th class="text-right">
-                        Action
-                    </x-helpers.parts.data-table.th>
+                    <x-helpers.parts.data-table.th class="text-left">Serial</x-helpers.parts.data-table.th>
+
+                    <x-helpers.parts.data-table.table-header :$tableFields />
+
+                    <x-helpers.parts.data-table.th class="text-right">Action</x-helpers.parts.data-table.th>
                 </tr>
             </thead>
             <tbody class="bg-white ">

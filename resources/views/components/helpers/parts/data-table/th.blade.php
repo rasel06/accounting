@@ -2,12 +2,12 @@
 
 <th {{ $attributes->merge(['class' => 'px-2 py-2 font-bold ' . $size]) }}>
     @if ($sortBy !== '')
-        <div class="flex justify-evenly content-center items-center">
+        <div class="flex justify-start content-center items-center">
             <div> {{ $slot }}</div>
-            <div class="flex flex-col gap-1 pl-2" x-data="{ ascIconColor: 'text-slate-400', descIconColor: 'text-slate-600' }">
+            <div class="flex flex-col pl-2" x-data="{ ascIconColor: 'text-slate-400', descIconColor: 'text-slate-600' }">
                 <div @click="ascIconColor = 'text-slate-400'; descIconColor = 'text-slate-600';"
                     wire:click="sortBy('<?= $sortBy ?>','asc')"
-                    class="w-4 h-2 flex justify-center items-center overflow-hidden cursor-pointer">
+                    class="w-4 h-3 flex justify-center items-center overflow-hidden cursor-pointer">
                     <span class="material-symbols-outlined" :class="ascIconColor">stat_1</span>
                 </div>
                 <div @click="ascIconColor = 'text-slate-600'; descIconColor = 'text-slate-400';"

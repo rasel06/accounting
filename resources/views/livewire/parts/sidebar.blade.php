@@ -1,4 +1,4 @@
-<sidebar class="w-1/5 lg:w-1/5 h-[calc(100vh-65px)] border-r border-cyan-400 pt-4 ">
+<sidebar class="w-1/5 lg:w-1/5 h-[calc(100vh-100px)] border-r border-cyan-400 pt-4 ">
 
     <ul class="space-y-2 text-gray-600">
 

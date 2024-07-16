@@ -29,17 +29,20 @@ class DebitTransaction extends Component
 
     public $paymentMethodFilter = '';
 
+    public $debitTxnFromDate;
+    public $debitTxnToDate;
+
     //  Add store_id
 
     public $tableFields = [
         'store_id' => ['Store'],
         'payment_method_id' => ['Payment Method'],
         'description' => ['Description'],
-        'invoice_number' => ['Invoice Number'],
-        'invoice_date' => ['Invoice Date'],
+        'invoice_number' => ['Invoice Number', 'sortable' => true],
+        'invoice_date' => ['Invoice Date', 'sortable' => true],
         'invoice_file' => ['Invoice Upload', 'w-10 '],
-        'number_of_unit' => ['Unit'],
-        'unit_price' => ['Unit Price'],
+        'number_of_unit' => ['Unit', 'sortable' => true],
+        'unit_price' => ['Unit Price', 'sortable' => true],
         'total' => ['Total'],
         'remarks' => ['Remarks']
     ];
@@ -58,6 +61,7 @@ class DebitTransaction extends Component
 
     public function mount()
     {
+        $this->sortByColumn = 'invoice_date';
         $this->getModule();
         $this->userId = Auth::id();
         $this->paymentMethodList = PaymentMethod::orderBy('name', 'asc')->get();
@@ -80,9 +84,17 @@ class DebitTransaction extends Component
                     return $query->where('description', 'like', '%' . $this->nameFilter . '%')
                         ->orWhere('invoice_number', 'like', '%' . $this->nameFilter . '%')
                         ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
-                })->when($this->paymentMethodFilter !== '', function ($query) {
+                })
+                ->when($this->paymentMethodFilter !== '', function ($query) {
                     return $query->where('payment_method_id',  $this->paymentMethodFilter);
-                })->orderBy('created_at', 'desc')
+                })
+                ->when($this->debitTxnFromDate != null && $this->debitTxnToDate == null, function ($query) {
+                    return $query->where('invoice_date', '>=', $this->debitTxnFromDate);
+                })
+                ->when($this->debitTxnFromDate != null && $this->debitTxnToDate != null, function ($query) {
+                    return $query->whereBetween('invoice_date', [$this->debitTxnFromDate, $this->debitTxnToDate]);
+                })
+                ->orderBy($this->sortByColumn, $this->sortType)
                 ->simplePaginate($this->limitFilter);
         } else {
             return  ModelDebitTransaction::with(['paymentMethod', 'store'])->when($this->nameFilter !== '', function ($query) {
@@ -92,7 +104,15 @@ class DebitTransaction extends Component
             })
                 ->when($this->paymentMethodFilter !== '', function ($query) {
                     return $query->where('payment_method_id',  $this->paymentMethodFilter);
-                })->orderBy('created_at', 'desc')->get();
+                })
+                ->when($this->debitTxnFromDate != null && $this->debitTxnToDate == null, function ($query) {
+                    return $query->where('invoice_date', '>=', $this->debitTxnFromDate);
+                })
+                ->when($this->debitTxnFromDate != null && $this->debitTxnToDate != null, function ($query) {
+                    return $query->whereBetween('invoice_date', [$this->debitTxnFromDate, $this->debitTxnToDate]);
+                })
+                ->orderBy($this->sortByColumn, $this->sortType)
+                ->get();
         }
     }
 

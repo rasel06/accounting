@@ -69,9 +69,11 @@ class Notes extends Component
                     return $query->where('details', 'like', '%' . $this->nameFilter . '%')
                         ->orWhere('title', 'like', '%' . $this->nameFilter . '%')
                         ->orWhere('remarks', 'like', '%' . $this->nameFilter . '%');
-                })->when($this->paymentMethodFilter !== '', function ($query) {
+                })
+                ->when($this->paymentMethodFilter !== '', function ($query) {
                     return $query->where('account',  $this->paymentMethodFilter);
-                })->orderBy($this->sortByColumn, $this->sortType)
+                })
+                ->orderBy($this->sortByColumn, $this->sortType)
                 ->simplePaginate($this->limitFilter);
         } else {
             return  ModelNote::with(['store', 'account'])->when($this->nameFilter !== '', function ($query) {

@@ -16,11 +16,9 @@
                     <x-helpers.parts.data-table.th class="text-left">
                         Serial
                     </x-helpers.parts.data-table.th>
-                    @foreach ($tableFields as $key => $value)
-                        <x-helpers.parts.data-table.th class="text-center {{ isset($value[1]) ? $value[1] : '' }}">
-                            {{ $value[0] }}
-                        </x-helpers.parts.data-table.th>
-                    @endforeach
+
+                    <x-helpers.parts.data-table.table-header :$tableFields />
+
                     <x-helpers.parts.data-table.th class="text-right">
                         Action
                     </x-helpers.parts.data-table.th>
@@ -54,13 +52,13 @@
                                 {{ $this->convertDate($item->txn_date) }}
                             </x-helpers.parts.data-table.td>
 
-                            <x-helpers.parts.data-table.td class="text-right">
+                            <x-helpers.parts.data-table.td>
                                 @php
                                     $totalAmount += $item->amount;
                                     echo number_format($item->amount, 2, '.', ',');
                                 @endphp
                             </x-helpers.parts.data-table.td>
-                            <x-helpers.parts.data-table.td class="text-right">
+                            <x-helpers.parts.data-table.td>
                                 {{ $item->remarks }}
                             </x-helpers.parts.data-table.td>
                             <x-helpers.parts.data-table.td class="py-1 text-sm  flex justify-end text-center">
@@ -73,13 +71,12 @@
             </tbody>
 
             <x-helpers.parts.data-table.table-footer class=" text-xs">
-                <x-helpers.parts.data-table.th colspan="2" class="text-left">In Word
-                    :</x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th colspan="3" class="text-left">
-                    {{ $totalAmount > 0 ? $this->convertToWords($totalAmount) : '' }}
+                <x-helpers.parts.data-table.th colspan="5" class="text-left ">
+                    In Word : {{ $totalAmount > 0 ? $this->convertToWords($totalAmount) : '' }}
                 </x-helpers.parts.data-table.th>
+
                 <x-helpers.parts.data-table.th class="text-right ">Total</x-helpers.parts.data-table.th>
-                <x-helpers.parts.data-table.th class="text-right">
+                <x-helpers.parts.data-table.th class="text-left ">
                     {{ $totalAmount > 0 ? number_format($totalAmount, 2, '.', ',') : '' }}
                 </x-helpers.parts.data-table.th>
                 <x-helpers.parts.data-table.th colspan="3" class="text-right" />

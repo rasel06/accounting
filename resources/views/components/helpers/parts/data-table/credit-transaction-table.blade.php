@@ -14,11 +14,9 @@
                         <x-helpers.parts.data-table.th class="text-left ">
                             Serial
                         </x-helpers.parts.data-table.th>
-                        @foreach ($tableFields as $key => $value)
-                            <x-helpers.parts.data-table.th class="text-center {{ isset($value[1]) ? $value[1] : '' }}">
-                                {{ $value[0] }}
-                            </x-helpers.parts.data-table.th>
-                        @endforeach
+
+                        <x-helpers.parts.data-table.table-header :$tableFields />
+
                         <x-helpers.parts.data-table.th class="text-right ">
                             Action
                         </x-helpers.parts.data-table.th>
@@ -35,15 +33,15 @@
                                 {{ $item->creditAccount->name }}
                             </x-helpers.parts.data-table.td>
 
-                            <x-helpers.parts.data-table.td class="text-left">
+                            <x-helpers.parts.data-table.td>
                                 {{ $item->description }}
                             </x-helpers.parts.data-table.td>
 
-                            <x-helpers.parts.data-table.td class="text-center">
+                            <x-helpers.parts.data-table.td>
                                 {{ $item->invoice_number }}
                             </x-helpers.parts.data-table.td>
 
-                            <x-helpers.parts.data-table.td class="text-left">
+                            <x-helpers.parts.data-table.td>
                                 {{ $this->convertDate($item->invoice_date) }}
                             </x-helpers.parts.data-table.td>
 
@@ -51,14 +49,14 @@
                                 <x-helpers.parts.image :file="$item->invoice_file" />
                             </x-helpers.parts.data-table.td>
 
-                            <x-helpers.parts.data-table.td class="text-right">
+                            <x-helpers.parts.data-table.td>
                                 @php
                                     $totalAmount += $item->amount;
                                     echo number_format($item->amount, 2, '.', ',');
                                 @endphp
                             </x-helpers.parts.data-table.td>
 
-                            <x-helpers.parts.data-table.td class="text-left">
+                            <x-helpers.parts.data-table.td>
                                 {{ $item->remarks }}
                             </x-helpers.parts.data-table.td>
 
@@ -70,12 +68,11 @@
                 </tbody>
 
                 <x-helpers.parts.data-table.table-footer class="">
-                    <x-helpers.parts.data-table.th class="text-left text-xs">In Word :</x-helpers.parts.data-table.th>
-                    <x-helpers.parts.data-table.th colspan="4" class="text-left normal-case text-xs">
-                        {{ $this->convertToWords($totalAmount) }}
+                    <x-helpers.parts.data-table.th colspan="5" class="text-left text-xs">
+                        In Word : {{ $this->convertToWords($totalAmount) }}
                     </x-helpers.parts.data-table.th>
                     <x-helpers.parts.data-table.th class="text-right text-xs">Total</x-helpers.parts.data-table.th>
-                    <x-helpers.parts.data-table.th class="text-right text-xs">
+                    <x-helpers.parts.data-table.th class="text-left text-xs">
                         {{ number_format($totalAmount, 2, '.', ',') }}
                     </x-helpers.parts.data-table.th>
                     <x-helpers.parts.data-table.th colspan="3" class="text-right" />

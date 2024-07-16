@@ -11,6 +11,9 @@
                 <option value="{{ $paymentMethod->id }}">{{ $paymentMethod->name }}</option>
             @endforeach
         </select>
+
+        <x-helpers.parts.date-range name="debitTxn" />
+
     </x-helpers.parts.data-table.control>
 
     <x-helpers.parts.data-table.debit-transaction-table :tableItems="$debitTransactionList" :$limitFilter :$tableFields />

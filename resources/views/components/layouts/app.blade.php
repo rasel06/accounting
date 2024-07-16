@@ -3,10 +3,13 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="author" content="Raseduz Zaman Rasel">
+    <meta name="website" content="www.rzrasel.com">
+    <meta name="email" content="rasel06@gmail.com">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', '') }} :: {{ $title ?? config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     {{-- <link rel="preconnect" href="https://fonts.bunny.net"> --}}
@@ -64,9 +67,17 @@
         <div class="flex   bg-white ">
             <livewire:parts.sidebar />
 
-            <main class="w-4/5 p-4">
-                {{ $slot }}
-            </main>
+            <div class="w-full  flex flex-col gap-4 justify-between ">
+                <main class=" p-2">
+                    {{ $slot }}
+                </main>
+
+                <footer class="flex bg-slate-300 py-2 mx-2 mb-1 rounded justify-center text-slate-500 text-sm">
+                    <span> &copy; {{ date('Y') }}, {{ config('app.name', '') }} LLC | All rihgts reserved</span>
+                </footer>
+            </div>
+
+
         </div>
     </div>
 
