@@ -114,6 +114,28 @@ class CreditTransaction extends Component
         );
     }
 
+    public function details($id = null)
+    {
+        if ($id) {
+
+            $this->showModal = true;
+            $this->detailsMode = true;
+
+            // {"id":2,"credit_account_id":6,"description":"asd asd a","invoice_number":"DBC50002","invoice_date":"2024-07-01","invoice_file":"","amount":"560.00","remarks":"a ad as ","user_id":11,"created_at":"2024-07-16T06:15:43.000000Z","updated_at":"2024-07-16T06:15:43.000000Z","user":{"id":11,"name":"Test User","email":"test@example.com","email_verified_at":"2024-07-09 10:02:15","password":"$2y$12$knHrnYQIGfT\/iAh7XyF0rO9lbms5WlI9aSXbFzM2CCwppskTYQR.C","remember_token":"fzgjAHyMtz","created_at":"2024-07-09T10:02:15.000000Z","updated_at":"2024-07-09T10:02:15.000000Z"}}
+            // $this->itemDetails = ModelCreditTransaction::with(['user:name'])->findOrFail($id);
+
+            $this->itemDetails  = ModelCreditTransaction::with(['user', 'creditAccount'])->where('id', $id)->get()->toArray();
+
+            // $this->itemDetails = [''];
+
+            // $this->itemDetails = ModelCreditTransaction::with(['user:name'])
+            //     ->where('id', $id)
+            //     ->get();
+
+            // $this->itemDetails = ModelCreditTransaction::with(['user:name'])->where('id', $id)->get();
+        }
+    }
+
 
     public function create()
     {

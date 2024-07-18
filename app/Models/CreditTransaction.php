@@ -30,7 +30,7 @@ class CreditTransaction extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'user_id' => 'integer',
+        // 'user_id' => 'integer',
         'credit_account_id' => 'integer',
         'amount' => 'decimal:2',
 
@@ -38,7 +38,8 @@ class CreditTransaction extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        // return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     // public function paymentMethod(): BelongsTo
     // {

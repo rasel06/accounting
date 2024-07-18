@@ -19,7 +19,17 @@
 
     <x-slot name="modal">
         <x-helpers.modal :id>
-            <x-helpers.forms.credit-transaction :$creditAccountList :selectedCreditAccountId="$this->creditAccountId" />
+            {{-- $this->showModal = true;
+            $this->detailsMode = true; --}}
+
+            @if (!$this->detailsMode)
+                {{-- resources\views\components\helpers\forms\credit-transaction.blade.php --}}
+                <x-helpers.forms.credit-transaction :$creditAccountList :selectedCreditAccountId="$this->creditAccountId" />
+            @else
+                {{-- resources\views\components\helpers\details-screen.blade.php --}}
+                <x-helpers.details-screen :itemDetails />
+            @endif
+
         </x-helpers.modal>
     </x-slot>
 

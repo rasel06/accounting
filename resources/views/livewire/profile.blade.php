@@ -17,7 +17,6 @@
                 <a class="bg-rose-500 leading-6" href="#" @click.prevent="selectedTab = 'tab3'">Delete
                     Account</a>
             </li>
-
         </ul>
         <div class="mt-4 bg-slate-300 p-6 rounded-md shadow-md ">
             <div x-show="selectedTab === 'tab1'">Content for Tab 1</div>

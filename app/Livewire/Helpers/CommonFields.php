@@ -22,7 +22,9 @@ trait CommonFields
     public $selectedId = '';
 
     public $addMode = false;
-    public $editMode = false;
+    public $detailsMode = false;
+
+    public $itemDetails = [];
 
 
     public $sortByColumn = 'created_at';
@@ -54,6 +56,8 @@ trait CommonFields
     public function commonReset()
     {
         $this->id = null;
+        $this->detailsMode = false;
+        $this->itemDetails = [];
         $this->status = 'active';
         $this->resetErrorBag();
     }
