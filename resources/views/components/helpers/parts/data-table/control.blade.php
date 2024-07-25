@@ -1,6 +1,6 @@
 @props(['showStatus' => true, 'isTransactional' => false, 'reportMenu' => false])
 
-<div class="flex flex-wrap flex-grow justify-between py-3">
+<div class="flex flex-wrap flex-grow justify-between py-3 print:hidden">
     <div class="flex items-center">
 
         @if ($reportMenu)

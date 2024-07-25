@@ -17,7 +17,7 @@
 
                         <x-helpers.parts.data-table.table-header :$tableFields />
 
-                        <x-helpers.parts.data-table.th class="text-right ">
+                        <x-helpers.parts.data-table.th class="text-right print:hidden">
                             Action
                         </x-helpers.parts.data-table.th>
                     </tr>
@@ -60,7 +60,8 @@
                                 {{ $item->remarks }}
                             </x-helpers.parts.data-table.td>
 
-                            <x-helpers.parts.data-table.td class="py-1 text-sm  flex justify-end text-center">
+                            <x-helpers.parts.data-table.td
+                                class="py-1 text-sm  flex justify-end text-center print:hidden">
                                 <x-helpers.parts.data-table.actions :id="$item->id" :smallIcon="true" />
                             </x-helpers.parts.data-table.td>
                         </tr>

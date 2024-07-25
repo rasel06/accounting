@@ -1,7 +1,7 @@
 <x-helpers.parts.content-panel>
     <x-slot name="heading">Credit Transaction</x-slot>
 
-    <x-helpers.parts.data-table.control :showStatus="false">
+    <x-helpers.parts.data-table.control :showStatus="false" >
 
         <select wire:model.change="creditAccountFilter"
             class="border-gray-100 rounded ml-2 py-1 pr-8 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-300">
