@@ -10,16 +10,8 @@
 
     <div class="align-middle inline-block w-full shadow overflow-x-auto sm:rounded-lg border-b border-gray-200 ">
         <table class="min-w-full text-slate-900 text-sm">
-            <thead>
-                <tr
-                    class="bg-slate-500 border-b font-extrabold border-gray-200 text-xs leading-4 text-gray-100 uppercase tracking-wider">
-                    <x-helpers.parts.data-table.th class="text-left">Serial</x-helpers.parts.data-table.th>
+            <x-helpers.parts.data-table.thead :$tableFields />
 
-                    <x-helpers.parts.data-table.table-header :$tableFields />
-
-                    <x-helpers.parts.data-table.th class="text-right">Action</x-helpers.parts.data-table.th>
-                </tr>
-            </thead>
             <tbody class="bg-white ">
                 @if ($tableItems)
                     @foreach ($tableItems as $item)
@@ -64,7 +56,7 @@
                             <x-helpers.parts.data-table.td class="text-right">
                                 {{ $item->remarks }}
                             </x-helpers.parts.data-table.td>
-                            <x-helpers.parts.data-table.td class="text-center ">
+                            <x-helpers.parts.data-table.td class="text-center print:hidden">
                                 <x-helpers.parts.data-table.actions :id="$item->id" />
                             </x-helpers.parts.data-table.td>
                         </tr>
