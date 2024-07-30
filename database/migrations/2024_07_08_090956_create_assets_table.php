@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Store;
+use App\Models\PaymentMethod;
 use App\Models\AssetType;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,9 +19,17 @@ return new class extends Migration
             $table->id();
             $table->longText('description');
             $table->foreignIdFor(Store::class)->constrained()->onUpdate('cascade');
-            $table->unsignedInteger('account_id');
+
+            // $table->unsignedInteger('account_id');
+            // $table->foreign('account_id')->references('id')->on('payment_methods')->onUpdate('cascade');
+            // credit_account_id
+
+            // $table->foreignIdFor(PaymentMethod::class, 'account_id')->constrained();
+            $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('payment_methods')->onUpdate('cascade');
+
             $table->foreignIdFor(AssetType::class)->constrained()->onUpdate('cascade');
+
             $table->date('txn_date')->nullable();
             $table->decimal('amount', 8, 2);
             $table->longText('remarks', 200);

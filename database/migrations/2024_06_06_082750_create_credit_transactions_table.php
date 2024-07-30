@@ -17,7 +17,8 @@ return new class extends Migration
 
         Schema::create('credit_transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('credit_account_id');
+            // $table->unsignedInteger('credit_account_id');
+            $table->foreignIdFor(PaymentMethod::class, 'credit_account_id')->constrained();
             $table->longText('description');
             $table->string('invoice_number', 50);
             $table->date('invoice_date')->nullable();
@@ -26,7 +27,7 @@ return new class extends Migration
             $table->string('remarks', 200);
             $table->foreignIdFor(User::class)->constrained();
             $table->timestamps();
-            $table->foreign('credit_account_id')->references('id')->on('payment_methods');
+            // $table->foreign('credit_account_id')->references('id')->on('payment_methods');
         });
 
         Schema::enableForeignKeyConstraints();

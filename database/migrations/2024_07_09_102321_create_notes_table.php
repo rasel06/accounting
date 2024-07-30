@@ -18,8 +18,11 @@ return new class extends Migration
             $table->string('title');
             $table->boolean('is_important')->default(false);
             $table->foreignIdFor(Store::class)->nullable()->constrained()->onUpdate('cascade');
-            $table->unsignedInteger('account_id')->nullable();
+
+            $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('payment_methods')->onUpdate('cascade');
+
+
             $table->date('note_date')->nullable();
             $table->longText('details');
             $table->string('remarks');
